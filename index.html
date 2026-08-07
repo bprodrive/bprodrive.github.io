@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bayu Askar Abdillah — Portofolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0d;
+    --bg-alt:#141318;
+    --surface:#1b1a20;
+    --text:#ede8e1;
+    --text-dim:#9c968c;
+    --gold:#c9a876;
+    --gold-soft:#7a6a4e;
+    --line:rgba(201,168,118,0.22);
+    --serif:'Fraunces', serif;
+    --sans:'Inter', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:auto;}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    font-weight:300;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:999;
+    opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* HERO GRADIENT GLOW */
+  .hero-glow{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .hero-glow::before,
+  .hero-glow::after{
+    content:'';
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:0.55;
+    animation:driftGlow 16s ease-in-out infinite alternate;
+  }
+  .hero-glow::before{
+    width:520px; height:520px;
+    top:-160px; left:-120px;
+    background:radial-gradient(circle, rgba(201,168,118,0.55), rgba(201,168,118,0) 70%);
+  }
+  .hero-glow::after{
+    width:460px; height:460px;
+    bottom:-180px; right:-100px;
+    background:radial-gradient(circle, rgba(122,106,78,0.5), rgba(122,106,78,0) 70%);
+    animation-delay:-8s;
+  }
+  @keyframes driftGlow{
+    0%{ transform:translate(0,0) scale(1); }
+    100%{ transform:translate(40px,30px) scale(1.15); }
+  }
+  .hero-inner{ position:relative; z-index:1; }
+
+  /* SCROLL PROGRESS */
+  .scroll-progress{
+    position:fixed;
+    top:0; left:0;
+    height:2px;
+    width:0%;
+    background:linear-gradient(90deg, var(--gold-soft), var(--gold));
+    z-index:200;
+    pointer-events:none;
+  }
+
+  /* CURSOR GLOW (desktop only) */
+  .cursor-glow{
+    position:fixed;
+    top:0; left:0;
+    width:22px; height:22px;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    pointer-events:none;
+    z-index:9999;
+    opacity:0;
+    transform:translate(-50%,-50%);
+    transition:width 0.35s cubic-bezier(0.16,1,0.3,1),
+               height 0.35s cubic-bezier(0.16,1,0.3,1),
+               background 0.35s ease,
+               border-color 0.35s ease,
+               opacity 0.4s ease;
+    mix-blend-mode:difference;
+  }
+  .cursor-glow.active{opacity:1;}
+  .cursor-glow.hovering{
+    width:52px; height:52px;
+    background:rgba(201,168,118,0.15);
+  }
+  @media(hover:none), (pointer:coarse){
+    .cursor-glow{display:none;}
+  }
+
+  /* BACK TO TOP */
+  .back-to-top{
+    position:fixed;
+    right:32px;
+    bottom:32px;
+    width:44px; height:44px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:rgba(20,19,24,0.6);
+    backdrop-filter:blur(6px);
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:150;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(10px);
+    transition:opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease, background 0.3s ease;
+  }
+  .back-to-top.show{opacity:1; visibility:visible; transform:translateY(0);}
+  .back-to-top:hover{border-color:var(--gold); background:rgba(201,168,118,0.1);}
+  .back-to-top svg{width:16px; height:16px;}
+
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--gold);color:var(--bg);}
+
+  :focus-visible{
+    outline:1px solid var(--gold);
+    outline-offset:4px;
+  }
+
+  .container{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 40px;
+  }
+
+  .spine{
+    position:fixed;
+    left:40px;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:var(--line);
+    z-index:2;
+    display:none;
+  }
+  @media(min-width:900px){ .spine{display:block;} }
+
+  /* NAV */
+  header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+    padding:28px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    mix-blend-mode:difference;
+  }
+  .mark{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:1.15rem;
+    letter-spacing:0.02em;
+  }
+  nav{display:flex;gap:36px;}
+  nav a{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    transition:color 0.3s ease;
+    position:relative;
+    padding-bottom:4px;
+  }
+  nav a::after{
+    content:'';
+    position:absolute;
+    left:0; bottom:0;
+    width:0; height:1px;
+    background:var(--gold);
+    transition:width 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  nav a:hover{color:var(--gold);}
+  nav a:hover::after, nav a.active::after{ width:100%; }
+  nav a.active{color:var(--gold);}
+  .nav-toggle{display:none;}
+  @media(max-width:640px){
+    nav{
+      position:fixed;
+      top:0; right:0; bottom:0;
+      width:70%;
+      background:var(--bg-alt);
+      flex-direction:column;
+      justify-content:center;
+      gap:28px;
+      padding:40px;
+      transform:translateX(100%);
+      transition:transform 0.4s ease;
+      mix-blend-mode:normal;
+    }
+    nav.open{transform:translateX(0);}
+    .nav-toggle{
+      display:block;
+      background:none;
+      border:none;
+      color:var(--text);
+      font-family:var(--mono);
+      font-size:0.7rem;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+      z-index:101;
+    }
+  }
+
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    padding:140px 40px 80px;
+  }
+  .hero-inner{max-width:1180px; margin:0 auto; width:100%; text-align:center; display:flex; flex-direction:column; align-items:center;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:28px;
+    opacity:0;
+    animation:fadeUp 0.9s ease forwards 0.2s;
+  }
+  h1.name{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(3.2rem, 9vw, 8rem);
+    line-height:0.95;
+    letter-spacing:-0.01em;
+    opacity:0;
+    animation:fadeUp 1s ease forwards 0.4s;
+  }
+  h1.name em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--gold);
+    display:block;
+  }
+  .hero-rule{
+    width:0;
+    height:1px;
+    background:var(--gold);
+    margin:44px auto;
+    animation:drawLine 1.4s ease forwards 1.1s;
+  }
+  @keyframes drawLine{ to{ width:120px; } }
+
+  .hero-desc{
+    max-width:560px;
+    font-size:1rem;
+    text-align: center;
+    color:var(--text-dim);
+    font-weight:300;
+    opacity:0;
+    animation:fadeUp 0.9s ease forwards 1.3s;
+  }
+  .hero-desc strong{color:var(--text); font-weight:500;}
+
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(18px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .scroll-cue{
+    position:absolute;
+    bottom:40px;
+    left:40px;
+    font-family:var(--mono);
+    font-size:0.68rem;
+    color:var(--text-dim);
+    letter-spacing:0.15em;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    opacity:0;
+    animation:fadeUp 0.9s ease forwards 1.6s;
+  }
+  .scroll-cue::after{
+    content:'';
+    width:1px; height:34px;
+    background:linear-gradient(var(--gold), transparent);
+    animation:pulseLine 2s ease-in-out infinite;
+  }
+  @keyframes pulseLine{ 50%{ opacity:0.3; } }
+
+  /* SECTION HEADERS */
+  .section{
+    padding:130px 0;
+    border-top:1px solid var(--line);
+    position:relative;
+    scroll-margin-top:96px;
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:20px;
+    margin-bottom:64px;
+    position:relative;
+    padding-bottom:26px;
+  }
+  .section-head::after{
+    content:'';
+    position:absolute;
+    left:0; bottom:0;
+    height:1px;
+    width:0;
+    background:linear-gradient(90deg, var(--gold), transparent);
+    transition:width 1.1s cubic-bezier(0.16,1,0.3,1) 0.25s;
+  }
+  .section-head.in::after{ width:180px; }
+  .section-num{
+    font-family:var(--mono);
+    color:var(--gold-soft);
+    font-size:0.78rem;
+  }
+  .section-title{
+    font-family:var(--serif);
+    font-size:clamp(1.8rem, 3.4vw, 2.6rem);
+    font-weight:400;
+  }
+  .section-title em{font-style:italic; color:var(--gold);}
+
+  .reveal{
+    opacity:0;
+    transform:translateY(35px) scale(0.985);
+    filter:blur(4px);
+    transition:opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+               transform 0.9s cubic-bezier(0.16,1,0.3,1),
+               filter 0.9s cubic-bezier(0.16,1,0.3,1);
+    will-change:opacity, transform, filter;
+  }
+  .reveal.in{opacity:1; transform:translateY(0) scale(1); filter:blur(0);}
+
+  /* ABOUT */
+  .about-grid{
+    display:grid;
+    grid-template-columns:0.9fr 1.3fr;
+    gap:80px;
+    align-items:start;
+  }
+  @media(max-width:800px){ .about-grid{grid-template-columns:1fr; gap:44px;} }
+
+  .portrait{
+    aspect-ratio:4/5;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(201,168,118,0.18), transparent 60%),
+      linear-gradient(160deg, var(--surface), var(--bg-alt));
+    border:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+    transition:transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease;
+    will-change:transform;
+  }
+  .portrait:hover{
+    box-shadow:0 30px 70px -25px rgba(201,168,118,0.4);
+  }
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* Memaksa foto memenuhi seluruh frame secara proporsional */
+    object-position: center; /* Memastikan fokus foto berada di tengah */
+    display: block;
+}
+  .portrait::after{
+    content:'B.A.A';
+    position:absolute;
+    bottom:5px; right:30px;
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:2.0rem;
+    color:var(--gold-soft);
+    opacity:0.5;
+  }
+
+  .about-text p{
+    color:var(--text-dim);
+    font-size:1.02rem;
+    margin-bottom:22px;
+    max-width:560px;
+  }
+  .about-text p strong{color:var(--text); font-weight:500;}
+
+  .facts{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:28px;
+    margin-top:48px;
+    border-top:1px solid var(--line);
+    padding-top:32px;
+  }
+  .fact-label{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-bottom:8px;
+  }
+  .fact-value{font-size:0.95rem; color:var(--text);}
+
+  /* WORK GROUP HEADS */
+  .work-group-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:2px;
+  }
+  .work-group-head--spaced{ margin-top:96px; }
+  .work-group-title{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(1.2rem, 2.2vw, 1.6rem);
+    color:var(--gold);
+  }
+  .work-group-count{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+  }
+
+  /* WORK */
+  .work-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:2px;
+    background:var(--line);
+  }
+  @media(max-width:700px){ .work-grid{grid-template-columns:1fr;} }
+
+  /* Staggered scroll-reveal for grid children */
+  .work-grid .work-card:nth-child(1){ transition-delay:0.05s; }
+  .work-grid .work-card:nth-child(2){ transition-delay:0.15s; }
+  .work-grid .work-card:nth-child(3){ transition-delay:0.25s; }
+  .work-grid .work-card:nth-child(4){ transition-delay:0.35s; }
+
+  .work-card{
+    background:var(--bg);
+    padding:48px 40px;
+    position:relative;
+    overflow:hidden;
+    transition:background 0.5s ease;
+  }
+  .work-card:hover{background:var(--bg-alt);}
+  .work-index{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    color:var(--gold-soft);
+    display:block;
+    margin-bottom:24px;
+  }
+  .work-visual{
+    aspect-ratio:16/10; /*01. Card*/
+    background:linear-gradient(135deg, var(--surface), var(--bg-alt));
+    margin-bottom:28px;
+    width: 100%;
+    position:relative;
+    overflow:hidden;
+    transition:transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease;
+    will-change:transform;
+  }
+  .work-visual:hover{
+    box-shadow:0 24px 60px -22px rgba(201,168,118,0.35);
+  }
+  .work-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;     /* Ubah dari contain ke cover */
+    object-position: center;
+}
+  /* Auto scaling untuk motion graphic (iframe Google Drive) agar tidak kepotong di HP */
+  .work-visual iframe{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+}
+  .work-visual::before{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(120deg, transparent 40%, rgba(201,168,118,0.15) 50%, transparent 60%);
+    transform:translateX(-100%);
+    transition:transform 0.7s ease;
+  }
+  .work-card:hover .work-visual::before{ transform:translateX(100%); }
+  .work-title{
+    font-family:var(--serif);
+    font-size:1.55rem;
+    margin-bottom:10px;
+    transition:color 0.3s ease;
+  }
+  .work-card:hover .work-title{color:var(--gold);}
+  .work-meta{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    color:var(--text-dim);
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+
+  /* TIMELINE */
+  .timeline{position:relative; padding-left:32px;}
+  .timeline::before{
+    content:'';
+    position:absolute; left:0; top:8px; bottom:8px;
+    width:1px;
+    background:var(--line);
+  }
+  .tl-item{
+    position:relative;
+    padding-bottom:56px;
+    display:grid;
+    grid-template-columns:110px 1fr;
+    gap:32px;
+  }
+  @media(max-width:640px){ .tl-item{grid-template-columns:1fr; gap:10px;} }
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:'';
+    position:absolute;
+    left:-36px; top:6px;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--bg);
+    border:1px solid var(--gold);
+  }
+  .tl-year{
+    font-family:var(--mono);
+    color:var(--gold-soft);
+    font-size:0.85rem;
+    padding-top:2px;
+  }
+  .tl-role{
+    font-family:var(--serif);
+    font-size:1.3rem;
+    margin-bottom:6px;
+  }
+  .tl-org{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--gold);
+    margin-bottom:12px;
+  }
+  .tl-desc{color:var(--text-dim); font-size:0.95rem; max-width:520px;}
+
+  /* CONTACT */
+  .contact-section{text-align:left;}
+  .contact-big{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(2.2rem, 7vw, 5rem);
+    line-height:1.08;
+    display:inline-block;
+    position:relative;
+  }
+  .contact-big::after{
+    content:'';
+    position:absolute; left:0; bottom:0.02em;
+    width:100%; height:1px;
+    background:var(--gold);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform 0.5s ease;
+  }
+  .contact-big:hover::after{transform:scaleX(1);}
+
+  .socials{
+    display:flex;
+    gap:32px;
+    margin-top:56px;
+    flex-wrap:wrap;
+  }
+  .socials a{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    border-bottom:1px solid transparent;
+    padding-bottom:4px;
+    transition:color 0.3s ease, border-color 0.3s ease;
+  }
+  .socials a:hover{color:var(--gold); border-color:var(--gold);}
+
+  .contact-form{
+    margin-top:64px;
+    max-width:560px;
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+  }
+  .form-row{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .form-row label{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+  }
+  .form-row input,
+  .form-row textarea{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    padding:10px 2px;
+    font-family:var(--sans);
+    font-weight:300;
+    font-size:1rem;
+    color:var(--text);
+    transition:border-color 0.3s ease;
+    resize:none;
+  }
+  .form-row input::placeholder,
+  .form-row textarea::placeholder{
+    color:var(--text-dim);
+    opacity:0.55;
+  }
+  .form-row input:focus,
+  input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    /* Menimpa background putih autofill dengan warna latar gelap Anda (sesuaikan warnanya) */
+    -webkit-box-shadow: 0 0 0 30px #121212 inset !important; 
+    
+    /* Memastikan warna teks tetap putih */
+    -webkit-text-fill-color: #ffffff !important;
+    
+    /* Mencegah browser mengubah warna background kembali secara tiba-tiba */
+    transition: background-color 5000s ease-in-out 0s;
+}
+  .form-row textarea:focus{
+    outline:none;
+    border-color:var(--gold);
+  }
+  .form-row textarea{min-height:110px;}
+  .form-submit{
+    align-self:flex-start;
+    margin-top:8px;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:14px 32px;
+    cursor:pointer;
+    transition:border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+  }
+  .form-submit:hover{
+    border-color:var(--gold);
+    color:var(--gold);
+    background:rgba(201,168,118,0.08);
+  }
+  .form-submit:disabled{
+    opacity:0.5;
+    cursor:not-allowed;
+  }
+  .form-note{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    letter-spacing:0.04em;
+    color:var(--text-dim);
+    margin-top:14px;
+    min-height:1em;
+  }
+  .form-note.success{color:var(--gold);}
+  .form-note.error{color:#d98c7a;}
+
+  footer{
+    padding:40px 0 48px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--mono);
+    font-size:0.68rem;
+    color:var(--text-dim);
+    letter-spacing:0.06em;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<div class="spine" aria-hidden="true"></div>
+
+<header>
+  <div class="mark">B.A.A</div>
+  <button class="nav-toggle" id="navToggle" aria-label="Buka menu">MENU</button>
+  <nav id="mainNav">
+    <a href="#tentang">Tentang</a>
+    <a href="#perjalanan">Perjalanan</a>
+    <a href="#karya">Karya</a>
+    <a href="#kontak">Kontak</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">Motion Graphic Designer, Graphic Designer &amp; Editor Video — Based in Jakarta</div>
+    <h1 class="name">Bayu Askar<br><em>Abdillah</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-desc">Seorang profesional di bidang <strong>Motion Graphic Design, Graphic Design, dan Video Editing</strong> dengan kemampuan menciptakan visual yang kreatif, modern, dan berorientasi pada hasil. Berpengalaman menghasilkan konten yang menarik, informatif, serta mendukung kebutuhan branding, promosi, dan komunikasi visual secara efektif.</p>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<div class="container">
+
+  <section class="section" id="tentang">
+    <div class="section-head reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Tentang <em>saya</em></h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="portrait"><img src=https://lh3.googleusercontent.com/d/1gIvemgWwapxbeawr5LdZJjNQVkgQsOd3></div>
+      <div class="about-text">
+        <p>Perjalanan saya di dunia kreatif dimulai sejak duduk di bangku <strong>Sekolah Menengah Atas (SMA).</strong></p>
+        <p>Pada masa tersebut, saya mulai menaruh minat yang besar terhadap bidang desain grafis, motion graphic, dan video editing.</p>
+        <p>Rasa ingin tahu yang tinggi mendorong saya untuk terus mengeksplorasi berbagai teknik desain, mempelajari berbagai perangkat lunak kreatif, serta mengembangkan kemampuan melalui beragam proyek dan eksperimen visual.</p>
+        <p>Konsistensi dalam belajar dan mengasah keterampilan tersebut membawa saya dipercaya untuk bergabung sebagai <strong>anggota Tim Multimedia</strong>  di sekolah, di mana saya berkesempatan terlibat dalam pembuatan berbagai konten visual dan dokumentasi untuk mendukung kegiatan sekolah.</p>
+        <p>Pengalaman saya semakin berkembang ketika dipercaya terlibat sebagai <strong>Motion Graphic Designer</strong> dalam sebuah acara sekolah yang dihadiri lebih dari <strong>1.000 peserta</strong>. Melalui proyek ini, saya bertanggung jawab menghasilkan motion graphic yang mendukung kebutuhan visual acara sekaligus memperkuat kemampuan saya dalam bekerja secara profesional dan memenuhi tenggat waktu.</p>
+        <p>Pengalaman tersebut menjadi fondasi yang membentuk cara saya berpikir secara kreatif, memahami komunikasi visual, dan menghasilkan karya yang tidak hanya menarik secara estetika, tetapi juga <strong>menyampaikan pesan secara efektif</strong>.</p>
+        <div class="facts">
+          <div>
+            <div class="fact-label">Berbasis di</div>
+            <div class="fact-value">Jakarta, Indonesia</div>
+          </div>
+          <div>
+            <div class="fact-label">Pengalaman</div>
+            <div class="fact-value">3+ tahun</div>
+          </div>
+          <div>
+            <div class="fact-label">Disiplin</div>
+            <div class="fact-value">Audio-Visual Synchronization, Tepat Waktu, Amanah</div>
+          </div>
+          <div>
+            <div class="fact-label">Ketersediaan</div>
+            <div class="fact-value">Open for freelance and project-based collaborations (On-site in Jakarta / Remote)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+  <section class="section" id="perjalanan">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Perjalanan <em>karier</em></h2>
+      </div>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="tl-year">2025 — kini</div>
+          <div>
+            <div class="tl-role">KIAN Company</div>
+            <div class="tl-org">Anggota / OJT</div>
+            <div class="tl-desc"style="text-align: justify;">Bertanggung jawab dalam pembuatan konten motion graphic untuk berbagai kebutuhan produksi meliputi lower third, teaser, bumper opening dan elemen grafis lainnya sesuai permintaan proyek. Berkolaborasi dengan tim produksi untuk menghasilkan visual yang komunikatif, konsisten dengan branding, serta siap digunakan pada berbagai platform media.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2022 — 2025</div>
+          <div>
+            <div class="tl-role">Multimedia Al Bahjah Buyut</div>
+            <div class="tl-org">Team Leader</div>
+            <div class="tl-desc"style="text-align: justify;">Memimpin dan mengoordinasikan tim multimedia, memastikan kelancaran pelaksanaan acara, membagi tugas secara efektif, serta membimbing anggota dalam pengoperasian kamera, software editing, dan proses produksi media.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="karya">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Hasil <em>Portofolio</em></h2>
+      </div>
+
+      <div class="work-group-head reveal">
+        <span class="work-group-title">Graphic Design</span>
+        <span class="work-group-count">03 karya</span>
+      </div>
+    </div>
+
+    <div class="work-grid">
+      <div class="work-card reveal">
+        <span class="work-index">01 / Graphic Design</span>
+        <div class="work-visual"><img src="https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ" loading="lazy"></div>
+        <div class="work-title">Flyer PMB UBSI</div>
+        <div class="work-meta">KIAN Company — 2025</div>
+      </div>
+      <div class="work-card reveal">
+        <span class="work-index">02 / Graphic Design</span>
+        <div class="work-visual"><img src="https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm" loading="lazy"></div>
+        <div class="work-title">Flyer PMB UBSI 2</div>
+        <div class="work-meta">KIAN Company — 2025</div>
+      </div>
+      <div class="work-card reveal">
+        <span class="work-index">03 / Graphic Design</span>
+        <div class="work-visual"><img src="https://lh3.googleusercontent.com/d/1XaYTh3n6dDnMOk8YBrLsUoLaG8snElXI" loading="lazy"></div>
+        <div class="work-title">Flyer Tugas Kelompok</div>
+        <div class="work-meta">UBSI Kaliabang — 2025</div>
+      </div>
+      <div class="work-card reveal">
+        <span class="work-index">03 / Graphic Design</span>
+        <div class="work-visual"><img src="https://lh3.googleusercontent.com/d/11GooM0-31pp7vzdQy6kim3Trdg_blJxA" loading="lazy"></div>
+        <div class="work-title">Carousel Post</div>
+        <div class="work-meta">2026</div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="work-group-head work-group-head--spaced reveal">
+        <span class="work-group-title">Motion Graphic</span>
+        <span class="work-group-count">04 karya</span>
+      </div>
+    </div>
+
+    <div class="work-grid">
+      <div class="work-card reveal">
+        <span class="work-index">01 / Motion Graphic</span>
+        <div class="work-visual"><iframe src="https://drive.google.com/file/d/1VZnb0DzDhGSDVx5EVWbDFXeYAUsEpwAK/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe></div>
+        <div class="work-title">Mograph Iklan Program</div>
+        <div class="work-meta">SMA — 2025</div>
+      </div>
+      <div class="work-card reveal">
+        <span class="work-index">02 / Motion Graphic</span>
+        <div class="work-visual"><iframe src="https://drive.google.com/file/d/1BkJDpkeAq-JM8BWM4wTxPhuTHADYWYJL/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe></div>
+        <div class="work-title">Teaser - BSI Flash 2027 Bogor</div>
+        <div class="work-meta">KIAN Company — 2026</div>
+      </div>
+      <div class="work-card reveal">
+        <span class="work-index">03 / Motion Graphic</span>
+        <div class="work-visual"><iframe src="https://drive.google.com/file/d/1v6_d4Ol-N8-AiV0BGaA5IRzhuIOrUZ0o/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe></div>
+        <div class="work-title">Teaser - BSI Flash ( UBSI Tasikmalaya )</div>
+        <div class="work-meta">KIAN Company — 2026</div>
+      </div>
+      <div class="work-card reveal">
+        <span class="work-index">04 / Motion Graphic</span>
+        <div class="work-visual"><iframe src="https://drive.google.com/file/d/1puZtH_8MJ67__u-PrTa9Otf5JvhY1P1h/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe></div>
+        <div class="work-title">Teaser - Kreasi 2026</div>
+        <div class="work-meta">KIAN Company — 2026</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+  <section class="section contact-section" id="kontak">
+    <div class="section-head reveal">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Let's <em>Collaborate !!</em></h2>
+    </div>
+
+    <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/xaewyvdk" method="POST">
+      <div class="form-row">
+        <label for="cf-name">Nama</label>
+        <input type="text" id="cf-name" name="name" placeholder="Nama lengkap" required>
+      </div>
+      <div class="form-row">
+        <label for="cf-email">Email</label>
+        <input type="email" id="cf-email" name="email" placeholder="nama@email.com" required>
+      </div>
+      <div class="form-row">
+        <label for="cf-message">Pesan</label>
+        <textarea id="cf-message" name="message" placeholder="Ceritakan proyekmu..." required></textarea>
+      </div>
+      <button type="submit" class="form-submit">Kirim Pesan</button>
+      <p class="form-note" id="formNote"></p>
+    </form>
+    <div class="reveal">
+      <a class="contact-big">askar.b.abdillah@gmail.com</a>
+    </div>
+    <div class="socials reveal">
+      <a href="https://www.instagram.com/bayuaskarabdillah/" target="_blank" rel="noopener noreferrer">Instagram</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Bprodrive</span>
+    <span>Made With Pleasure</span>
+  </footer>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Kembali ke atas">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+  // Toggle menu mobile
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('mainNav');
+  if(toggle){
+    toggle.addEventListener('click', () => {
+      nav.classList.toggle('open');
+      toggle.textContent = nav.classList.contains('open') ? 'TUTUP' : 'MENU';
+    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      nav.classList.remove('open');
+      toggle.textContent = 'MENU';
+    }));
+  }
+
+  // Smooth scroll elegan & responsif untuk klik menu (Tentang, Karya, Perjalanan, Kontak)
+  function easeOutExpo(t){
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  }
+  let scrollAnimId = null;
+  let userInterrupted = false;
+
+  function cancelSmoothScroll(){
+    if(scrollAnimId !== null){
+      cancelAnimationFrame(scrollAnimId);
+      scrollAnimId = null;
+    }
+  }
+
+  function smoothScrollTo(targetY){
+    cancelSmoothScroll();
+    userInterrupted = false;
+
+    const startY = window.scrollY;
+    const diff = targetY - startY;
+    // Durasi menyesuaikan jarak: dekat = cepat & responsif, jauh = tetap dibatasi agar tidak lama
+    const duration = Math.min(650, Math.max(200, Math.abs(diff) * 0.4));
+    let startTime = null;
+
+    function stopOnUserInput(){
+      userInterrupted = true;
+    }
+    window.addEventListener('wheel', stopOnUserInput, { passive:true, once:true });
+    window.addEventListener('touchstart', stopOnUserInput, { passive:true, once:true });
+
+    function step(timestamp){
+      if(userInterrupted){
+        cancelSmoothScroll();
+        return;
+      }
+      if(startTime === null) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      window.scrollTo({ top: startY + diff * easeOutExpo(progress), left: 0, behavior:'auto' });
+      if(progress < 1){
+        scrollAnimId = requestAnimationFrame(step);
+      } else {
+        scrollAnimId = null;
+      }
+    }
+    scrollAnimId = requestAnimationFrame(step);
+  }
+  document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if(!target) return;
+      e.preventDefault();
+      const headerOffset = 90;
+      const targetY = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReducedMotion){
+        window.scrollTo(0, Math.max(targetY, 0));
+      } else {
+        smoothScrollTo(Math.max(targetY, 0));
+      }
+      history.pushState(null, '', link.getAttribute('href'));
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Scroll progress bar
+  const scrollProgress = document.getElementById('scrollProgress');
+  function updateScrollProgress(){
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight || 1) * 100;
+    scrollProgress.style.width = scrolled + '%';
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive:true });
+  updateScrollProgress();
+
+  // Back to top button
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
+  }, { passive:true });
+  backToTop.addEventListener('click', () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(prefersReducedMotion){
+      window.scrollTo(0, 0);
+    } else {
+      smoothScrollTo(0);
+    }
+  });
+
+  // Active nav link based on section in view
+  const navLinksList = document.querySelectorAll('nav a');
+  const navSections = Array.from(navLinksList)
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinksList.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { rootMargin:'-45% 0px -45% 0px' });
+  navSections.forEach(s => navObserver.observe(s));
+
+  // Form kontak — kirim ke Formspree via AJAX (tanpa reload halaman)
+  const contactForm = document.getElementById('contactForm');
+  const formNote = document.getElementById('formNote');
+  const formSubmitBtn = contactForm ? contactForm.querySelector('.form-submit') : null;
+  if(contactForm){
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formNote.classList.remove('success', 'error');
+      formNote.textContent = 'Mengirim pesan...';
+      if(formSubmitBtn) formSubmitBtn.disabled = true;
+
+      try{
+        const response = await fetch(contactForm.action, {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if(response.ok){
+          formNote.textContent = 'Pesan terkirim, terima kasih! Aku akan segera membalas.';
+          formNote.classList.add('success');
+          contactForm.reset();
+        } else {
+          formNote.textContent = 'Gagal mengirim. Coba lagi atau hubungi lewat email di atas.';
+          formNote.classList.add('error');
+        }
+      } catch(err){
+        formNote.textContent = 'Gagal mengirim. Coba lagi atau hubungi lewat email di atas.';
+        formNote.classList.add('error');
+      } finally {
+        if(formSubmitBtn) formSubmitBtn.disabled = false;
+      }
+    });
+  }
+
+  // Cursor glow + subtle tilt (desktop / fine pointer only)
+  if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+    const glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    document.body.appendChild(glow);
+
+    let mx = 0, my = 0, gx = 0, gy = 0;
+    window.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      glow.classList.add('active');
+    });
+    (function loop(){
+      gx += (mx - gx) * 0.18;
+      gy += (my - gy) * 0.18;
+      glow.style.left = gx + 'px';
+      glow.style.top = gy + 'px';
+      requestAnimationFrame(loop);
+    })();
+
+    document.querySelectorAll('a, button, .work-card').forEach(el => {
+      el.addEventListener('mouseenter', () => glow.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => glow.classList.remove('hovering'));
+    });
+
+    // Subtle 3D tilt on portrait & work visuals
+    document.querySelectorAll('.portrait, .work-visual').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = `perspective(900px) rotateY(${px * 6}deg) rotateX(${-py * 6}deg) scale(1.02)`;
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'perspective(900px) rotateY(0) rotateX(0) scale(1)';
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
