@@ -1046,10 +1046,11 @@
       object-fit: contain;
       user-select: none;
       -webkit-user-drag: none;
-      transform: translate(0px, 0px) scale(1);
+      transform: translate3d(0px, 0px, 0px) scale(1);
       transform-origin: center center;
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
     .lightbox-stage.zoomed .lightbox-image {
@@ -2605,7 +2606,7 @@
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
       function renderZoom() {
-        image.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+        image.style.transform = `translate3d(${posX}px, ${posY}px, 0px) scale(${scale})`;
         zoomResetBtn.textContent = `${scale % 1 === 0 ? scale : scale.toFixed(1)}×`;
       }
 
