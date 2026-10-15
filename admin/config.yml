@@ -1,5 +1,5 @@
 backend:
-  name: git-gateaway
+  name: git-gateway
   repo: bprodrive/bprodrive.github.io # Ganti dengan username/nama repo Anda
   branch: main  
 
