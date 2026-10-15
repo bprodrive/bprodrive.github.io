@@ -1,0 +1,167 @@
+/* ============================================================== */
+/* STUDIO CMS - ADMIN STYLESHEET                                  */
+/* Bayu Askar Abdillah Portfolio Admin Management                 */
+/* ============================================================== */
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0b0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2833;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c9a876;
+}
+
+/* Ambient Glow background */
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.ambient-glow::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  top: -200px;
+  left: -150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 168, 118, 0.08), transparent 70%);
+  filter: blur(80px);
+}
+.ambient-glow::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  bottom: -150px;
+  right: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.06), transparent 70%);
+  filter: blur(80px);
+}
+
+/* Glass Effect */
+.glass-card {
+  background: rgba(22, 21, 28, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 118, 0.16);
+}
+.glass-card-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card-hover:hover {
+  border-color: rgba(201, 168, 118, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(201, 168, 118, 0.08);
+}
+
+/* Active Nav Tab */
+.nav-item.active {
+  background: rgba(201, 168, 118, 0.12);
+  color: #c9a876;
+  border-right: 3px solid #c9a876;
+}
+
+/* Markdown Editor Preview */
+.prose-dark {
+  color: #ede8e1;
+  line-height: 1.7;
+}
+.prose-dark h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ede8e1;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-family: 'Fraunces', serif;
+}
+.prose-dark h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #c9a876;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+.prose-dark h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #e4c99b;
+  margin-top: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+.prose-dark p {
+  margin-bottom: 0.8rem;
+  color: #9c968c;
+}
+.prose-dark strong {
+  color: #ede8e1;
+  font-weight: 600;
+}
+.prose-dark a {
+  color: #c9a876;
+  text-decoration: underline;
+}
+.prose-dark code {
+  background: #141318;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  color: #e4c99b;
+}
+.prose-dark blockquote {
+  border-left: 3px solid #c9a876;
+  padding-left: 1rem;
+  color: #9c968c;
+  font-style: italic;
+}
+.prose-dark ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+.prose-dark li {
+  margin-bottom: 0.25rem;
+}
+
+/* Shaking animation on wrong password */
+@keyframes shakeAuth {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-8px);
+  }
+  40%, 80% {
+    transform: translateX(8px);
+  }
+}
+.shake-error {
+  animation: shakeAuth 0.4s ease-in-out;
+}
+
+/* Animated pulse dot */
+@keyframes pulseGold {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+}
+.pulse-gold {
+  animation: pulseGold 2s infinite ease-in-out;
+}
