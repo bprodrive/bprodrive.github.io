@@ -1,12 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TinaCMS Admin</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@tinacms/app@latest/dist/index.js"></script>
-  </body>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Custom Admin Dashboard</title>
+  <!-- Tailwind CSS via CDN untuk UI modern -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-indigo-700 text-white p-4 shadow-md flex justify-between items-center">
+    <h1 class="text-xl font-bold tracking-wide">⚙️ Custom Site Admin</h1>
+    <button id="logoutBtn" class="hidden bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded text-sm font-medium transition">
+      Keluar / Hapus Token
+    </button>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6">
+
+    <!-- Section 1: Form Login Token GitHub -->
+    <section id="authSection" class="bg-white p-6 rounded-xl shadow-md max-w-md mx-auto mt-10">
+      <h2 class="text-lg font-bold mb-2">Autentikasi GitHub</h2>
+      <p class="text-sm text-gray-600 mb-4">
+        Masukkan <b>Personal Access Token (PAT)</b> GitHub Anda. Token ini hanya disimpan secara lokal di browser Anda.
+      </p>
+      
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">GitHub Personal Access Token:</label>
+        <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+      </div>
+
+      <button id="saveTokenBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition">
+        Masuk ke Dashboard
+      </button>
+    </section>
+
+    <!-- Section 2: Content Editor -->
+    <section id="editorSection" class="hidden space-y-6">
+      
+      <!-- Card Pilih File -->
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <h2 class="text-lg font-bold mb-3">Pilih File Konten</h2>
+        <div class="flex gap-2">
+          <input type="text" id="filePath" placeholder="contoh: _posts/2026-10-15-hello.md atau index.html" value="index.html" class="flex-1 border p-2.5 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+          <button id="loadFileBtn" class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-lg font-medium transition">
+            Muat File
+          </button>
+        </div>
+      </div>
+
+      <!-- Card Editor Konten -->
+      <div id="contentBox" class="hidden bg-white p-6 rounded-xl shadow-md space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-semibold text-gray-700">Editor Konten (<span id="currentFileName" class="text-indigo-600 font-mono"></span>)</h3>
+          <span id="statusBadge" class="text-xs px-2.5 py-1 rounded bg-gray-100 text-gray-600 font-mono">Siap</span>
+        </div>
+
+        <div>
+          <textarea id="fileContent" rows="15" class="w-full font-mono text-sm border p-3 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3">
+          <button id="saveFileBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-medium transition flex items-center gap-2">
+            💾 Simpan & Commit Perubahan
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    const REPO_OWNER = 'bprodrive';
+    const REPO_NAME = 'bprodrive.github.io';
+
+    let currentSha = '';
+
+    // DOM Elements
+    const authSection = document.getElementById('authSection');
+    const editorSection = document.getElementById('editorSection');
+    const githubTokenInput = document.getElementById('githubToken');
+    const saveTokenBtn = document.getElementById('saveTokenBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    const filePathInput = document.getElementById('filePath');
+    const loadFileBtn = document.getElementById('loadFileBtn');
+    const contentBox = document.getElementById('contentBox');
+    const currentFileName = document.getElementById('currentFileName');
+    const fileContent = document.getElementById('fileContent');
+    const saveFileBtn = document.getElementById('saveFileBtn');
+    const statusBadge = document.getElementById('statusBadge');
+
+    // Init Check Token
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedToken = localStorage.getItem('gh_pat_token');
+      if (savedToken) {
+        showEditor();
+      }
+    });
+
+    saveTokenBtn.addEventListener('click', () => {
+      const token = githubTokenInput.value.trim();
+      if (!token) return alert('Harap masukkan Personal Access Token GitHub!');
+      localStorage.setItem('gh_pat_token', token);
+      showEditor();
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('gh_pat_token');
+      location.reload();
+    });
+
+    function showEditor() {
+      authSection.classList.add('hidden');
+      editorSection.classList.remove('hidden');
+      logoutBtn.classList.remove('hidden');
+    }
+
+    // Load File dari GitHub API
+    loadFileBtn.addEventListener('click', async () => {
+      const path = filePathInput.value.trim();
+      const token = localStorage.getItem('gh_pat_token');
+      if (!path) return alert('Path file tidak boleh kosong');
+
+      statusBadge.textContent = 'Memuat...';
+      
+      try {
+        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if (!response.ok) throw new Error('File tidak ditemukan atau Token salah');
+
+        const data = await response.json();
+        currentSha = data.sha;
+        
+        // Decode base64 content
+        const decodedContent = decodeURIComponent(escape(atob(data.content)));
+        
+        fileContent.value = decodedContent;
+        currentFileName.textContent = path;
+        contentBox.classList.remove('hidden');
+        statusBadge.textContent = 'Terunduh';
+        statusBadge.className = 'text-xs px-2.5 py-1 rounded bg-green-100 text-green-700 font-mono';
+      } catch (err) {
+        alert(err.message);
+        statusBadge.textContent = 'Gagal';
+        statusBadge.className = 'text-xs px-2.5 py-1 rounded bg-red-100 text-red-700 font-mono';
+      }
+    });
+
+    // Simpan & Commit ke GitHub API
+    saveFileBtn.addEventListener('click', async () => {
+      const path = filePathInput.value.trim();
+      const token = localStorage.getItem('gh_pat_token');
+      const updatedText = fileContent.value;
+
+      if (!confirm(`Simpan dan commit perubahan ke file "${path}"?`)) return;
+
+      statusBadge.textContent = 'Menyimpan...';
+
+      // Encode UTF-8 to Base64
+      const encodedContent = btoa(unescape(encodeURIComponent(updatedText)));
+
+      try {
+        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Update ${path} via Custom Admin`,
+            content: encodedContent,
+            sha: currentSha
+          })
+        });
+
+        if (!response.ok) throw new Error('Gagal menyimpan perubahan');
+
+        const result = await response.json();
+        currentSha = result.content.sha; // Update SHA baru
+
+        statusBadge.textContent = 'Tersimpan & Di-commit!';
+        statusBadge.className = 'text-xs px-2.5 py-1 rounded bg-green-100 text-green-700 font-mono';
+        alert('File berhasil diperbarui! GitHub Pages akan otomatis memperbarui situs dalam 1-2 menit.');
+      } catch (err) {
+        alert(err.message);
+        statusBadge.textContent = 'Gagal';
+        statusBadge.className = 'text-xs px-2.5 py-1 rounded bg-red-100 text-red-700 font-mono';
+      }
+    });
+  </script>
+</body>
 </html>
