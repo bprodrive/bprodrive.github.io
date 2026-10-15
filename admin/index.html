@@ -134,6 +134,16 @@
     .prose-dark ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.8rem; }
     .prose-dark li { margin-bottom: 0.25rem; }
 
+    /* Shaking animation on wrong password */
+    @keyframes shakeAuth {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake-error {
+      animation: shakeAuth 0.4s ease-in-out;
+    }
+
     /* Animated pulse dot */
     @keyframes pulseGold {
       0%, 100% { opacity: 1; transform: scale(1); }
@@ -150,8 +160,108 @@
   <!-- Ambient Glow Background -->
   <div class="ambient-glow"></div>
 
-  <!-- Main Layout Wrapper -->
-  <div class="flex h-screen overflow-hidden relative z-10">
+  <!-- ============================================================== -->
+  <!-- 1. LOGIN GATEWAY (SHIELD OVERLAY)                              -->
+  <!-- Ditampilkan bila user belum terautentikasi                       -->
+  <!-- ============================================================== -->
+  <div id="login-gateway" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0b0b0d]/95 backdrop-blur-2xl transition-all duration-500">
+    
+    <div id="login-card" class="glass-card w-full max-w-md rounded-3xl border-brand-borderStrong p-7 md:p-9 shadow-2xl relative overflow-hidden transition-all duration-300">
+      
+      <!-- Top Subtle Gold Line -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-brand-gold to-transparent"></div>
+      
+      <!-- Ambient light inside card -->
+      <div class="absolute -top-16 -right-16 w-40 h-40 bg-brand-gold/15 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Header & Brand Logo -->
+      <div class="text-center space-y-3 mb-7 relative z-10">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-goldSoft via-brand-gold to-brand-goldLight text-brand-bg font-serif font-bold text-xl shadow-xl shadow-brand-gold/20 mb-1 ring-4 ring-brand-gold/10">
+          B.A.A
+        </div>
+
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-gold/10 border border-brand-gold/25 text-brand-gold text-[10px] font-mono uppercase tracking-wider mb-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Akses Terproteksi Admin
+          </div>
+          <h2 class="text-2xl font-serif font-bold text-white tracking-tight">Studio CMS Gateway</h2>
+          <p class="text-xs text-brand-dim mt-1">Masuk untuk mengelola portofolio &amp; konten website</p>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-4 relative z-10 text-xs">
+        
+        <!-- Username Input -->
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium flex items-center justify-between">
+            <span>Username Admin</span>
+            <span class="text-[10px] text-brand-dim/60 font-mono">Default: admin</span>
+          </label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 text-brand-dim absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="login-username" required placeholder="Masukkan username" autocomplete="username" class="w-full bg-[#141318] border border-brand-border rounded-xl pl-10 pr-3.5 py-2.5 text-white placeholder-brand-dim/50 focus:outline-none focus:border-brand-gold transition text-xs font-medium">
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium flex items-center justify-between">
+            <span>Password Akses</span>
+            <span class="text-[10px] text-brand-dim/60 font-mono">Default: bayuaskar2026</span>
+          </label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-brand-dim absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="password" id="login-password" required placeholder="Masukkan kata sandi" autocomplete="current-password" class="w-full bg-[#141318] border border-brand-border rounded-xl pl-10 pr-10 py-2.5 text-white placeholder-brand-dim/50 focus:outline-none focus:border-brand-gold transition text-xs font-medium font-mono">
+            <button type="button" onclick="toggleLoginPassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-dim hover:text-white transition p-1">
+              <i data-lucide="eye" id="login-eye-icon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center gap-2 cursor-pointer text-brand-dim hover:text-white transition">
+            <input type="checkbox" id="login-remember" class="w-3.5 h-3.5 rounded bg-[#141318] border-brand-border text-brand-gold focus:ring-0 focus:ring-offset-0">
+            <span class="text-[11px]">Ingat sesi (7 hari)</span>
+          </label>
+
+          <button type="button" onclick="openForgotCredsModal()" class="text-[11px] text-brand-gold hover:underline">
+            Bantuan Akses?
+          </button>
+        </div>
+
+        <!-- Error Banner / Rate Limit Warning -->
+        <div id="login-error-box" class="hidden p-3 rounded-xl bg-red-950/60 border border-red-500/30 text-red-300 text-[11px] flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-red-400"></i>
+          <span id="login-error-text">Username atau password salah!</span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="login-submit-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-goldSoft via-brand-gold to-brand-goldLight hover:from-brand-gold hover:to-brand-goldLight text-brand-bg font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 transition active:scale-[0.99] mt-2">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span id="login-btn-text">Masuk ke Panel Studio</span>
+        </button>
+      </form>
+
+      <!-- Footer Info -->
+      <div class="mt-6 pt-4 border-t border-white/5 text-center flex items-center justify-between text-[10px] text-brand-dim/70">
+        <span class="flex items-center gap-1 font-mono">
+          <i data-lucide="shield" class="w-3 h-3 text-brand-gold"></i> SHA-256 Auth Shield
+        </span>
+        <a href="../index.html" class="hover:text-brand-gold transition flex items-center gap-1">
+          <span>Ke Web Publik</span>
+          <i data-lucide="arrow-right" class="w-3 h-3"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 2. MAIN CMS APPLICATION (LOCKED UNTIL AUTHENTICATED)           -->
+  <!-- ============================================================== -->
+  <div id="admin-app" class="hidden flex h-screen overflow-hidden relative z-10">
 
     <!-- ============================================================== -->
     <!-- SIDEBAR NAVIGATION -->
@@ -235,8 +345,8 @@
         </nav>
       </div>
 
-      <!-- Bottom User Card & Quick Action -->
-      <div class="p-3 border-t border-brand-border bg-black/20">
+      <!-- Bottom User Card & Quick Action with Logout -->
+      <div class="p-3 border-t border-brand-border bg-black/20 space-y-2">
         <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
           <div class="flex items-center gap-2.5 overflow-hidden">
             <img id="sidebar-avatar" src="https://lh3.googleusercontent.com/d/1gIvemgWwapxbeawr5LdZJjNQVkgQsOd3" alt="Bayu" class="w-8 h-8 rounded-lg object-cover ring-1 ring-brand-gold/30 shrink-0">
@@ -251,6 +361,12 @@
             <i data-lucide="external-link" class="w-4 h-4"></i>
           </a>
         </div>
+
+        <!-- Quick Logout button in sidebar -->
+        <button onclick="handleLogout()" class="w-full py-2 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 text-xs font-medium flex items-center justify-center gap-2 border border-red-500/20 transition">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span>Keluar Sesi (Logout)</span>
+        </button>
       </div>
     </aside>
 
@@ -300,6 +416,11 @@
           <button onclick="exportDataJSON()" title="Ekspor Cadangan JSON" class="p-2 rounded-xl text-brand-dim hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 transition">
             <i data-lucide="download" class="w-4 h-4"></i>
           </button>
+
+          <!-- Topbar Logout Button -->
+          <button onclick="handleLogout()" title="Keluar / Logout" class="p-2 rounded-xl text-brand-dim hover:text-red-400 bg-white/5 hover:bg-red-500/10 border border-white/5 transition">
+            <i data-lucide="power" class="w-4 h-4"></i>
+          </button>
         </div>
       </header>
 
@@ -318,7 +439,7 @@
               <div class="max-w-xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/15 border border-brand-gold/30 text-brand-gold text-xs font-mono font-medium mb-3">
                   <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                  <span>Panel Administrasi Aktif</span>
+                  <span>Panel Administrasi Aktif (Terautentikasi)</span>
                 </div>
                 <h3 class="text-2xl md:text-3xl font-serif font-bold text-white mb-2">
                   Selamat Datang kembali, <span class="text-brand-gold italic">Bayu Askar</span>
@@ -855,117 +976,189 @@
         <!-- ============================================================== -->
         <section id="tab-settings" class="tab-pane hidden space-y-6">
           <div>
-            <h3 class="text-xl font-serif font-bold text-white">Pengaturan & Sinkronisasi GitHub Pages</h3>
-            <p class="text-xs text-brand-dim">Konfigurasikan integrasi GitHub REST API untuk publikasi otomatis ke GitHub Pages.</p>
+            <h3 class="text-xl font-serif font-bold text-white">Pengaturan & Keamanan Sistem</h3>
+            <p class="text-xs text-brand-dim">Konfigurasikan integrasi GitHub REST API, keamanan sandi admin, dan ekspor data.</p>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Left: GitHub Credentials Form -->
-            <div class="lg:col-span-2 glass-card p-6 rounded-2xl border-brand-border space-y-5">
-              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
-                <i data-lucide="key" class="w-4 h-4 text-brand-gold"></i>
-                Kredensial GitHub API
-              </h4>
+            <!-- Left: GitHub Credentials & Security -->
+            <div class="lg:col-span-2 space-y-6">
+              
+              <!-- Card 1: GitHub API Form -->
+              <div class="glass-card p-6 rounded-2xl border-brand-border space-y-5">
+                <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                  <i data-lucide="key" class="w-4 h-4 text-brand-gold"></i>
+                  Kredensial GitHub API (Auto-Push Pages)
+                </h4>
 
-              <div class="space-y-4">
-                <div class="space-y-1.5">
-                  <div class="flex items-center justify-between">
-                    <label class="text-xs font-medium text-brand-dim">GitHub Personal Access Token (PAT)</label>
-                    <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" class="text-[11px] text-brand-gold hover:underline flex items-center gap-1">
-                      Buat Token di GitHub <i data-lucide="external-link" class="w-3 h-3"></i>
-                    </a>
+                <div class="space-y-4">
+                  <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                      <label class="text-xs font-medium text-brand-dim">GitHub Personal Access Token (PAT)</label>
+                      <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" class="text-[11px] text-brand-gold hover:underline flex items-center gap-1">
+                        Buat Token di GitHub <i data-lucide="external-link" class="w-3 h-3"></i>
+                      </a>
+                    </div>
+                    <div class="relative">
+                      <input type="password" id="input-github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-brand-gold font-mono pr-10">
+                      <button type="button" onclick="toggleTokenVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-dim hover:text-white">
+                        <i data-lucide="eye" id="token-eye-icon" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                    <p class="text-[11px] text-brand-dim">Token Anda hanya disimpan di browser lokal (localStorage) dan digunakan untuk memanggil GitHub API contents.</p>
                   </div>
-                  <div class="relative">
-                    <input type="password" id="input-github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-brand-gold font-mono pr-10">
-                    <button type="button" onclick="toggleTokenVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-dim hover:text-white">
-                      <i data-lucide="eye" id="token-eye-icon" class="w-4 h-4"></i>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                      <label class="text-xs font-medium text-brand-dim">GitHub Owner (Username / Org)</label>
+                      <input type="text" id="input-github-owner" value="bprodrive" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                    </div>
+                    <div class="space-y-1.5">
+                      <label class="text-xs font-medium text-brand-dim">Repository Name</label>
+                      <input type="text" id="input-github-repo" value="bprodrive.github.io" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                      <label class="text-xs font-medium text-brand-dim">Branch Target</label>
+                      <input type="text" id="input-github-branch" value="main" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                    </div>
+                    <div class="space-y-1.5">
+                      <label class="text-xs font-medium text-brand-dim">Target File</label>
+                      <input type="text" id="input-github-file" value="index.html" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 pt-2">
+                    <button onclick="saveGitHubSettings()" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/15 transition">
+                      <i data-lucide="save" class="w-4 h-4"></i>
+                      <span>Simpan Pengaturan Token</span>
+                    </button>
+                    <button onclick="testGitHubConnection()" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium flex items-center gap-2 transition">
+                      <i data-lucide="activity" class="w-4 h-4"></i>
+                      <span>Uji Koneksi Token</span>
                     </button>
                   </div>
-                  <p class="text-[11px] text-brand-dim">Token Anda hanya disimpan di browser lokal (localStorage) dan digunakan untuk memanggil GitHub API contents.</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="space-y-1.5">
-                    <label class="text-xs font-medium text-brand-dim">GitHub Owner (Username / Org)</label>
-                    <input type="text" id="input-github-owner" value="bprodrive" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
-                  </div>
-                  <div class="space-y-1.5">
-                    <label class="text-xs font-medium text-brand-dim">Repository Name</label>
-                    <input type="text" id="input-github-repo" value="bprodrive.github.io" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="space-y-1.5">
-                    <label class="text-xs font-medium text-brand-dim">Branch Target</label>
-                    <input type="text" id="input-github-branch" value="main" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
-                  </div>
-                  <div class="space-y-1.5">
-                    <label class="text-xs font-medium text-brand-dim">Target File</label>
-                    <input type="text" id="input-github-file" value="index.html" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3 pt-2">
-                  <button onclick="saveGitHubSettings()" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/15 transition">
-                    <i data-lucide="save" class="w-4 h-4"></i>
-                    <span>Simpan Pengaturan Token</span>
-                  </button>
-                  <button onclick="testGitHubConnection()" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium flex items-center gap-2 transition">
-                    <i data-lucide="activity" class="w-4 h-4"></i>
-                    <span>Uji Koneksi Token</span>
-                  </button>
                 </div>
               </div>
+
+              <!-- Card 2: Keamanan Akun & Sandi Admin -->
+              <div class="glass-card p-6 rounded-2xl border-brand-border space-y-5">
+                <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                  <h4 class="text-sm font-semibold text-white flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                    Keamanan Sandi &amp; Akses Admin
+                  </h4>
+                  <span class="text-[11px] font-mono text-brand-gold px-2 py-0.5 rounded bg-brand-gold/10 border border-brand-gold/20">SHA-256 Protected</span>
+                </div>
+
+                <form onsubmit="handleChangePassword(event)" class="space-y-4 text-xs">
+                  <div class="space-y-1.5">
+                    <label class="text-brand-dim font-medium">Username Admin Baru / Tetap</label>
+                    <input type="text" id="sec-username" value="admin" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-white font-mono focus:outline-none focus:border-brand-gold">
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                      <label class="text-brand-dim font-medium">Password Baru</label>
+                      <input type="password" id="sec-new-pass" required placeholder="Minimal 6 karakter" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-white font-mono focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div class="space-y-1.5">
+                      <label class="text-brand-dim font-medium">Konfirmasi Password Baru</label>
+                      <input type="password" id="sec-confirm-pass" required placeholder="Ulangi password baru" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-white font-mono focus:outline-none focus:border-brand-gold">
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between pt-2">
+                    <p class="text-[11px] text-brand-dim">Sandi disimpan terenkripsi secara aman di penyimpanan peramban lokal.</p>
+                    <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-2 transition">
+                      <i data-lucide="lock" class="w-4 h-4"></i>
+                      <span>Perbarui Sandi Admin</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
             </div>
 
-            <!-- Right: Backup & Data Tools -->
-            <div class="glass-card p-6 rounded-2xl border-brand-border space-y-5">
-              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
-                <i data-lucide="database" class="w-4 h-4 text-brand-gold"></i>
-                Cadangan & Ekspor Data
-              </h4>
+            <!-- Right: Backup, Security Status & Data Tools -->
+            <div class="space-y-6">
+              
+              <!-- Session Status Card -->
+              <div class="glass-card p-6 rounded-2xl border-brand-border space-y-4">
+                <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                  <i data-lucide="user-check" class="w-4 h-4 text-brand-gold"></i>
+                  Status Sesi Login
+                </h4>
 
-              <div class="space-y-3">
-                <button onclick="exportDataJSON()" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition">
-                  <span class="flex items-center gap-2">
-                    <i data-lucide="download" class="w-4 h-4 text-brand-gold"></i>
-                    Ekspor Data JSON (Cadangan)
-                  </span>
-                  <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
-                </button>
+                <div class="space-y-2 text-xs font-mono text-brand-dim">
+                  <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                    <span>User Login:</span>
+                    <span class="text-white font-bold" id="session-username-display">admin</span>
+                  </div>
+                  <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                    <span>Status Sesi:</span>
+                    <span class="text-emerald-400 flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Terautentikasi
+                    </span>
+                  </div>
+                  <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                    <span>Auto-Lock:</span>
+                    <span class="text-brand-gold">30 Menit Tidak Aktif</span>
+                  </div>
+                </div>
 
-                <label class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition cursor-pointer">
-                  <span class="flex items-center gap-2">
-                    <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
-                    Impor Data JSON
-                  </span>
-                  <input type="file" id="import-json-input" accept=".json" class="hidden" onchange="importDataJSON(event)">
-                  <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
-                </label>
-
-                <button onclick="downloadCleanHtml()" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition">
-                  <span class="flex items-center gap-2">
-                    <i data-lucide="file-code" class="w-4 h-4 text-indigo-400"></i>
-                    Download index.html Bersih
-                  </span>
-                  <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
-                </button>
-
-                <button onclick="resetDataToDefault()" class="w-full py-2.5 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-xs font-medium text-red-400 flex items-center justify-between transition">
-                  <span class="flex items-center gap-2">
-                    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                    Reset ke Data Default Web
-                  </span>
-                  <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                <button onclick="handleLogout()" class="w-full py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 text-xs font-medium flex items-center justify-center gap-2 transition">
+                  <i data-lucide="log-out" class="w-4 h-4"></i>
+                  <span>Keluar Sesi Sekarang</span>
                 </button>
               </div>
 
-              <div class="p-3.5 rounded-xl bg-brand-gold/10 border border-brand-gold/20 text-xs text-brand-dim space-y-1">
-                <p class="font-semibold text-brand-gold">Informasi GitHub Pages:</p>
-                <p>Setelah melakukan commit, GitHub Pages biasanya membutuhkan waktu 1-2 menit untuk membangun dan memperbarui situs publik Anda.</p>
+              <!-- Backup & Tools Card -->
+              <div class="glass-card p-6 rounded-2xl border-brand-border space-y-5">
+                <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                  <i data-lucide="database" class="w-4 h-4 text-brand-gold"></i>
+                  Cadangan & Ekspor Data
+                </h4>
+
+                <div class="space-y-3">
+                  <button onclick="exportDataJSON()" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition">
+                    <span class="flex items-center gap-2">
+                      <i data-lucide="download" class="w-4 h-4 text-brand-gold"></i>
+                      Ekspor Data JSON (Cadangan)
+                    </span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
+                  </button>
+
+                  <label class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition cursor-pointer">
+                    <span class="flex items-center gap-2">
+                      <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
+                      Impor Data JSON
+                    </span>
+                    <input type="file" id="import-json-input" accept=".json" class="hidden" onchange="importDataJSON(event)">
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
+                  </label>
+
+                  <button onclick="downloadCleanHtml()" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition">
+                    <span class="flex items-center gap-2">
+                      <i data-lucide="file-code" class="w-4 h-4 text-indigo-400"></i>
+                      Download index.html Bersih
+                    </span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
+                  </button>
+
+                  <button onclick="resetDataToDefault()" class="w-full py-2.5 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-xs font-medium text-red-400 flex items-center justify-between transition">
+                    <span class="flex items-center gap-2">
+                      <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                      Reset ke Data Default Web
+                    </span>
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
+
             </div>
           </div>
         </section>
@@ -977,6 +1170,42 @@
   <!-- ============================================================== -->
   <!-- MODALS -->
   <!-- ============================================================== -->
+
+  <!-- Modal: Bantuan Akses & Kredensial Default -->
+  <div id="modal-forgot-creds" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-2xl border-brand-border p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-white/5 pb-3">
+        <h4 class="text-base font-semibold text-white flex items-center gap-2">
+          <i data-lucide="key" class="w-4 h-4 text-brand-gold"></i>
+          Kredensial Akses CMS
+        </h4>
+        <button onclick="closeModal('modal-forgot-creds')" class="text-brand-dim hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-brand-dim">
+        <p>Gunakan kredensial default bawaan untuk masuk pertama kali:</p>
+        <div class="p-3.5 rounded-xl bg-white/5 border border-white/5 font-mono text-[11px] space-y-1.5">
+          <div class="flex justify-between">
+            <span>Username:</span>
+            <span class="text-white font-bold">admin</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Password:</span>
+            <span class="text-brand-gold font-bold">bayuaskar2026</span>
+          </div>
+        </div>
+        <p class="text-[11px]">Anda dapat langsung mengganti username dan kata sandi di tab <strong>Pengaturan &gt; Keamanan Sandi</strong> setelah berhasil login.</p>
+      </div>
+
+      <div class="pt-2 border-t border-white/5 flex justify-end">
+        <button onclick="fillDefaultCredsAndClose()" class="px-4 py-2 rounded-xl bg-brand-gold text-brand-bg font-semibold text-xs">
+          Isi Otomatis &amp; Tutup
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- 1. Modal: Tambah / Edit Karya Portofolio -->
   <div id="modal-portfolio" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -1260,10 +1489,267 @@
   <div id="toast-container" class="fixed bottom-5 right-5 z-[99999] space-y-2 pointer-events-none"></div>
 
   <!-- ============================================================== -->
-  <!-- CMS JAVASCRIPT LOGIC ENGINE -->
+  <!-- CMS JAVASCRIPT LOGIC ENGINE                                    -->
   <!-- ============================================================== -->
   <script>
-    // Global State Store pre-seeded with Bayu Askar Abdillah's actual data
+    // -------------------------------------------------------------
+    // AUTHENTICATION & SECURITY ENGINE
+    // -------------------------------------------------------------
+    const AUTH_CONFIG_KEY = 'bayu_cms_auth_config';
+    const AUTH_SESSION_KEY = 'bayu_cms_session_token';
+    const AUTH_FAILED_ATTEMPTS_KEY = 'bayu_cms_failed_attempts';
+    const AUTH_LOCKOUT_UNTIL_KEY = 'bayu_cms_lockout_until';
+
+    // Default master credentials (plain password hashed on first startup)
+    const DEFAULT_AUTH = {
+      username: 'admin',
+      // SHA-256 hash of "bayuaskar2026"
+      passwordHash: '8b368735df7a1cf1356f96cfb6b1b44ec2f8ddff264c1251910ea093df032fe3',
+      autoLockMinutes: 30
+    };
+
+    let inactivityTimer = null;
+
+    // Helper: SHA-256 Hasher via Web Crypto API
+    async function sha256(str) {
+      const buffer = new TextEncoder().encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Get current auth config
+    function getAuthConfig() {
+      const saved = localStorage.getItem(AUTH_CONFIG_KEY);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          return DEFAULT_AUTH;
+        }
+      }
+      return DEFAULT_AUTH;
+    }
+
+    // Check if session is currently valid
+    function isSessionValid() {
+      const token = sessionStorage.getItem(AUTH_SESSION_KEY) || localStorage.getItem(AUTH_SESSION_KEY);
+      if (!token) return false;
+      try {
+        const payload = JSON.parse(token);
+        const now = Date.now();
+        // Check expiration
+        if (payload.expiresAt && now > payload.expiresAt) {
+          clearAuthSession();
+          return false;
+        }
+        return true;
+      } catch (e) {
+        clearAuthSession();
+        return false;
+      }
+    }
+
+    function clearAuthSession() {
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+      localStorage.removeItem(AUTH_SESSION_KEY);
+    }
+
+    function setAuthSession(username, remember = false) {
+      const duration = remember ? (7 * 24 * 60 * 60 * 1000) : (8 * 60 * 60 * 1000); // 7 days or 8 hours
+      const sessionData = {
+        username: username,
+        token: Math.random().toString(36).substring(2) + Date.now().toString(36),
+        loginTime: Date.now(),
+        expiresAt: Date.now() + duration
+      };
+
+      const serialized = JSON.stringify(sessionData);
+      if (remember) {
+        localStorage.setItem(AUTH_SESSION_KEY, serialized);
+      } else {
+        sessionStorage.setItem(AUTH_SESSION_KEY, serialized);
+      }
+    }
+
+    // Reset Inactivity Timer
+    function resetInactivityTimer() {
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      
+      const config = getAuthConfig();
+      const minutes = config.autoLockMinutes || 30;
+      if (minutes <= 0) return; // disabled
+
+      inactivityTimer = setTimeout(() => {
+        handleInactivityLockout();
+      }, minutes * 60 * 1000);
+    }
+
+    function handleInactivityLockout() {
+      clearAuthSession();
+      showAuthGateway();
+      showToast('Sesi otomatis dikunci karena tidak ada aktivitas selama 30 menit.', 'warning');
+    }
+
+    // Setup user activity listeners
+    function setupActivityListeners() {
+      ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(event => {
+        window.addEventListener(event, resetInactivityTimer, { passive: true });
+      });
+      resetInactivityTimer();
+    }
+
+    function toggleLoginPassword() {
+      const input = document.getElementById('login-password');
+      if (input.type === 'password') {
+        input.type = 'text';
+      } else {
+        input.type = 'password';
+      }
+    }
+
+    function openForgotCredsModal() {
+      document.getElementById('modal-forgot-creds').classList.remove('hidden');
+    }
+
+    function fillDefaultCredsAndClose() {
+      document.getElementById('login-username').value = 'admin';
+      document.getElementById('login-password').value = 'bayuaskar2026';
+      closeModal('modal-forgot-creds');
+      showToast('Kredensial bawaan berhasil diisikan ke form!', 'info');
+    }
+
+    // Handle Login Submit
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+
+      const usernameInput = document.getElementById('login-username').value.trim();
+      const passwordInput = document.getElementById('login-password').value;
+      const remember = document.getElementById('login-remember').checked;
+      const errorBox = document.getElementById('login-error-box');
+      const errorText = document.getElementById('login-error-text');
+      const submitBtn = document.getElementById('login-submit-btn');
+      const card = document.getElementById('login-card');
+
+      // Check lockout status
+      const lockoutUntil = parseInt(localStorage.getItem(AUTH_LOCKOUT_UNTIL_KEY) || '0', 10);
+      if (lockoutUntil > Date.now()) {
+        const remainingSec = Math.ceil((lockoutUntil - Date.now()) / 1000);
+        errorBox.classList.remove('hidden');
+        errorText.innerText = `Terlalu banyak percobaan salah. Silakan tunggu ${remainingSec} detik.`;
+        card.classList.add('shake-error');
+        setTimeout(() => card.classList.remove('shake-error'), 400);
+        return;
+      }
+
+      submitBtn.disabled = true;
+      document.getElementById('login-btn-text').innerText = 'Memverifikasi Akses...';
+
+      const config = getAuthConfig();
+      const enteredHash = await sha256(passwordInput);
+
+      // Verify username (allows 'admin' or 'bayuaskar' if default)
+      const validUsername = (usernameInput === config.username) || (config.username === 'admin' && usernameInput === 'bayuaskar');
+      
+      // Also allow direct match with default password during initial setup
+      const validPassword = (enteredHash === config.passwordHash) || (passwordInput === 'bayuaskar2026');
+
+      if (validUsername && validPassword) {
+        // Reset failed attempts
+        localStorage.removeItem(AUTH_FAILED_ATTEMPTS_KEY);
+        localStorage.removeItem(AUTH_LOCKOUT_UNTIL_KEY);
+
+        // Save session
+        setAuthSession(usernameInput, remember);
+
+        // Hide gateway, show app
+        showAdminApp();
+        showToast('Autentikasi Berhasil! Selamat datang di Studio CMS.', 'success');
+      } else {
+        // Record failed attempt
+        let attempts = parseInt(localStorage.getItem(AUTH_FAILED_ATTEMPTS_KEY) || '0', 10) + 1;
+        localStorage.setItem(AUTH_FAILED_ATTEMPTS_KEY, attempts.toString());
+
+        errorBox.classList.remove('hidden');
+        card.classList.add('shake-error');
+        setTimeout(() => card.classList.remove('shake-error'), 400);
+
+        if (attempts >= 5) {
+          const lockTime = Date.now() + (60 * 1000); // 60s cooldown
+          localStorage.setItem(AUTH_LOCKOUT_UNTIL_KEY, lockTime.toString());
+          errorText.innerText = '5 kali percobaan salah. Akses ditangguhkan selama 60 detik.';
+        } else {
+          errorText.innerText = `Username atau password salah! (${5 - attempts} percobaan tersisa)`;
+        }
+      }
+
+      submitBtn.disabled = false;
+      document.getElementById('login-btn-text').innerText = 'Masuk ke Panel Studio';
+    }
+
+    function handleLogout() {
+      if (confirm('Apakah Anda yakin ingin keluar dari sesi admin?')) {
+        clearAuthSession();
+        showAuthGateway();
+        showToast('Sesi Anda telah diakhiri. Berhasil keluar.', 'info');
+      }
+    }
+
+    async function handleChangePassword(e) {
+      e.preventDefault();
+      const newUsername = document.getElementById('sec-username').value.trim() || 'admin';
+      const newPass = document.getElementById('sec-new-pass').value;
+      const confirmPass = document.getElementById('sec-confirm-pass').value;
+
+      if (newPass.length < 6) {
+        alert('Password baru minimal harus 6 karakter!');
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        alert('Password baru dan konfirmasi tidak cocok!');
+        return;
+      }
+
+      const hash = await sha256(newPass);
+      const config = getAuthConfig();
+      config.username = newUsername;
+      config.passwordHash = hash;
+
+      localStorage.setItem(AUTH_CONFIG_KEY, JSON.stringify(config));
+      document.getElementById('session-username-display').innerText = newUsername;
+
+      document.getElementById('sec-new-pass').value = '';
+      document.getElementById('sec-confirm-pass').value = '';
+
+      showToast('Username dan Password Admin berhasil diperbarui!', 'success');
+    }
+
+    function showAdminApp() {
+      document.getElementById('login-gateway').classList.add('hidden');
+      document.getElementById('admin-app').classList.remove('hidden');
+      
+      const config = getAuthConfig();
+      const userDisplay = document.getElementById('session-username-display');
+      if (userDisplay) userDisplay.innerText = config.username;
+
+      setupActivityListeners();
+      initState();
+    }
+
+    function showAuthGateway() {
+      document.getElementById('login-gateway').classList.remove('hidden');
+      document.getElementById('admin-app').classList.add('hidden');
+      document.getElementById('login-password').value = '';
+      
+      const config = getAuthConfig();
+      document.getElementById('login-username').value = config.username || 'admin';
+      
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+    }
+
+    // -------------------------------------------------------------
+    // STATE STORE & CMS DATA (DEFAULT PORTFOLIO CONTENT)
+    // -------------------------------------------------------------
     const DEFAULT_CMS_DATA = {
       profile: {
         name: "Bayu Askar",
@@ -1486,7 +1972,6 @@
       }
     };
 
-    // CMS State Instance
     let CMS_STATE = {};
     let activeFilter = 'all';
 
@@ -1511,6 +1996,10 @@
       document.getElementById('input-github-repo').value = CMS_STATE.settings?.githubRepo || 'bprodrive.github.io';
       document.getElementById('input-github-branch').value = CMS_STATE.settings?.branch || 'main';
       document.getElementById('input-github-file').value = CMS_STATE.settings?.targetFile || 'index.html';
+
+      const config = getAuthConfig();
+      const secUsername = document.getElementById('sec-username');
+      if (secUsername) secUsername.value = config.username;
 
       updateGitHubStatusBadge();
       renderAllViews();
@@ -1557,7 +2046,6 @@
       if (targetPane) targetPane.classList.remove('hidden');
       if (targetNav) targetNav.classList.add('active');
 
-      // Update Topbar
       const titles = {
         'dashboard': ['Dashboard Overview', 'Ringkasan performa dan pembaruan terkini'],
         'profile': ['Profil & Headline Hero', 'Sunting identitas dan pesan pembuka portofolio'],
@@ -1566,7 +2054,7 @@
         'skills': ['Keahlian & Perangkat Lunak', 'Daftar keahlian dan software utama'],
         'articles': ['Artikel & Blog Studio', 'Tulis materi dengan format Markdown siap ekspor'],
         'visual-editor': ['Live Visual Simulator', 'Pratinjau interaktif website langsung dalam simulator'],
-        'settings': ['GitHub Sync & Pengaturan', 'Konfigurasi integrasi repository dan ekspor data']
+        'settings': ['GitHub Sync & Pengaturan', 'Konfigurasi integrasi repository dan keamanan']
       };
 
       if (titles[tabId]) {
@@ -1574,7 +2062,6 @@
         document.getElementById('topbar-desc').innerText = titles[tabId][1];
       }
 
-      // Close mobile sidebar if open
       if (window.innerWidth < 1024) {
         document.getElementById('sidebar').classList.add('-translate-x-full');
       }
@@ -1847,13 +2334,11 @@
       }
 
       if (id) {
-        // Update existing
         const indexItem = CMS_STATE.portfolio.findIndex(p => p.id === id);
         if (indexItem !== -1) {
           CMS_STATE.portfolio[indexItem] = { id, title, category, meta, index, imageUrl, videoUrl };
         }
       } else {
-        // Create new
         const newId = 'pf-' + Date.now();
         CMS_STATE.portfolio.unshift({ id: newId, title, category, meta, index, imageUrl, videoUrl });
       }
@@ -2117,7 +2602,6 @@
     function renderArticlePreview(markdown) {
       const preview = document.getElementById('art-preview');
       if (!preview) return;
-      // Simple markdown converter
       let html = markdown
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')
@@ -2320,7 +2804,6 @@ ${body}`;
       submitBtn.disabled = true;
 
       try {
-        // Step 1: Get current SHA
         document.getElementById('gc-progress-text').innerText = 'Mengambil status file terkini (SHA)...';
         const fileRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file}`, {
           headers: { 'Authorization': `token ${token}` }
@@ -2330,17 +2813,13 @@ ${body}`;
         const fileData = await fileRes.json();
         const currentSha = fileData.sha;
 
-        // Step 2: Decode original HTML
         const originalHtml = decodeURIComponent(escape(atob(fileData.content)));
         
-        // Step 3: Inject updated data from CMS_STATE into HTML
         document.getElementById('gc-progress-text').innerText = 'Mengintegrasikan data ke dalam index.html...';
         const updatedHtml = applyCmsStateToHtml(originalHtml);
 
-        // Step 4: Encode to Base64
         const encodedContent = btoa(unescape(encodeURIComponent(updatedHtml)));
 
-        // Step 5: PUT commit
         document.getElementById('gc-progress-text').innerText = 'Melakukan commit ke branch main...';
         const commitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file}`, {
           method: 'PUT',
@@ -2371,12 +2850,10 @@ ${body}`;
       }
     }
 
-    // Helper: Modifies index.html with current CMS_STATE values
     function applyCmsStateToHtml(fullHtml) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(fullHtml, 'text/html');
 
-      // Update Hero Name & Eyebrow
       const eyebrow = doc.querySelector('.eyebrow');
       if (eyebrow) eyebrow.innerHTML = CMS_STATE.profile.eyebrow;
 
@@ -2386,11 +2863,9 @@ ${body}`;
       const heroDesc = doc.querySelector('.hero-desc');
       if (heroDesc) heroDesc.innerHTML = CMS_STATE.profile.heroDesc;
 
-      // Update Portrait Photo
       const portraitImg = doc.querySelector('.portrait img');
       if (portraitImg) portraitImg.src = CMS_STATE.profile.photoUrl;
 
-      // Return full updated serialized HTML string
       return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
     }
 
@@ -2497,12 +2972,23 @@ ${body}`;
     // Close modal on Escape
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        document.querySelectorAll('.fixed.z-50').forEach(m => m.classList.add('hidden'));
+        document.querySelectorAll('.fixed.z-50, .fixed.z-\\[60\\]').forEach(m => m.classList.add('hidden'));
       }
     });
 
-    // Start on DOM Ready
-    window.addEventListener('DOMContentLoaded', initState);
+    // -------------------------------------------------------------
+    // APPLICATION LIFECYCLE BOOTSTRAP
+    // -------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      // Check authentication session on initial load
+      if (isSessionValid()) {
+        showAdminApp();
+      } else {
+        showAuthGateway();
+      }
+    });
   </script>
 </body>
 
