@@ -1,0 +1,5041 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayu Askar Abdillah — Portofolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --bg-alt: #141318;
+      --surface: #1b1a20;
+      --text: #ede8e1;
+      --text-dim: #9c968c;
+      --gold: #c9a876;
+      --gold-soft: #7a6a4e;
+      --line: rgba(201, 168, 118, 0.22);
+      --serif: 'Fraunces', serif;
+      --sans: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: auto;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* HERO GRADIENT GLOW */
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero-glow::before,
+    .hero-glow::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.55;
+      animation: driftGlow 16s ease-in-out infinite alternate;
+    }
+
+    .hero-glow::before {
+      width: 520px;
+      height: 520px;
+      top: -160px;
+      left: -120px;
+      background: radial-gradient(circle, rgba(201, 168, 118, 0.55), rgba(201, 168, 118, 0) 70%);
+    }
+
+    .hero-glow::after {
+      width: 460px;
+      height: 460px;
+      bottom: -180px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(122, 106, 78, 0.5), rgba(122, 106, 78, 0) 70%);
+      animation-delay: -8s;
+    }
+
+    @keyframes driftGlow {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      100% {
+        transform: translate(40px, 30px) scale(1.15);
+      }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* SCROLL PROGRESS */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-soft), var(--gold));
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    /* CURSOR GLOW (desktop only) */
+    .cursor-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        background 0.35s ease,
+        border-color 0.35s ease,
+        opacity 0.4s ease;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-glow.active {
+      opacity: 1;
+    }
+
+    .cursor-glow.hovering {
+      width: 52px;
+      height: 52px;
+      background: rgba(201, 168, 118, 0.15);
+    }
+
+    @media(hover:none), (pointer:coarse) {
+      .cursor-glow {
+        display: none;
+      }
+    }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed;
+      right: 32px;
+      bottom: 32px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(20, 19, 24, 0.6);
+      backdrop-filter: blur(6px);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 150;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      border-color: var(--gold);
+      background: rgba(201, 168, 118, 0.1);
+    }
+
+    .back-to-top svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ::selection {
+      background: var(--gold);
+      color: var(--bg);
+    }
+
+    :focus-visible {
+      outline: 1px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .spine {
+      position: fixed;
+      left: 40px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--line);
+      z-index: 2;
+      display: none;
+    }
+
+    @media(min-width:900px) {
+      .spine {
+        display: block;
+      }
+    }
+
+    /* NAV */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 28px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    .mark {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.15rem;
+      letter-spacing: 0.02em;
+    }
+
+    nav {
+      display: flex;
+      gap: 36px;
+    }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color 0.3s ease;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    nav a:hover {
+      color: var(--gold);
+    }
+
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+
+    nav a.active {
+      color: var(--gold);
+    }
+
+    .nav-toggle {
+      display: none;
+    }
+
+    @media(max-width:640px) {
+      nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 70%;
+        background: var(--bg-alt);
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+        padding: 40px;
+        transform: translateX(100%);
+        transition: transform 0.4s ease;
+        mix-blend-mode: normal;
+      }
+
+      nav.open {
+        transform: translateX(0);
+      }
+
+      .nav-toggle {
+        display: block;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        z-index: 101;
+      }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: 140px 40px 80px;
+    }
+
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.2s;
+    }
+
+    h1.name {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(3.2rem, 9vw, 8rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.4s;
+    }
+
+    h1.name em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--gold);
+      display: block;
+    }
+
+    .hero-rule {
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      margin: 44px auto;
+      animation: drawLine 1.4s ease forwards 1.1s;
+    }
+
+    @keyframes drawLine {
+      to {
+        width: 120px;
+      }
+    }
+
+    .hero-desc {
+      max-width: 560px;
+      font-size: 1rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1.3s;
+    }
+
+    .hero-desc strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1.6s;
+    }
+
+    .scroll-cue::after {
+      content: '';
+      width: 1px;
+      height: 34px;
+      background: linear-gradient(var(--gold), transparent);
+      animation: pulseLine 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseLine {
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    /* SECTION HEADERS */
+    .section {
+      padding: 130px 0;
+      border-top: 1px solid var(--line);
+      position: relative;
+      scroll-margin-top: 96px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 64px;
+      position: relative;
+      padding-bottom: 26px;
+    }
+
+    .section-head::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 1px;
+      width: 0;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      transition: width 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+    }
+
+    .section-head.in::after {
+      width: 180px;
+    }
+
+    .section-num {
+      font-family: var(--mono);
+      color: var(--gold-soft);
+      font-size: 0.78rem;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+      font-weight: 400;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px) scale(0.985);
+      filter: blur(4px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.65fr 1.3fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    @media(max-width:800px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 44px;
+      }
+    }
+
+    .portrait {
+      aspect-ratio: 4/5;
+      max-width: 320px;
+      /* Batasi lebar maksimal agar tidak terlalu besar */
+      width: 100%;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(201, 168, 118, 0.18), transparent 60%),
+        linear-gradient(160deg, var(--surface), var(--bg-alt));
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+      will-change: transform;
+    }
+
+    .portrait:hover {
+      box-shadow: 0 30px 70px -25px rgba(201, 168, 118, 0.4);
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Memaksa foto memenuhi seluruh frame secara proporsional */
+      object-position: center;
+      /* Memastikan fokus foto berada di tengah */
+      display: block;
+    }
+
+    .portrait::after {
+      content: 'B.A.A';
+      position: absolute;
+      bottom: 5px;
+      right: 30px;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 2.0rem;
+      color: var(--gold-soft);
+      opacity: 0.5;
+    }
+
+    .about-text p {
+      color: var(--text-dim);
+      font-size: 1.02rem;
+      margin-bottom: 22px;
+      max-width: 560px;
+    }
+
+    .about-text p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-top: 48px;
+      border-top: 1px solid var(--line);
+      padding-top: 32px;
+    }
+
+    .fact-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      margin-bottom: 8px;
+    }
+
+    .fact-value {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    /* SKILLS */
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .skill-tag {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      background: none;
+      padding: 12px 22px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    }
+
+    .skill-tag:hover,
+    .skill-tag:focus-visible {
+      color: var(--gold);
+      border-color: var(--gold);
+      background: rgba(201, 168, 118, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* SKILL MODAL */
+    .skill-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .skill-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .skill-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 11, 13, 0.86);
+      backdrop-filter: blur(6px);
+    }
+
+    .skill-modal-card {
+      position: relative;
+      z-index: 1;
+      max-width: 440px;
+      width: 100%;
+      background: linear-gradient(160deg, var(--surface), var(--bg-alt));
+      border: 1px solid var(--line);
+      padding: 48px 40px 40px;
+      text-align: center;
+      transform: translateY(18px) scale(0.97);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .skill-modal.open .skill-modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .skill-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.6rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .skill-modal-close:hover {
+      color: var(--gold);
+    }
+
+    .skill-modal-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 26px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 30% 20%, rgba(201, 168, 118, 0.18), transparent 65%);
+      color: var(--gold);
+    }
+
+    .skill-modal-icon svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .skill-modal-eyebrow {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      margin-bottom: 10px;
+    }
+
+    .skill-modal-title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.5rem;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .skill-modal-desc {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* WORK GROUP HEADS */
+    .work-group-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 2px;
+    }
+
+    .work-group-head--spaced {
+      margin-top: 96px;
+    }
+
+    .work-group-title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+      color: var(--gold);
+    }
+
+    .work-group-count {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* WORK */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      background: var(--bg);
+      /* Latar belakang gelap agar tidak muncul bar cokelat saat loading */
+      transition: background 0.6s ease;
+    }
+
+    .work-grid.in {
+      background: var(--line);
+      /* Efek garis pemisah emas hanya aktif setelah konten muncul */
+    }
+
+    @media(max-width:700px) {
+      .work-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width:640px) {
+      .container {
+        padding: 0 20px;
+      }
+
+      .hero {
+        padding: 110px 20px 60px;
+      }
+
+      header {
+        padding: 20px;
+      }
+
+      .work-card {
+        padding: 28px 20px;
+      }
+
+      .work-visual {
+        aspect-ratio: 16/9;
+        min-height: 210px;
+      }
+    }
+
+    /* Staggered scroll-reveal for grid children */
+    .work-grid .work-card:nth-child(1) {
+      transition-delay: 0.05s;
+    }
+
+    .work-grid .work-card:nth-child(2) {
+      transition-delay: 0.15s;
+    }
+
+    .work-grid .work-card:nth-child(3) {
+      transition-delay: 0.25s;
+    }
+
+    .work-grid .work-card:nth-child(4) {
+      transition-delay: 0.35s;
+    }
+
+    .work-card {
+      background: var(--bg);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.5s ease;
+    }
+
+    .work-card:hover {
+      background: var(--bg-alt);
+    }
+
+    .work-index {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--gold-soft);
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    @keyframes shimmerLoading {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .work-visual {
+      aspect-ratio: 16/9;
+      background: linear-gradient(90deg, var(--surface) 25%, #272630 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmerLoading 2.2s infinite ease-in-out;
+      margin-bottom: 28px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease, background 0.5s ease;
+      will-change: transform;
+    }
+
+    /* Frame natural — rasio container mengikuti rasio foto asli secara otomatis via JS */
+    .work-visual--natural {
+      aspect-ratio: 4 / 3;
+      /* fallback sementara gambar loading */
+      transition: aspect-ratio 0s;
+    }
+
+    .work-visual--natural img {
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    .work-visual.loaded,
+    .tl-media.loaded {
+      animation: none;
+      background: var(--surface);
+    }
+
+    .work-visual:hover {
+      box-shadow: 0 24px 60px -22px rgba(201, 168, 118, 0.35);
+    }
+
+    .work-visual img,
+    .tl-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      opacity: 0;
+      transform: scale(1.05);
+      filter: blur(6px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+
+    .work-visual img.loaded,
+    .tl-media img.loaded,
+    .portrait img.loaded {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+
+    /* Auto scaling & seamless fade-in untuk motion graphic (iframe YouTube / embed) */
+    .work-visual iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      animation: iframeFadeInSeamless 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes iframeFadeInSeamless {
+      from {
+        opacity: 0;
+        transform: scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Light swipe glow — muncul dan menyapu saat kursor di atas frame */
+    @keyframes swipeOnce {
+      0% {
+        opacity: 0;
+        transform: translateX(-100%);
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateX(280%);
+      }
+    }
+
+    .work-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 60%;
+      left: -60%;
+      opacity: 0;
+      background: linear-gradient(105deg,
+          transparent 0%,
+          rgba(201, 168, 118, 0.08) 30%,
+          rgba(255, 240, 190, 0.32) 50%,
+          rgba(201, 168, 118, 0.08) 70%,
+          transparent 100%);
+      pointer-events: none;
+      transform: translateX(-100%);
+    }
+
+    .work-card:hover .work-visual::before {
+      animation: swipeOnce 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Hapus override khusus natural agar sama rata */
+    .work-visual--natural::before {
+      animation: none;
+    }
+
+    .work-card:hover .work-visual--natural::before {
+      animation: swipeOnce 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+
+    /* GRAPHIC DESIGN IMAGE ZOOM / LIGHTBOX */
+    .work-visual--natural {
+      cursor: zoom-in;
+    }
+
+    .image-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(5, 5, 7, 0.98);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .image-lightbox.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .lightbox-stage {
+      width: 100%;
+      height: 100%;
+      max-width: 1400px;
+      max-height: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .lightbox-stage.dragging {
+      cursor: grabbing;
+    }
+
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-user-drag: none;
+      transform: translate(0px, 0px) scale(1);
+      transform-origin: center center;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lightbox-stage.zoomed .lightbox-image {
+      transition: none;
+    }
+
+    .lightbox-close,
+    .lightbox-control {
+      border: 1px solid var(--line);
+      background: rgba(20, 19, 24, 0.78);
+      color: var(--text);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.35rem;
+      z-index: 2;
+    }
+
+    .lightbox-controls {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(20, 19, 24, 0.72);
+      backdrop-filter: blur(8px);
+      z-index: 2;
+    }
+
+    .lightbox-control {
+      width: 38px;
+      height: 34px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+
+    .lightbox-close:hover,
+    .lightbox-control:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201, 168, 118, 0.12);
+    }
+
+    .lightbox-close:hover {
+      transform: rotate(90deg);
+    }
+
+    .lightbox-caption {
+      position: absolute;
+      left: 28px;
+      bottom: 30px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      z-index: 2;
+    }
+
+    @media(max-width:640px) {
+      .image-lightbox {
+        padding: 20px;
+      }
+
+      .lightbox-stage {
+        width: 96vw;
+        height: 82vh;
+      }
+
+      .lightbox-close {
+        top: 16px;
+        right: 16px;
+      }
+
+      .lightbox-caption {
+        left: 18px;
+        bottom: 20px;
+      }
+
+      .lightbox-controls {
+        bottom: 16px;
+      }
+    }
+
+    .work-title {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      margin-bottom: 10px;
+      transition: color 0.3s ease;
+    }
+
+    .work-card:hover .work-title {
+      color: var(--gold);
+    }
+
+    .work-meta {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .work-action {
+      margin-top: 16px;
+    }
+
+    .youtube-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--line);
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      background: rgba(20, 19, 24, 0.4);
+    }
+
+    .youtube-link:hover {
+      background: rgba(201, 168, 118, 0.15);
+      border-color: var(--gold);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .youtube-card {
+      cursor: pointer;
+    }
+
+    .play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(11, 11, 13, 0.75);
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 3;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .play-btn svg {
+      width: 22px;
+      height: 22px;
+      margin-left: 3px;
+      transition: transform 0.3s ease;
+    }
+
+    .youtube-card:hover .play-btn {
+      transform: translate(-50%, -50%) scale(1.12);
+      background: var(--gold);
+      color: var(--bg);
+      box-shadow: 0 12px 32px rgba(201, 168, 118, 0.4);
+    }
+
+    /* TIMELINE */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .tl-item {
+      position: relative;
+      padding-bottom: 56px;
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 32px;
+    }
+
+    @media(max-width:640px) {
+      .tl-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+    }
+
+    .tl-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--gold);
+    }
+
+    .tl-year {
+      font-family: var(--mono);
+      color: var(--gold-soft);
+      font-size: 0.85rem;
+      padding-top: 2px;
+    }
+
+    .tl-role {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .tl-org {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .tl-desc {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 520px;
+    }
+
+    /* TIMELINE STATS FRAME */
+    .tl-stats {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .tl-stat-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, rgba(27, 26, 32, 0.85) 0%, rgba(20, 19, 24, 0.95) 100%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+      transition: border-color 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, background 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tl-stat-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(201, 168, 118, 0.12), transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .tl-stat-item:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px -6px rgba(201, 168, 118, 0.25);
+      background: linear-gradient(135deg, rgba(32, 30, 38, 0.95) 0%, rgba(24, 23, 29, 0.98) 100%);
+    }
+
+    .tl-stat-item:hover::before {
+      opacity: 1;
+    }
+
+    .tl-stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      background: rgba(201, 168, 118, 0.08);
+      border: 1px solid rgba(201, 168, 118, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      flex-shrink: 0;
+      transition: transform 0.35s ease, background 0.35s ease, border-color 0.35s ease;
+    }
+
+    .tl-stat-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .tl-stat-item:hover .tl-stat-icon {
+      transform: scale(1.08);
+      background: rgba(201, 168, 118, 0.16);
+      border-color: var(--gold);
+    }
+
+    .tl-stat-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .tl-stat-number-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 1px;
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--gold);
+      letter-spacing: -0.01em;
+    }
+
+    .tl-stat-plus {
+      font-family: var(--sans);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold-soft);
+      margin-left: 2px;
+    }
+
+    .tl-stat-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 3px;
+      line-height: 1;
+    }
+
+
+    .tl-content {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .tl-media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      /* Rasio landscape 16:9 */
+      background: linear-gradient(135deg, var(--surface), var(--bg-alt));
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 2px;
+      /* Sejajar sempurna dengan cap-height teks headline */
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .tl-media:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -12px rgba(201, 168, 118, 0.3);
+    }
+
+    .tl-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    @media(max-width: 960px) {
+      .tl-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .tl-media {
+        max-width: 440px;
+        margin-top: 0;
+      }
+    }
+
+    /* CONTACT */
+    .contact-section {
+      text-align: left;
+    }
+
+    .contact-big {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(2.2rem, 7vw, 5rem);
+      line-height: 1.08;
+      display: inline-block;
+      position: relative;
+    }
+
+    .contact-big::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0.02em;
+      width: 100%;
+      height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+
+    .contact-big:hover::after {
+      transform: scaleX(1);
+    }
+
+    .socials {
+      display: flex;
+      gap: 32px;
+      margin-top: 56px;
+      flex-wrap: wrap;
+    }
+
+    .socials a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid transparent;
+      padding-bottom: 4px;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .socials a:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .contact-form {
+      margin-top: 64px;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+
+    .form-row {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-row label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .form-row input,
+    .form-row textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 2px;
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 1rem;
+      color: var(--text);
+      transition: border-color 0.3s ease;
+      resize: none;
+    }
+
+    .form-row input::placeholder,
+    .form-row textarea::placeholder {
+      color: var(--text-dim);
+      opacity: 0.55;
+    }
+
+    .form-row input:focus,
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      /* Menimpa background putih autofill dengan warna latar gelap Anda (sesuaikan warnanya) */
+      -webkit-box-shadow: 0 0 0 30px #121212 inset !important;
+
+      /* Memastikan warna teks tetap putih */
+      -webkit-text-fill-color: #ffffff !important;
+
+      /* Mencegah browser mengubah warna background kembali secara tiba-tiba */
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .form-row textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .form-row textarea {
+      min-height: 110px;
+    }
+
+    .form-submit {
+      align-self: flex-start;
+      margin-top: 8px;
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      cursor: pointer;
+      transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+    }
+
+    .form-submit:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201, 168, 118, 0.08);
+    }
+
+    .form-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .form-note {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: var(--text-dim);
+      margin-top: 14px;
+      min-height: 1em;
+    }
+
+    .form-note.success {
+      color: var(--gold);
+    }
+
+    .form-note.error {
+      color: #d98c7a;
+    }
+
+    footer {
+      padding: 40px 0 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ============================================
+       PORTFOLIO FILTER — category buttons + intro
+       ============================================ */
+    .portfolio-intro {
+      max-width: 560px;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin-top: -32px;
+      margin-bottom: 40px;
+    }
+
+    .portfolio-filters {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media(max-width:640px) {
+      .portfolio-filters {
+        grid-template-columns: 1fr;
+      }
+
+      .portfolio-intro {
+        margin-top: -20px;
+        margin-bottom: 32px;
+      }
+    }
+
+    .portfolio-filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      padding: 30px 32px;
+      background: linear-gradient(160deg, var(--bg-alt), var(--bg));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--text);
+      font-family: var(--sans);
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s ease, background 0.4s ease;
+    }
+
+    .portfolio-filter-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 60%;
+      left: -60%;
+      opacity: 0;
+      background: linear-gradient(105deg,
+          transparent 0%,
+          rgba(201, 168, 118, 0.06) 30%,
+          rgba(255, 240, 190, 0.22) 50%,
+          rgba(201, 168, 118, 0.06) 70%,
+          transparent 100%);
+      pointer-events: none;
+      transform: translateX(-100%);
+    }
+
+    .portfolio-filter-btn:hover::before,
+    .portfolio-filter-btn:focus-visible::before {
+      animation: swipeOnce 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .portfolio-filter-btn:hover,
+    .portfolio-filter-btn:focus-visible {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 48px -22px rgba(201, 168, 118, 0.4);
+      background: linear-gradient(160deg, var(--surface), var(--bg-alt));
+    }
+
+    .pf-icon {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease;
+    }
+
+    .pf-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .portfolio-filter-btn:hover .pf-icon,
+    .portfolio-filter-btn:focus-visible .pf-icon {
+      border-color: var(--gold);
+      background: rgba(201, 168, 118, 0.12);
+      transform: scale(1.08);
+    }
+
+    .pf-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .pf-title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.25rem;
+      color: var(--text);
+      transition: color 0.3s ease;
+    }
+
+    .portfolio-filter-btn:hover .pf-title,
+    .portfolio-filter-btn:focus-visible .pf-title {
+      color: var(--gold);
+    }
+
+    .pf-count {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .pf-arrow {
+      flex-shrink: 0;
+      color: var(--text-dim);
+      display: flex;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease;
+    }
+
+    .pf-arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .portfolio-filter-btn:hover .pf-arrow,
+    .portfolio-filter-btn:focus-visible .pf-arrow {
+      color: var(--gold);
+      transform: translateX(5px);
+    }
+
+    /* ============================================
+       PORTFOLIO MODAL — floating category gallery
+       ============================================ */
+    .portfolio-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .portfolio-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .portfolio-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 11, 13, 0.9);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+    }
+
+    .portfolio-modal-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1080px;
+      max-height: 86vh;
+      overflow-y: auto;
+      background: linear-gradient(160deg, var(--surface), var(--bg-alt));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      transform: translateY(28px) scale(0.97);
+      filter: blur(6px);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .portfolio-modal.open .portfolio-modal-card {
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .portfolio-modal-card::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .portfolio-modal-card::-webkit-scrollbar-thumb {
+      background: var(--line);
+    }
+
+    .portfolio-modal-card::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .portfolio-modal-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 34px 44px 24px;
+      background: linear-gradient(160deg, var(--surface), var(--bg-alt));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .portfolio-modal-eyebrow {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      margin-bottom: 8px;
+    }
+
+    .portfolio-modal-title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+      color: var(--gold);
+    }
+
+    .portfolio-modal-close {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(20, 19, 24, 0.7);
+      color: var(--text);
+      font-size: 1.3rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    }
+
+    .portfolio-modal-close:hover,
+    .portfolio-modal-close:focus-visible {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201, 168, 118, 0.12);
+      transform: rotate(90deg);
+    }
+
+    .portfolio-modal-gallery-wrap {
+      padding: 30px 44px 46px;
+    }
+
+    .portfolio-modal-gallery.work-grid {
+      background: var(--line);
+    }
+
+    .portfolio-modal-gallery .work-card {
+      padding: 34px 28px;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        background 0.5s ease;
+    }
+
+    .portfolio-modal.open .portfolio-modal-gallery .work-card {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .portfolio-modal-gallery .work-card:nth-child(1) {
+      transition-delay: 0.06s;
+    }
+
+    .portfolio-modal-gallery .work-card:nth-child(2) {
+      transition-delay: 0.12s;
+    }
+
+    .portfolio-modal-gallery .work-card:nth-child(3) {
+      transition-delay: 0.18s;
+    }
+
+    .portfolio-modal-gallery .work-card:nth-child(4) {
+      transition-delay: 0.24s;
+    }
+
+    .portfolio-modal-gallery .work-card:nth-child(5) {
+      transition-delay: 0.3s;
+    }
+
+    .portfolio-modal-gallery .work-card:nth-child(6) {
+      transition-delay: 0.36s;
+    }
+
+    @media(max-width:640px) {
+      .portfolio-modal {
+        padding: 0;
+      }
+
+      .portfolio-modal-card {
+        max-width: 100%;
+        max-height: 100vh;
+        height: 100%;
+        border: none;
+      }
+
+      .portfolio-modal-head {
+        padding: 24px 22px 18px;
+      }
+
+      .portfolio-modal-gallery-wrap {
+        padding: 22px 16px 36px;
+      }
+
+      .portfolio-modal-gallery .work-card {
+        padding: 26px 20px;
+      }
+    }
+
+    /* ==========================================================================
+       EXPERIENCE PROJECTS FLOATING MODAL & INTERACTIVE STAT BADGES
+       ========================================================================== */
+    .tl-stat-item {
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+    }
+
+    .tl-stat-item:focus-visible {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201, 168, 118, 0.4);
+    }
+
+    .tl-stat-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: 10px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(201, 168, 118, 0.08);
+      border: 1px solid rgba(201, 168, 118, 0.22);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tl-stat-action-icon {
+      width: 12px;
+      height: 12px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tl-stat-item:hover .tl-stat-action {
+      background: var(--gold);
+      color: var(--bg);
+      border-color: var(--gold);
+      box-shadow: 0 2px 10px rgba(201, 168, 118, 0.35);
+    }
+
+    .tl-stat-item:hover .tl-stat-action-icon {
+      transform: translate(2px, -2px);
+    }
+
+    .tl-stat-item:active {
+      transform: scale(0.98);
+    }
+
+    /* Floating Modal */
+    .exp-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 450;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
+    }
+
+    .exp-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .exp-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 11, 13, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .exp-modal-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 980px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(165deg, rgba(27, 26, 32, 0.98) 0%, rgba(16, 15, 20, 0.99) 100%);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.9), 0 0 45px rgba(201, 168, 118, 0.12);
+      transform: translateY(28px) scale(0.96);
+      filter: blur(4px);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .exp-modal.open .exp-modal-card {
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    /* Modal Header */
+    .exp-modal-head {
+      padding: 28px 32px 20px;
+      border-bottom: 1px solid rgba(201, 168, 118, 0.15);
+      background: rgba(20, 19, 24, 0.7);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+    }
+
+    .exp-modal-head-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .exp-modal-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exp-modal-badge {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(201, 168, 118, 0.12);
+      border: 1px solid rgba(201, 168, 118, 0.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .exp-modal-badge--year {
+      color: var(--text-dim);
+      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .exp-modal-badge--count {
+      background: rgba(201, 168, 118, 0.22);
+      border-color: var(--gold);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .exp-modal-title {
+      font-family: var(--serif);
+      font-size: 1.85rem;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .exp-modal-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .exp-modal-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.55;
+      max-width: 680px;
+    }
+
+    .exp-modal-close {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(201, 168, 118, 0.08);
+      color: var(--text-dim);
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      outline: none;
+    }
+
+    .exp-modal-close:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      background: rgba(201, 168, 118, 0.22);
+      transform: rotate(90deg) scale(1.05);
+    }
+
+    .exp-modal-close:focus-visible {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201, 168, 118, 0.4);
+    }
+
+    /* Modal Toolbar / Filter bar */
+    .exp-modal-toolbar {
+      padding: 14px 32px;
+      background: rgba(14, 13, 17, 0.6);
+      border-bottom: 1px solid rgba(201, 168, 118, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .exp-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .exp-filter-group::-webkit-scrollbar {
+      display: none;
+    }
+
+    .exp-filter-btn {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .exp-filter-btn:hover {
+      color: var(--text);
+      border-color: rgba(201, 168, 118, 0.3);
+      background: rgba(201, 168, 118, 0.08);
+    }
+
+    .exp-filter-btn.active {
+      color: var(--bg);
+      background: var(--gold);
+      border-color: var(--gold);
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(201, 168, 118, 0.3);
+    }
+
+    /* ── EVENT & BROADCAST special filter button ── */
+    .exp-filter-btn--event {
+      border-color: rgba(94, 190, 170, 0.35);
+      color: rgba(94, 190, 170, 0.85);
+      background: rgba(94, 190, 170, 0.06);
+      position: relative;
+    }
+
+    .exp-filter-btn--event::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #5ebeaa;
+      margin-right: 6px;
+      box-shadow: 0 0 6px rgba(94, 190, 170, 0.8);
+      animation: eventPulse 2s ease-in-out infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes eventPulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.55;
+        transform: scale(0.75);
+      }
+    }
+
+    .exp-filter-btn--event:hover {
+      color: #5ebeaa;
+      border-color: rgba(94, 190, 170, 0.7);
+      background: rgba(94, 190, 170, 0.12);
+    }
+
+    .exp-filter-btn--event.active {
+      color: #0b0b0d;
+      background: #5ebeaa;
+      border-color: #5ebeaa;
+      box-shadow: 0 2px 10px rgba(94, 190, 170, 0.4);
+    }
+
+    .exp-filter-btn--event.active::before {
+      background: #0b0b0d;
+      box-shadow: none;
+      animation: none;
+    }
+
+    .exp-search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-width: 220px;
+    }
+
+    .exp-search-box input {
+      width: 100%;
+      padding: 7px 12px 7px 32px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(201, 168, 118, 0.2);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .exp-search-box input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(201, 168, 118, 0.25);
+    }
+
+    .exp-search-box svg {
+      position: absolute;
+      left: 10px;
+      width: 14px;
+      height: 14px;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    /* Modal Body / Project Grid */
+    .exp-modal-body {
+      padding: 24px 32px 32px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold-soft) transparent;
+    }
+
+    .exp-modal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .exp-modal-body::-webkit-scrollbar-thumb {
+      background: rgba(201, 168, 118, 0.3);
+      border-radius: 3px;
+    }
+
+    .exp-modal-body::-webkit-scrollbar-thumb:hover {
+      background: var(--gold);
+    }
+
+    /* Project Card */
+    .exp-project-card {
+      background: linear-gradient(145deg, rgba(32, 30, 38, 0.65) 0%, rgba(20, 19, 25, 0.8) 100%);
+      border: 1px solid rgba(201, 168, 118, 0.16);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      position: relative;
+    }
+
+    .exp-project-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(201, 168, 118, 0.45);
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5), 0 0 20px rgba(201, 168, 118, 0.15);
+      background: linear-gradient(145deg, rgba(36, 34, 44, 0.9) 0%, rgba(25, 24, 31, 0.95) 100%);
+    }
+
+    .exp-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .exp-card-date {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      background: rgba(201, 168, 118, 0.12);
+      border: 1px solid rgba(201, 168, 118, 0.3);
+      padding: 3px 9px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      margin-left: auto;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      transition: all 0.25s ease;
+    }
+
+    .exp-card-date:hover {
+      background: rgba(201, 168, 118, 0.2);
+      border-color: var(--gold);
+      color: #fff;
+    }
+
+    .exp-card-date svg {
+      width: 12px;
+      height: 12px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* replaced */
+    .exp-card-header-old {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .exp-card-index {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--gold);
+      background: rgba(201, 168, 118, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(201, 168, 118, 0.2);
+    }
+
+    .exp-card-tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .exp-card-title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .exp-card-desc {
+      font-size: 0.84rem;
+      line-height: 1.6;
+      color: #bbb4a8;
+      text-align: justify;
+    }
+
+    .exp-card-output {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border-left: 2px solid var(--gold);
+      line-height: 1.5;
+    }
+
+    .exp-card-output strong {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .exp-card-tools {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(201, 168, 118, 0.12);
+    }
+
+    .exp-tool-pill {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--gold-soft);
+      background: rgba(201, 168, 118, 0.06);
+      border: 1px solid rgba(201, 168, 118, 0.18);
+      padding: 2px 7px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .exp-no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 16px;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 0.88rem;
+    }
+
+    /* Modal Footer */
+    .exp-modal-foot {
+      padding: 16px 32px;
+      background: rgba(14, 13, 17, 0.85);
+      border-top: 1px solid rgba(201, 168, 118, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .exp-foot-note {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .exp-foot-action {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      background: var(--gold);
+      color: var(--bg);
+      font-weight: 600;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .exp-foot-action:hover {
+      background: #deb985;
+      box-shadow: 0 0 14px rgba(201, 168, 118, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .exp-modal {
+        padding: 12px;
+      }
+
+      .exp-modal-card {
+        max-height: 94vh;
+        border-radius: 14px;
+      }
+
+      .exp-modal-head {
+        padding: 20px 18px 16px;
+      }
+
+      .exp-modal-title {
+        font-size: 1.4rem;
+      }
+
+      .exp-modal-toolbar {
+        padding: 12px 18px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .exp-search-box {
+        min-width: 100%;
+      }
+
+      .exp-modal-body {
+        grid-template-columns: 1fr;
+        padding: 18px 18px 24px;
+        gap: 14px;
+      }
+
+      .exp-modal-foot {
+        padding: 14px 18px;
+      }
+    }
+
+    .exp-card-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      color: var(--text-dim);
+      background: rgba(201, 168, 118, 0.06);
+      border: 1px solid rgba(201, 168, 118, 0.2);
+      padding: 3px 10px;
+      border-radius: 6px;
+      width: fit-content;
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
+    .exp-card-role svg {
+      width: 12px;
+      height: 12px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .exp-role-label {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+    }
+
+    .exp-role-val {
+      color: var(--gold);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <div class="spine" aria-hidden="true"></div>
+
+  <header>
+    <div class="mark">B.A.A</div>
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu">MENU</button>
+    <nav id="mainNav">
+      <a href="#tentang">Tentang</a>
+      <a href="#perjalanan">Perjalanan</a>
+      <a href="#karya">Karya</a>
+      <a href="#keahlian">Keahlian</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="eyebrow">Motion Graphic Designer, Graphic Designer &amp; Editor Video — Based in Jakarta</div>
+      <h1 class="name">Bayu Askar<br><em>Abdillah</em></h1>
+      <div class="hero-rule"></div>
+      <p class="hero-desc">Seorang profesional di bidang <strong>Motion Graphic Design, Graphic Design, dan Video
+          Editing</strong> dengan kemampuan menciptakan visual yang kreatif, modern, dan berorientasi pada hasil.
+        Berpengalaman menghasilkan konten yang menarik, informatif, serta mendukung kebutuhan branding, promosi, dan
+        komunikasi visual secara efektif.</p>
+    </div>
+    <div class="scroll-cue"></div>
+  </section>
+
+  <div class="container">
+
+    <section class="section" id="tentang">
+      <div class="section-head reveal">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Tentang <em>saya</em></h2>
+      </div>
+      <div class="about-grid reveal">
+        <div class="portrait"><img src="https://lh3.googleusercontent.com/d/1gIvemgWwapxbeawr5LdZJjNQVkgQsOd3"
+            alt="Bayu Askar Abdillah"></div>
+        <div class="about-text">
+          <p>Perjalanan saya di dunia kreatif dimulai sejak duduk di bangku <strong>Sekolah Menengah Atas
+              (SMA).</strong></p>
+          <p>Pada masa tersebut, saya mulai menaruh minat yang besar terhadap bidang desain grafis, motion graphic, dan
+            video editing.</p>
+          <p>Rasa ingin tahu yang tinggi mendorong saya untuk terus mengeksplorasi berbagai teknik desain, mempelajari
+            berbagai perangkat lunak kreatif, serta mengembangkan kemampuan melalui beragam proyek dan eksperimen
+            visual.</p>
+          <p>Konsistensi dalam belajar dan mengasah keterampilan tersebut membawa saya dipercaya untuk bergabung sebagai
+            <strong>anggota Tim Multimedia</strong> di sekolah, di mana saya berkesempatan terlibat dalam pembuatan
+            berbagai konten visual dan dokumentasi untuk mendukung kegiatan sekolah.
+          </p>
+          <p>Pengalaman saya semakin berkembang ketika dipercaya terlibat sebagai <strong>Motion Graphic
+              Designer</strong> dalam sebuah acara sekolah yang dihadiri lebih dari <strong>1.000 peserta</strong>.
+            Melalui proyek ini, saya bertanggung jawab menghasilkan motion graphic yang mendukung kebutuhan visual acara
+            sekaligus memperkuat kemampuan saya dalam bekerja secara profesional dan memenuhi tenggat waktu.</p>
+          <p>Pengalaman tersebut menjadi fondasi yang membentuk cara saya berpikir secara kreatif, memahami komunikasi
+            visual, dan menghasilkan karya yang tidak hanya menarik secara estetika, tetapi juga <strong>menyampaikan
+              pesan secara efektif</strong>.</p>
+          <div class="facts">
+            <div>
+              <div class="fact-label">Berbasis di</div>
+              <div class="fact-value">Jakarta, Indonesia</div>
+            </div>
+            <div>
+              <div class="fact-label">Pengalaman</div>
+              <div class="fact-value">3+ tahun</div>
+            </div>
+            <div>
+              <div class="fact-label">Disiplin</div>
+              <div class="fact-value">Audio-Visual Synchronization, Tepat Waktu, Amanah</div>
+            </div>
+            <div>
+              <div class="fact-label">Ketersediaan</div>
+              <div class="fact-value">Open for freelance and project-based collaborations (On-site in Jakarta / Remote)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="section" id="perjalanan">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Perjalanan <em>karier</em></h2>
+      </div>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="tl-year">2025 — kini</div>
+          <div class="tl-content">
+            <div class="tl-text">
+              <div class="tl-role">KIAN Company</div>
+              <div class="tl-org">Anggota / OJT</div>
+              <div class="tl-desc" style="text-align: justify;">Bertanggung jawab dalam pembuatan konten motion graphic
+                untuk berbagai kebutuhan produksi meliputi lower third, teaser, bumper opening dan elemen grafis lainnya
+                sesuai permintaan proyek. Berkolaborasi dengan tim produksi untuk menghasilkan visual yang komunikatif,
+                konsisten dengan branding, serta siap digunakan pada berbagai platform media.</div>
+              <div class="tl-stats">
+                <div class="tl-stat-item" role="button" tabindex="0" data-exp-target="expModalKian"
+                  aria-haspopup="dialog" aria-label="Buka detail 17+ Proyek Ditangani di KIAN Company"
+                  title="Klik untuk membuka detail proyek">
+                  <div class="tl-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                      <polyline points="2 17 12 22 22 17"></polyline>
+                      <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                  </div>
+                  <div class="tl-stat-info">
+                    <div class="tl-stat-number-wrap">
+                      <span class="tl-stat-number" data-count="17">0</span><span class="tl-stat-plus">+</span>
+                    </div>
+                    <span class="tl-stat-label">Proyek Ditangani</span>
+                  </div>
+                  <div class="tl-stat-action">
+                    <span class="tl-stat-action-text">Detail</span>
+                    <svg class="tl-stat-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7 17L17 7M17 7H7M17 7V17" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tl-media">
+              <img src="https://lh3.googleusercontent.com/d/1qW0kQjm2kZ5YL4M0St8v2ZxGHNzLneuC"
+                alt="KIAN Company Preview" loading="lazy">
+            </div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2022 — 2025</div>
+          <div class="tl-content">
+            <div class="tl-text">
+              <div class="tl-role">Multimedia Al Bahjah Buyut</div>
+              <div class="tl-org">Team Leader</div>
+              <div class="tl-desc" style="text-align: justify;">Memimpin dan mengoordinasikan tim multimedia, memastikan
+                kelancaran pelaksanaan acara, membagi tugas secara efektif, serta membimbing anggota dalam pengoperasian
+                kamera, software editing, dan proses produksi media.</div>
+              <div class="tl-stats">
+                <div class="tl-stat-item" role="button" tabindex="0" data-exp-target="expModalAlbahjah"
+                  aria-haspopup="dialog" aria-label="Buka detail 10+ Proyek Ditangani di Multimedia Al Bahjah Buyut"
+                  title="Klik untuk membuka detail proyek">
+                  <div class="tl-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                      <line x1="12" y1="11" x2="12" y2="17"></line>
+                      <line x1="9" y1="14" x2="15" y2="14"></line>
+                    </svg>
+                  </div>
+                  <div class="tl-stat-info">
+                    <div class="tl-stat-number-wrap">
+                      <span class="tl-stat-number" data-count="10">0</span><span class="tl-stat-plus">+</span>
+                    </div>
+                    <span class="tl-stat-label">Proyek Ditangani</span>
+                  </div>
+                  <div class="tl-stat-action">
+                    <span class="tl-stat-action-text">Detail</span>
+                    <svg class="tl-stat-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7 17L17 7M17 7H7M17 7V17" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tl-media">
+              <img src="https://lh3.googleusercontent.com/d/1lsDFYtubndYSVFnBKpDtbNh8MvwTOAH8"
+                alt="Multimedia Al Bahjah Buyut Preview" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="karya">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Hasil <em>Portofolio</em></h2>
+      </div>
+
+      <p class="portfolio-intro reveal">Pilih salah satu kategori di bawah untuk membuka galeri lengkap — setiap
+        karya ditampilkan dalam tampilan yang lebih fokus dan interaktif.</p>
+
+      <div class="portfolio-filters reveal">
+        <button class="portfolio-filter-btn" type="button" data-portfolio-target="portfolioModalGraphic"
+          aria-haspopup="dialog">
+          <span class="pf-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="m12 19 7-7 3 3-7 7-3-3z" />
+              <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+              <path d="m2 2 7.586 7.586" />
+              <circle cx="11" cy="11" r="2" />
+            </svg>
+          </span>
+          <span class="pf-text">
+            <span class="pf-title">Graphic Design</span>
+            <span class="pf-count">08 Karya</span>
+          </span>
+          <span class="pf-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </button>
+
+        <button class="portfolio-filter-btn" type="button" data-portfolio-target="portfolioModalMotion"
+          aria-haspopup="dialog">
+          <span class="pf-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="18" rx="2" />
+              <path d="M7 3v18M17 3v18M2 8h5M2 16h5M17 8h5M17 16h5" />
+            </svg>
+          </span>
+          <span class="pf-text">
+            <span class="pf-title">Motion Graphic</span>
+            <span class="pf-count">05 Karya</span>
+          </span>
+          <span class="pf-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Modal: Graphic Design -->
+  <div class="portfolio-modal" id="portfolioModalGraphic" aria-hidden="true">
+    <div class="portfolio-modal-backdrop" data-portfolio-close></div>
+    <div class="portfolio-modal-card" role="dialog" aria-modal="true" aria-labelledby="pmGraphicTitle">
+      <div class="portfolio-modal-head">
+        <div>
+          <span class="portfolio-modal-eyebrow">Kategori 01</span>
+          <h3 class="portfolio-modal-title" id="pmGraphicTitle">Graphic Design</h3>
+        </div>
+        <button class="portfolio-modal-close" type="button" data-portfolio-close
+          aria-label="Tutup galeri">&times;</button>
+      </div>
+      <div class="portfolio-modal-gallery-wrap">
+        <div class="work-grid portfolio-modal-gallery">
+          <div class="work-card">
+            <span class="work-index">01 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ" alt="Flyer PMB UBSI"
+                loading="lazy"></div>
+            <div class="work-title">Flyer PMB UBSI</div>
+            <div class="work-meta">KIAN Company — 2025</div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">02 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm" alt="Flyer PMB UBSI 2"
+                loading="lazy"></div>
+            <div class="work-title">Flyer PMB UBSI 2</div>
+            <div class="work-meta">KIAN Company — 2025</div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">03 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/1XaYTh3n6dDnMOk8YBrLsUoLaG8snElXI" alt="Flyer Tugas Kelompok"
+                loading="lazy"></div>
+            <div class="work-title">Flyer Tugas Kelompok</div>
+            <div class="work-meta">UBSI Kaliabang — 2025</div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">04 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/11GooM0-31pp7vzdQy6kim3Trdg_blJxA" alt="Carousel Post"
+                loading="lazy"></div>
+            <div class="work-title">Carousel Post</div>
+            <div class="work-meta">2026</div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">05 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/1D0d8kWDCXdR0vJzap7EgVgTMV722F5zq"
+                alt="Leaderboard Top Designer" loading="lazy"></div>
+            <div class="work-title">Leaderboard Top Designer</div>
+            <div class="work-meta">2026</div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">06 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/1sJ9EE3PjFzU6lroeDppR8Nm-_p0lGN17"
+                alt="Leaderboard Video Editor" loading="lazy"></div>
+            <div class="work-title">Leaderboard Video Editor</div>
+            <div class="work-meta">2026</div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">07 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/1CYl4UfnQYPdUFtEV9PNTUipn8yLZ1tWG" alt="Troopers Design"
+                loading="lazy"></div>
+            <div class="work-title">Troopers Design</div>
+            <div class="work-meta">2026</div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">08 / Graphic Design</span>
+            <div class="work-visual work-visual--natural"><img
+                src="https://lh3.googleusercontent.com/d/1U3lDUNHPOuXBeWlLugJ9ERna7IQgIhSZ" alt="Insight Design"
+                loading="lazy"></div>
+            <div class="work-title">Insight Design</div>
+            <div class="work-meta">2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portfolio Modal: Motion Graphic -->
+  <div class="portfolio-modal" id="portfolioModalMotion" aria-hidden="true">
+    <div class="portfolio-modal-backdrop" data-portfolio-close></div>
+    <div class="portfolio-modal-card" role="dialog" aria-modal="true" aria-labelledby="pmMotionTitle">
+      <div class="portfolio-modal-head">
+        <div>
+          <span class="portfolio-modal-eyebrow">Kategori 02</span>
+          <h3 class="portfolio-modal-title" id="pmMotionTitle">Motion Graphic</h3>
+        </div>
+        <button class="portfolio-modal-close" type="button" data-portfolio-close
+          aria-label="Tutup galeri">&times;</button>
+      </div>
+      <div class="portfolio-modal-gallery-wrap">
+        <div class="work-grid portfolio-modal-gallery">
+          <div class="work-card">
+            <span class="work-index">01 / Motion Graphic</span>
+            <div class="work-visual youtube-card" data-video-id="EuUwm5oP_Ac" data-url="https://youtu.be/EuUwm5oP_Ac">
+              <img src="https://img.youtube.com/vi/EuUwm5oP_Ac/hqdefault.jpg" alt="Mograph Iklan Program"
+                loading="lazy">
+              <button class="play-btn" aria-label="Putar Video">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+            </div>
+            <div class="work-title">Mograph Iklan Program</div>
+            <div class="work-meta">SMA — 2025</div>
+            <div class="work-action">
+              <a href="https://youtu.be/EuUwm5oP_Ac" target="_blank" rel="noopener noreferrer" class="youtube-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                Tonton di YouTube
+              </a>
+            </div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">02 / Motion Graphic</span>
+            <div class="work-visual youtube-card" data-video-id="7WHaXXC0rt4"
+              data-url="https://youtube.com/shorts/7WHaXXC0rt4">
+              <img src="https://img.youtube.com/vi/7WHaXXC0rt4/hqdefault.jpg" alt="Teaser - BSI Flash 2027 Bogor"
+                loading="lazy">
+              <button class="play-btn" aria-label="Putar Video">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+            </div>
+            <div class="work-title">Teaser - BSI Flash 2027 Bogor</div>
+            <div class="work-meta">KIAN Company — 2026</div>
+            <div class="work-action">
+              <a href="https://youtube.com/shorts/7WHaXXC0rt4" target="_blank" rel="noopener noreferrer"
+                class="youtube-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                Tonton di YouTube
+              </a>
+            </div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">03 / Motion Graphic</span>
+            <div class="work-visual youtube-card" data-video-id="Zcs-eFYnMxM"
+              data-url="https://youtube.com/shorts/Zcs-eFYnMxM">
+              <img src="https://img.youtube.com/vi/Zcs-eFYnMxM/hqdefault.jpg"
+                alt="Teaser - BSI Flash ( UBSI Tasikmalaya )" loading="lazy">
+              <button class="play-btn" aria-label="Putar Video">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+            </div>
+            <div class="work-title">Teaser - BSI Flash ( UBSI Tasikmalaya )</div>
+            <div class="work-meta">KIAN Company — 2026</div>
+            <div class="work-action">
+              <a href="https://youtube.com/shorts/Zcs-eFYnMxM" target="_blank" rel="noopener noreferrer"
+                class="youtube-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                Tonton di YouTube
+              </a>
+            </div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">04 / Motion Graphic</span>
+            <div class="work-visual youtube-card" data-video-id="J-bMdo0LtIY"
+              data-url="https://youtube.com/shorts/J-bMdo0LtIY">
+              <img src="https://img.youtube.com/vi/J-bMdo0LtIY/hqdefault.jpg" alt="Teaser - Kreasi 2026" loading="lazy">
+              <button class="play-btn" aria-label="Putar Video">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+            </div>
+            <div class="work-title">Teaser - Kreasi 2026</div>
+            <div class="work-meta">KIAN Company — 2026</div>
+            <div class="work-action">
+              <a href="https://youtube.com/shorts/J-bMdo0LtIY" target="_blank" rel="noopener noreferrer"
+                class="youtube-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                Tonton di YouTube
+              </a>
+            </div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">05 / Motion Graphic</span>
+            <div class="work-visual youtube-card" data-video-id="zDzieLy3zFY" data-url="https://youtu.be/zDzieLy3zFY">
+              <img src="https://img.youtube.com/vi/zDzieLy3zFY/hqdefault.jpg" alt="Teaser - ICITRI 2026" loading="lazy">
+              <button class="play-btn" aria-label="Putar Video">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+            </div>
+            <div class="work-title">Teaser - ICITRI 2026</div>
+            <div class="work-meta">KIAN Company — 2026</div>
+            <div class="work-action">
+              <a href="https://youtu.be/zDzieLy3zFY" target="_blank" rel="noopener noreferrer" class="youtube-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                Tonton di YouTube
+              </a>
+            </div>
+          </div>
+          <div class="work-card">
+            <span class="work-index">06 / Motion Graphic</span>
+            <div class="work-visual youtube-card" data-video-id="Gz-OoOX_3NA"
+              data-url="https://youtube.com/shorts/Gz-OoOX_3NA">
+              <img src="https://img.youtube.com/vi/Gz-OoOX_3NA/hqdefault.jpg" alt="Teaser - BSI Flash Cengkareng 2026"
+                loading="lazy">
+              <button class="play-btn" aria-label="Putar Video">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+            </div>
+            <div class="work-title">Teaser - BSI Flash Cengkareng 2026</div>
+            <div class="work-meta">KIAN Company — 2026</div>
+            <div class="work-action">
+              <a href="https://youtube.com/shorts/Gz-OoOX_3NA" target="_blank" rel="noopener noreferrer"
+                class="youtube-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                Tonton di YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" id="keahlian">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Keahlian &amp; <em>Software</em></h2>
+      </div>
+      <div class="skill-tags reveal">
+        <button class="skill-tag" type="button" data-skill="motion-graphic">Motion Graphic Design</button>
+        <button class="skill-tag" type="button" data-skill="graphic-design">Graphic Design</button>
+        <button class="skill-tag" type="button" data-skill="video-editing">Video Editing</button>
+        <button class="skill-tag" type="button" data-skill="av-sync">Audio-Visual Synchronization</button>
+        <button class="skill-tag" type="button" data-skill="branding">Streaming &amp; Broadcasting</button>
+        <button class="skill-tag" type="button" data-skill="leadership">Camera Skills</button>
+        <button class="skill-tag" type="button" data-skill="after-effects">Drone Pilot</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- EXPERIENCE MODAL: KIAN COMPANY (17+ PROYEK) -->
+  <!-- ========================================== -->
+  <div class="exp-modal" id="expModalKian" aria-hidden="true">
+    <div class="exp-modal-backdrop" data-exp-close></div>
+    <div class="exp-modal-card" role="dialog" aria-modal="true" aria-labelledby="expKianTitle">
+      <div class="exp-modal-head">
+        <div class="exp-modal-head-info">
+          <div class="exp-modal-badges">
+            <span class="exp-modal-badge">KIAN Company</span>
+            <span class="exp-modal-badge exp-modal-badge--year">2025 — Kini</span>
+            <span class="exp-modal-badge exp-modal-badge--count">17+ Proyek Selesai</span>
+            <span class="exp-modal-badge exp-modal-badge--year">Anggota / OJT</span>
+          </div>
+          <h3 class="exp-modal-title" id="expKianTitle">Detail Proyek & <em>Kontribusi Produksi</em></h3>
+          <p class="exp-modal-subtitle">Eksplorasi ragam karya motion graphic, broadcast assets, materi promosi, serta
+            aset visual dinamis yang dikembangkan secara profesional.</p>
+        </div>
+        <button class="exp-modal-close" type="button" data-exp-close
+          aria-label="Tutup jendela detail proyek">&times;</button>
+      </div>
+
+      <div class="exp-modal-toolbar">
+        <div class="exp-filter-group" data-target="expKianBody">
+          <button class="exp-filter-btn active" data-filter="all">Semua (17)</button>
+          <button class="exp-filter-btn exp-filter-btn--event" data-filter="event &amp; broadcast">Event &amp;
+            Broadcast</button>
+          <button class="exp-filter-btn" data-filter="production">Production</button>
+        </div>
+        <div class="exp-search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Cari nama atau tools..." data-search-target="expKianBody">
+        </div>
+      </div>
+
+      <div class="exp-modal-body" id="expKianBody">
+        <!-- 01 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="VT Operator">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#01</span>
+            <span class="exp-card-tag">Event &amp; Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>28 Maret 2026</span>
+          </div>
+          <h4 class="exp-card-title">ORMIK & SEMOT - UBSI Kaliabang</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">VT Operator</span></div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai video tron operator untuk acara ORMIK & SEMOT yang
+            diselenggarakan
+            di UBSI Kaliabang, dengan lingkup kerja yang mencakup area produksi video dan multimedia.
+          </p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> 6 Variasi template lower third (Host, Pembicara, Topik, Running Info, Media
+            Sosial).
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">VMIX</span>
+            <span class="exp-tool-pill">OBS Studio</span>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Cameraman">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#02</span>
+            <span class="exp-card-tag">Event &amp; Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>10 April 2026</span>
+          </div>
+          <h4 class="exp-card-title">BSI Flash 2026 - UBSI Kaliabang</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cameraman</span></div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Cameraman untuk acara BSI Flash 2026 yang
+            diselenggarakan
+            di UBSI Kaliabang, dengan lingkup kerja yang mencakup area produksi video dan multimedia.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Hasil Recording acara yg kualitasnya jernih dan dapat digunakan untuk
+            membuat highlights.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">PXW-Z190</span>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Vmix Operator">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#03</span>
+            <span class="exp-card-tag">Event &amp; Display</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>18 - 19 April 2026</span>
+          </div>
+          <h4 class="exp-card-title">Presgo Expo 2026 - Universitas Terbuka Convention Center</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Vmix Operator</span></div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Vmix Operator untuk acara Presgo Expo 2026 yang
+            digelar di Universitas Terbuka Convention Center.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Hasil Recording acara Presgo Expo 2026 dengan kualitas yang jernih dan
+            menangkap esensi acara.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Vmix</span>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast"
+          data-keywords="color grading davinci resolve lut cinematic mood tone correction">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#04</span>
+            <span class="exp-card-tag">Event & Display</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>23 April 2026</span>
+          </div>
+          <h4 class="exp-card-title">Wisuda UNM 2026 - Gedung Pewayangan Kautaman</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Switcher Operator</span></div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Switcher untuk acara Wisuda UNM 2026 yang
+            diselenggarakan di Gedung Pewayangan Kautaman.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Multicam Recording dan Switching untuk acara Wisuda UNM 2026
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Switcher</span>
+          </div>
+        </div>
+
+        <!-- 05 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast"
+          data-keywords="switcher operator, multicam recording, broadcast, live event">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#05</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>2 Mei 2026</span>
+          </div>
+          <h4 class="exp-card-title">Halal bi Halal Cyber University 2026 - Cyber University</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cameraman</span></div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Cameraman untuk acara Halal bi Halal Cyber University 2026
+            yang diselenggarakan di Gedung Pewayangan Kautaman.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Frame Camera, Angle Camera, Color Balance serta Triangle
+            Exposure terekam dengan baik.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony PXW-Z90</span>
+          </div>
+        </div>
+
+        <!-- 06 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Cameraman">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#06</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>23 Mei 2026</span>
+          </div>
+          <h4 class="exp-card-title">Seminar BSI Digination - UBSI Kaliabang</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cameraman</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Cameraman untuk acara Seminar BSI Digination yang
+            diselenggarakan di Aula Kampus UBSI Kaliabang.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Frame Camera, Angle Camera, Color Balance serta Triangle
+            Exposure terekam dengan baik.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony PXW-Z90</span>
+          </div>
+        </div>
+
+        <!-- 07 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Cameraman">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#07</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>26 Mei 2026</span>
+          </div>
+          <h4 class="exp-card-title">Economic Review - Perpustakaan Nasional</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cameraman</span></div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Cameraman untuk acara Economic Review yang diselenggarakan
+            di Perpustakaan Nasional.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Frame Camera, Angle Camera, Color Balance serta Triangle
+            Exposure terekam dengan baik.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony PXW-Z90</span>
+          </div>
+        </div>
+
+        <!-- 08 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="VT Operator">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#08</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>9 - 12, 17 Juni 2026</span>
+          </div>
+          <h4 class="exp-card-title">Seminar Literasi Keuangan - UBSI Kaliabang</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">VT Operator</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai VT Operator untuk acara Seminar Literasi Keuangan yang
+            diselenggarakan di Aula Kampus UBSI Kaliabang.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Laptop Narasumber Terkoneksi dan Tampil di Layar Video Tron
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">VT Operator</span>
+          </div>
+        </div>
+
+        <!-- 09 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Cameraman">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#09</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>12 Juni 2026</span>
+          </div>
+          <h4 class="exp-card-title">Seminar Bersama Deryanshaa Azhary - UBSI Kaliabang</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cameraman</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Cameraman untuk acara Seminar Bersama Deryanshaa Azhary
+            yang diselenggarakan di Aula Kampus UBSI Kaliabang.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Frame Camera, Angle Camera, Color Balance serta Triangle
+            Exposure terekam dengan baik.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony PXW-Z190</span>
+          </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Audioman">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#10</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>20 Juni 2026</span>
+          </div>
+          <h4 class="exp-card-title">Wisuda Presgo 2026 - Gedung Makara Art UI</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Audioman</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Audioman untuk acara Wisuda Presgo 2026 yang
+            diselenggarakan di Gedung Makara Art UI.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Kualitas Suara Jernih, Balance Antar Mic Serta Tidak Ada
+            Problem Teknis dan mengatur level sound agar terdengar jelas.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Midas M32</span>
+          </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="VT Operator">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#11</span>
+            <span class="exp-card-tag">Event &amp; Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>7 - 9 Juli 2026</span>
+          </div>
+          <h4 class="exp-card-title">Seminar TOEFL - UBSI Kaliabang</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">VT Operator</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai VT Operator untuk acara Seminar TOEFL yang
+            diselenggarakan di Aula Kampus UBSI Kaliabang.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Video Source Masuk ke OBS, Mengatur Layout Teks Agar Terlihat
+            Jelas.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">OBS Studio</span>
+          </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="exp-project-card" data-category="production" data-keywords="Assistant Production">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#12</span>
+            <span class="exp-card-tag">Production</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>15 Juli 2026</span>
+          </div>
+          <h4 class="exp-card-title">Shooting Iklan PMB UBSI - UBSI Kaliabang</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Assistant Production</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Assistant Production untuk Shooting Iklan PMB UBSI yang
+            dilaksanakan di UBSI Kaliabang.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Membantu dalam persiapan peralatan, eksekusi teknis di lapangan, dan
+            memastikan
+            kelancaran produksi video iklan PMB UBSI.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony A6400</span>
+          </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Cameraman">
+          <div class=" exp-card-header">
+            <span class="exp-card-index">#13</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>30 Juli 2026</span>
+          </div>
+          <h4 class="exp-card-title">Seminar Bersama Bang Ogut (Muda Cuma Sekali) - UBSI Kaliabang</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cameraman</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Cameraman pada Seminar Bersama Bang Ogut (Muda Cuma Sekali)
+            di UBSI Kaliabang.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Frame Camera, Angle Camera, Color Balance serta Triangle
+            Exposure terekam dengan baik.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony PXW - Z190</span>
+          </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Cameraman">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#14</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>8 - 9 Agustus 2026</span>
+          </div>
+          <h4 class="exp-card-title">Event Judo Nasional - UBSI Karawang</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cameraman</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Cameraman pada Event Judo Nasional di UBSI Karawang.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Frame Camera, Angle Camera, Color Balance serta Triangle
+            Exposure terekam dengan baik.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony PXW - Z90</span>
+          </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Switcher">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#15</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>17 September 2026</span>
+          </div>
+          <h4 class="exp-card-title">Wisuda Cyber University - Gedung Pewayangan Kautaman</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Switcher</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Switcher pada Wisuda Cyber University di Gedung
+            Pewayangan Kautaman.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Transisi antar Camera berjalan lancar.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Data Video Switcher</span>
+          </div>
+        </div>
+
+        <!-- 16 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Streaming">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#16</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>20 September 2026</span>
+          </div>
+          <h4 class="exp-card-title">SEMOT UBSI 2026</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Streaming</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Streaming SEMOT UBSI 2026.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Streaming berjalan lancar.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">VMIX</span>
+          </div>
+        </div>
+
+        <!-- 17 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Multimedia Operator">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#17</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>24 September 2026</span>
+          </div>
+          <h4 class="exp-card-title">Cyber Connect Event - Cyber University</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Multimedia Operator</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Multimedia Operator pada Cyber Connect Event Cyber
+            University.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan semua presentasi dan multimedia berjalan dengan lancar.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">VMIX</span>
+          </div>
+        </div>
+
+        <!-- 18 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Switcher Operator">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#18</span>
+            <span class="exp-card-tag">Event & Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>2 - 3 Oktober 2026</span>
+          </div>
+          <h4 class="exp-card-title">IEEE YESIST 12 - UBSI Kaliabang</h4>
+          <div class="exp-card-role">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Switcher</span>
+          </div>
+          <p class="exp-card-desc">Bertanggung jawab sebagai Switcher Operator pada Event IEEE YESIST 12 di UBSI
+            Kaliabang</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong>Memastikan Perpindahan Kamera Berjalan Lancar dan sesuai dengan prosedur.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">VMIX</span>
+          </div>
+        </div>
+
+      </div><!-- end expKianBody -->
+      <div class="exp-modal-foot">
+        <span class="exp-foot-note">Seluruh proyek diproduksi dengan standar kualitas tinggi dan sinkronisasi
+          audio-visual presisi.</span>
+        <button class="exp-foot-action" type="button" data-exp-close>Tutup Detail Proyek</button>
+      </div>
+    </div><!-- end exp-modal-card -->
+  </div><!-- end expModalKian -->
+
+  <!-- ==================================================== -->
+  <!-- EXPERIENCE MODAL: AL BAHJAH BUYUT (10+ PROYEK) -->
+  <!-- ==================================================== -->
+  <div class="exp-modal" id="expModalAlbahjah" aria-hidden="true">
+    <div class="exp-modal-backdrop" data-exp-close></div>
+    <div class="exp-modal-card" role="dialog" aria-modal="true" aria-labelledby="expAlbahjahTitle">
+      <div class="exp-modal-head">
+        <div class="exp-modal-head-info">
+          <div class="exp-modal-badges">
+            <span class="exp-modal-badge">Multimedia Al Bahjah Buyut</span>
+            <span class="exp-modal-badge exp-modal-badge--year">2022 — 2025</span>
+            <span class="exp-modal-badge exp-modal-badge--count">10+ Proyek Selesai</span>
+            <span class="exp-modal-badge exp-modal-badge--year">Team Leader</span>
+          </div>
+          <h3 class="exp-modal-title" id="expAlbahjahTitle">Detail Proyek & <em>Kepemimpinan Multimedia</em></h3>
+          <p class="exp-modal-subtitle">Rekam jejak kepemimpinan produksi media, penyiaran siaran langsung multi-kamera,
+            manajemen tim teknis, serta pembuatan konten dakwah Al Bahjah.</p>
+        </div>
+        <button class="exp-modal-close" type="button" data-exp-close
+          aria-label="Tutup jendela detail proyek">&times;</button>
+      </div>
+
+      <div class="exp-modal-toolbar">
+        <div class="exp-filter-group" data-target="expAlbahjahBody">
+          <button class="exp-filter-btn active" data-filter="all">Semua (10)</button>
+          <button class="exp-filter-btn exp-filter-btn--event" data-filter="event &amp; broadcast">Event &amp;
+            Broadcast</button>
+          <button class="exp-filter-btn" data-filter="mograph">Mograph &amp; Video</button>
+          <button class="exp-filter-btn" data-filter="leadership">Leadership &amp; Training</button>
+        </div>
+        <div class="exp-search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Cari proyek Al Bahjah..." data-search-target="expAlbahjahBody">
+        </div>
+      </div>
+
+      <div class="exp-modal-body" id="expAlbahjahBody">
+        <!-- 01 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast"
+          data-keywords="live streaming multi-camera switcher obs atem sony multicam siaran langsung event akbar maulid tabligh">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#01</span>
+            <span class="exp-card-tag">Live Broadcast & Event</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>16 September 2024</span>
+          </div>
+          <h4 class="exp-card-title">Maulid Akbar 1446 H - Al Bahjah Buyut</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Team Leader & Live
+              Switcher</span></div>
+          <p class="exp-card-desc">Memimpin tim teknis dalam setup live streaming 3 sudut kamera (wide, medium,
+            close-up), routing
+            kabel video SDI/HDMI, serta pengoperasian video switcher tanpa jeda hingga tuntas.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Siaran langsung YouTube & Facebook 3+ jam lancar dengan jangkauan ribuan
+            penonton.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">VMIX</span>
+            <span class="exp-tool-pill">Video Switcher</span>
+            <span class="exp-tool-pill">Sony Camcorder Setup</span>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="exp-project-card" data-category="mograph"
+          data-keywords="video dokumenter dakwah al bahjah wawancara narasi b-roll premiere davinci resolve">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#02</span>
+            <span class="exp-card-tag">Dokumenter & Video</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>20 November 2023</span>
+          </div>
+          <h4 class="exp-card-title">Produksi Video Profile Sekolah</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Director & Lead Video
+              Editor</span></div>
+          <p class="exp-card-desc">Mengarahkan proses pra-produksi, pengambilan video siswa dan wawancara narasumber,
+            pengambilan b-roll sinematik,
+            serta penyuntingan video profil sekolah.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Video Profile berdurasi 5 - 6 Menit untuk TK-SD-SMP-SMAIQU-Al Bahjah Buyut.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Premiere Pro</span>
+            <span class="exp-tool-pill">Sony Alpha</span>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="exp-project-card" data-category="leadership"
+          data-keywords="modul pelatihan workshop tim multimedia kamera lighting sop kurikulum">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#03</span>
+            <span class="exp-card-tag">Leadership & Training</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>15 Agustus 2023</span>
+          </div>
+          <h4 class="exp-card-title">Workshop Pelatihan Tim Multimedia Baru</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Mentor & Trainer
+              Multimedia</span></div>
+          <p class="exp-card-desc">Menyusun kurikulum dasar sinematografi, teknik pencahayaan (three-point lighting),
+            serta membina 15+ anggota tim baru hingga mampu mengoperasikan kamera dan software secara mandiri.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Program:</strong> Buku panduan SOP Multimedia & regenerasi anggota tim yang terampil dan siap
+            tugas.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Mentoring & Hands-on</span>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Kajian Rutinan">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#04</span>
+            <span class="exp-card-tag">Kajian Rutinan</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>2022 — 2025 (Rutin)</span>
+          </div>
+          <h4 class="exp-card-title">Kajian Rutin Ahad Sore Al Bahjah</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Broadcast & Streaming
+              Operator</span></div>
+          <p class="exp-card-desc">Memproduksi Kajian Rutin Ahad Sore yang diunggah setiap minggu, serta menangani
+            proses live streaming multi-kamera, Hingga Streaming instagram & Tiktok menggunakan sofware OBS Studio.
+          </p>
+          <div class="exp-card-output">
+            <strong>Hasil Setup:</strong> Kajian Rutin Ahad Sore aktif dengan kualitas rekaman jernih dan visual studio
+            yang
+            representatif.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">VMIX</span>
+            <span class="exp-tool-pill">OBS Studio</span>
+            <span class="exp-tool-pill">Stage Setup</span>
+          </div>
+        </div>
+
+        <!-- 05 -->
+        <div class="exp-project-card" data-category="mograph"
+          data-keywords="bumper pembuka motion graphic opening kaligrafi video kajian al bahjah after effects">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#05</span>
+            <span class="exp-card-tag">Motion & Identity</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>12 Oktober 2022</span>
+          </div>
+          <h4 class="exp-card-title">Bumper Pembuka & Identitas Visual Saluran Kajian</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Motion Graphic Designer</span>
+          </div>
+          <p class="exp-card-desc">Merancang animasi intro pembuka bernuansa islami kontemporer dengan ornamen visual
+            elegan untuk seluruh tayangan video resmi Al Bahjah Buyut di media sosial.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Paket bumper intro 5 detik, Lower Third, transisi wiper ornamen, dan outro
+            resmi.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">After Effects</span>
+            <span class="exp-tool-pill">Premiere Pro</span>
+          </div>
+        </div>
+
+        <!-- 06 -->
+        <div class="exp-project-card" data-category="mograph" data-keywords="Short Movie Angkatan Sekolah">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#06</span>
+            <span class="exp-card-tag">Short Movie & Social</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>22 Juli 2024</span>
+          </div>
+          <h4 class="exp-card-title">Short Movie Angkatan</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Cinematographer & Editor</span>
+          </div>
+          <p class="exp-card-desc">Pengambilan gambar sinematik dengan alur cerita yang dramatis</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Video highlight 1-2 menit untuk publikasi cepat di Instagram & YouTube.
+          </div>
+          <div class="exp-card-tools">
+            <span class="exp-tool-pill">Sony A7II</span>
+            <span class="exp-tool-pill">Premiere Pro</span>
+          </div>
+        </div>
+
+        <div class="exp-modal-foot">
+          <span class="exp-foot-note">Seluruh program dijalankan dengan koordinasi tim yang solid, tepat waktu, dan
+            amanah.</span>
+          <button class="exp-foot-action" type="button" data-exp-close>Tutup Detail Proyek</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- end expModalAlbahjah -->
+
+  <!-- Skill Detail Modal -->
+  <div class="skill-modal" id="skillModal" aria-hidden="true">
+    <div class="skill-modal-backdrop" id="skillModalBackdrop"></div>
+    <div class="skill-modal-card" role="dialog" aria-modal="true" aria-labelledby="skillModalTitle">
+      <button class="skill-modal-close" id="skillModalClose" aria-label="Tutup">&times;</button>
+      <div class="skill-modal-icon" id="skillModalIcon"></div>
+      <span class="skill-modal-eyebrow" id="skillModalCategory"></span>
+      <h3 class="skill-modal-title" id="skillModalTitle"></h3>
+      <p class="skill-modal-desc" id="skillModalDesc"></p>
+    </div>
+  </div>
+
+  <div class="container">
+    <section class="section contact-section" id="kontak">
+      <div class="section-head reveal">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Let's <em>Collaborate !!</em></h2>
+      </div>
+
+      <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/xaewyvdk" method="POST">
+        <div class="form-row">
+          <label for="cf-name">Nama</label>
+          <input type="text" id="cf-name" name="name" placeholder="Nama lengkap" required>
+        </div>
+        <div class="form-row">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" placeholder="nama@email.com" required>
+        </div>
+        <div class="form-row">
+          <label for="cf-message">Pesan</label>
+          <textarea id="cf-message" name="message" placeholder="Ceritakan proyekmu..." required></textarea>
+        </div>
+        <button type="submit" class="form-submit">Kirim Pesan</button>
+        <p class="form-note" id="formNote"></p>
+      </form>
+      <div class="reveal">
+        <a class="contact-big" href="mailto:askar.b.abdillah@gmail.com">askar.b.abdillah@gmail.com</a>
+      </div>
+      <div class="socials reveal">
+        <a href="https://www.instagram.com/bayuaskarabdillah/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Bprodrive</span>
+      <span>Made With Pleasure</span>
+    </footer>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Kembali ke atas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  </button>
+
+
+  <!-- Graphic Design Image Lightbox -->
+  <div class="image-lightbox" id="imageLightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Tutup gambar">&times;</button>
+
+    <div class="lightbox-stage" id="lightboxStage">
+      <img class="lightbox-image" id="lightboxImage" src="" alt="">
+    </div>
+
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+
+    <div class="lightbox-controls" aria-label="Kontrol zoom">
+      <button class="lightbox-control" id="zoomOut" aria-label="Perkecil gambar">−</button>
+      <button class="lightbox-control" id="zoomReset" aria-label="Reset zoom">1×</button>
+      <button class="lightbox-control" id="zoomIn" aria-label="Perbesar gambar">+</button>
+    </div>
+  </div>
+
+  <script>
+    // Toggle menu mobile
+    const toggle = document.getElementById('navToggle');
+    const nav = document.getElementById('mainNav');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        nav.classList.toggle('open');
+        toggle.textContent = nav.classList.contains('open') ? 'TUTUP' : 'MENU';
+      });
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        nav.classList.remove('open');
+        toggle.textContent = 'MENU';
+      }));
+    }
+
+    // Smooth scroll elegan & responsif untuk klik menu (Tentang, Karya, Perjalanan, Kontak)
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+    let scrollAnimId = null;
+    let userInterrupted = false;
+
+    function cancelSmoothScroll() {
+      if (scrollAnimId !== null) {
+        cancelAnimationFrame(scrollAnimId);
+        scrollAnimId = null;
+      }
+    }
+
+    function smoothScrollTo(targetY) {
+      cancelSmoothScroll();
+      userInterrupted = false;
+
+      const startY = window.scrollY;
+      const diff = targetY - startY;
+      // Durasi menyesuaikan jarak: dekat = cepat & responsif, jauh = tetap dibatasi agar tidak lama
+      const duration = Math.min(650, Math.max(200, Math.abs(diff) * 0.4));
+      let startTime = null;
+
+      function stopOnUserInput() {
+        userInterrupted = true;
+      }
+      window.addEventListener('wheel', stopOnUserInput, { passive: true, once: true });
+      window.addEventListener('touchstart', stopOnUserInput, { passive: true, once: true });
+
+      function step(timestamp) {
+        if (userInterrupted) {
+          cancelSmoothScroll();
+          return;
+        }
+        if (startTime === null) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo({ top: startY + diff * easeOutExpo(progress), left: 0, behavior: 'auto' });
+        if (progress < 1) {
+          scrollAnimId = requestAnimationFrame(step);
+        } else {
+          scrollAnimId = null;
+        }
+      }
+      scrollAnimId = requestAnimationFrame(step);
+    }
+    document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const headerOffset = 90;
+        const targetY = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+          window.scrollTo(0, Math.max(targetY, 0));
+        } else {
+          smoothScrollTo(Math.max(targetY, 0));
+        }
+        history.pushState(null, '', link.getAttribute('href'));
+      });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Scroll progress bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+      const h = document.documentElement;
+      const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight || 1) * 100;
+      scrollProgress.style.width = scrolled + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    updateScrollProgress();
+
+    // Back to top button
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
+    }, { passive: true });
+    backToTop.addEventListener('click', () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        window.scrollTo(0, 0);
+      } else {
+        smoothScrollTo(0);
+      }
+    });
+
+    // Active nav link based on section in view
+    const navLinksList = document.querySelectorAll('nav a');
+    const navSections = Array.from(navLinksList)
+      .map(a => document.querySelector(a.getAttribute('href')))
+      .filter(Boolean);
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinksList.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+        }
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    navSections.forEach(s => navObserver.observe(s));
+
+    // Form kontak — kirim ke Formspree via AJAX (tanpa reload halaman)
+    const contactForm = document.getElementById('contactForm');
+    const formNote = document.getElementById('formNote');
+    const formSubmitBtn = contactForm ? contactForm.querySelector('.form-submit') : null;
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        formNote.classList.remove('success', 'error');
+        formNote.textContent = 'Mengirim pesan...';
+        if (formSubmitBtn) formSubmitBtn.disabled = true;
+
+        try {
+          const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: new FormData(contactForm),
+            headers: { 'Accept': 'application/json' }
+          });
+
+          if (response.ok) {
+            formNote.textContent = 'Pesan terkirim, terima kasih! Aku akan segera membalas.';
+            formNote.classList.add('success');
+            contactForm.reset();
+          } else {
+            formNote.textContent = 'Gagal mengirim. Coba lagi atau hubungi lewat email di atas.';
+            formNote.classList.add('error');
+          }
+        } catch (err) {
+          formNote.textContent = 'Gagal mengirim. Coba lagi atau hubungi lewat email di atas.';
+          formNote.classList.add('error');
+        } finally {
+          if (formSubmitBtn) formSubmitBtn.disabled = false;
+        }
+      });
+    }
+
+    // Cursor glow + subtle tilt (desktop / fine pointer only)
+    if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+      const glow = document.createElement('div');
+      glow.className = 'cursor-glow';
+      document.body.appendChild(glow);
+
+      let mx = 0, my = 0, gx = 0, gy = 0;
+      window.addEventListener('mousemove', (e) => {
+        mx = e.clientX; my = e.clientY;
+        glow.classList.add('active');
+      });
+      (function loop() {
+        gx += (mx - gx) * 0.18;
+        gy += (my - gy) * 0.18;
+        glow.style.left = gx + 'px';
+        glow.style.top = gy + 'px';
+        requestAnimationFrame(loop);
+      })();
+
+      document.querySelectorAll('a, button, .work-card').forEach(el => {
+        el.addEventListener('mouseenter', () => glow.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => glow.classList.remove('hovering'));
+      });
+
+      // Subtle 3D tilt on portrait & work visuals
+      document.querySelectorAll('.portrait, .work-visual').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const r = el.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          el.style.transform = `perspective(900px) rotateY(${px * 6}deg) rotateX(${-py * 6}deg) scale(1.02)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'perspective(900px) rotateY(0) rotateX(0) scale(1)';
+        });
+      });
+    }
+
+    // YouTube Video Player Manager (Autoplay, single-active instance & instant stop on modal close)
+    function stopAllYouTubeCards(scope = document) {
+      if (!scope) return;
+      const cards = scope.querySelectorAll('.youtube-card');
+      cards.forEach(card => {
+        const iframe = card.querySelector('iframe');
+        if (iframe) {
+          try {
+            iframe.contentWindow?.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+            iframe.src = 'about:blank';
+          } catch (err) { }
+          if (card.dataset.originalContent) {
+            card.innerHTML = card.dataset.originalContent;
+          } else {
+            iframe.remove();
+          }
+        }
+      });
+    }
+
+    function initYouTubePlayer() {
+      const cards = document.querySelectorAll('.youtube-card');
+      cards.forEach(card => {
+        if (!card.dataset.originalContent) {
+          card.dataset.originalContent = card.innerHTML;
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        const card = e.target.closest('.youtube-card');
+        if (!card) return;
+        if (e.target.closest('.youtube-link')) return;
+
+        if (card.querySelector('iframe')) return;
+
+        stopAllYouTubeCards(document);
+
+        const videoId = card.dataset.videoId;
+        if (!videoId) return;
+
+        if (!card.dataset.originalContent) {
+          card.dataset.originalContent = card.innerHTML;
+        }
+
+        card.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1" title="YouTube Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+      });
+    }
+    initYouTubePlayer();
+
+    // Seamless Image Loading Fade-in + Natural Aspect-Ratio auto-detect for Graphic Design cards
+    function initSeamlessImageLoading() {
+      const images = document.querySelectorAll('.work-visual img, .tl-media img, .portrait img');
+      images.forEach(img => {
+        const applyNaturalRatio = () => {
+          const wrapper = img.parentElement;
+          if (wrapper && wrapper.classList.contains('work-visual--natural')) {
+            const w = img.naturalWidth;
+            const h = img.naturalHeight;
+            if (w && h) {
+              wrapper.style.aspectRatio = `${w} / ${h}`;
+            }
+          }
+        };
+
+        const markLoaded = () => {
+          img.classList.add('loaded');
+          if (img.parentElement) {
+            img.parentElement.classList.add('loaded');
+          }
+          applyNaturalRatio();
+        };
+
+        if (img.complete && img.naturalWidth !== 0) {
+          markLoaded();
+        } else {
+          img.addEventListener('load', markLoaded);
+          img.addEventListener('error', () => {
+            img.classList.add('loaded');
+            if (img.parentElement) img.parentElement.classList.add('loaded');
+          });
+        }
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSeamlessImageLoading);
+    } else {
+      initSeamlessImageLoading();
+    }
+
+    // Graphic Design Image Zoom / Lightbox
+    (() => {
+      const lightbox = document.getElementById('imageLightbox');
+      const stage = document.getElementById('lightboxStage');
+      const image = document.getElementById('lightboxImage');
+      const closeBtn = document.getElementById('lightboxClose');
+      const zoomInBtn = document.getElementById('zoomIn');
+      const zoomOutBtn = document.getElementById('zoomOut');
+      const zoomResetBtn = document.getElementById('zoomReset');
+      const caption = document.getElementById('lightboxCaption');
+
+      if (!lightbox || !stage || !image) return;
+
+      let scale = 1;
+      let posX = 0;
+      let posY = 0;
+      let dragging = false;
+      let startX = 0;
+      let startY = 0;
+
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+      function renderZoom() {
+        if (!image || !stage) return;
+
+        const scaledWidth = image.offsetWidth * scale;
+        const scaledHeight = image.offsetHeight * scale;
+        const maxPosX = Math.max(0, (scaledWidth - stage.offsetWidth) / 2);
+        const maxPosY = Math.max(0, (scaledHeight - stage.offsetHeight) / 2);
+
+        posX = clamp(posX, -maxPosX, maxPosX);
+        posY = clamp(posY, -maxPosY, maxPosY);
+
+        image.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+        zoomResetBtn.textContent = `${scale % 1 === 0 ? scale : scale.toFixed(1)}×`;
+      }
+
+      function resetZoom() {
+        scale = 1;
+        posX = 0;
+        posY = 0;
+        stage.classList.remove('zoomed');
+        renderZoom();
+      }
+
+      function setZoom(nextScale) {
+        const oldScale = scale;
+        scale = clamp(nextScale, 1, 4);
+
+        // Keep the image centered when returning to 1×.
+        if (scale === 1) {
+          posX = 0;
+          posY = 0;
+        } else if (oldScale === 1) {
+          posX = 0;
+          posY = 0;
+        }
+
+        stage.classList.toggle('zoomed', scale > 1);
+        renderZoom();
+      }
+
+      function openLightbox(img) {
+        image.src = img.currentSrc || img.src;
+        image.alt = img.alt || 'Graphic Design';
+        const title = img.closest('.work-card')?.querySelector('.work-title')?.textContent?.trim();
+        const meta = img.closest('.work-card')?.querySelector('.work-meta')?.textContent?.trim();
+        caption.textContent = [title, meta].filter(Boolean).join('  /  ');
+
+        resetZoom();
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+          if (!lightbox.classList.contains('open')) image.src = '';
+        }, 250);
+      }
+
+      document.querySelectorAll('.work-visual--natural img').forEach(img => {
+        img.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openLightbox(img);
+        });
+      });
+
+      closeBtn.addEventListener('click', closeLightbox);
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      zoomInBtn.addEventListener('click', () => setZoom(scale + 0.5));
+      zoomOutBtn.addEventListener('click', () => setZoom(scale - 0.5));
+      zoomResetBtn.addEventListener('click', resetZoom);
+
+      // Mouse wheel zoom.
+      stage.addEventListener('wheel', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+        e.preventDefault();
+        setZoom(scale + (e.deltaY < 0 ? 0.25 : -0.25));
+      }, { passive: false });
+
+      // Drag the image while zoomed.
+      stage.addEventListener('mousedown', (e) => {
+        if (scale <= 1 || e.button !== 0) return;
+        dragging = true;
+        startX = e.clientX - posX;
+        startY = e.clientY - posY;
+        stage.classList.add('dragging');
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        posX = e.clientX - startX;
+        posY = e.clientY - startY;
+        renderZoom();
+      });
+
+      window.addEventListener('mouseup', () => {
+        dragging = false;
+        stage.classList.remove('dragging');
+      });
+
+      // Touch events for iOS Pinch-to-zoom and Pan
+      let initialDistance = null;
+      let initialScale = 1;
+
+      stage.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          initialDistance = Math.hypot(dx, dy);
+          initialScale = scale;
+        } else if (e.touches.length === 1 && scale > 1) {
+          dragging = true;
+          startX = e.touches[0].clientX - posX;
+          startY = e.touches[0].clientY - posY;
+          stage.classList.add('dragging');
+        }
+      }, { passive: false });
+
+      stage.addEventListener('touchmove', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const distance = Math.hypot(dx, dy);
+
+          if (initialDistance) {
+            const scaleChange = distance / initialDistance;
+            setZoom(initialScale * scaleChange);
+          }
+        } else if (e.touches.length === 1 && dragging) {
+          e.preventDefault();
+          posX = e.touches[0].clientX - startX;
+          posY = e.touches[0].clientY - startY;
+          renderZoom();
+        }
+      }, { passive: false });
+
+      stage.addEventListener('touchend', (e) => {
+        initialDistance = null;
+        if (e.touches.length < 1) {
+          dragging = false;
+          stage.classList.remove('dragging');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === '+' || e.key === '=') setZoom(scale + 0.5);
+        if (e.key === '-' || e.key === '_') setZoom(scale - 0.5);
+        if (e.key === '0') resetZoom();
+      });
+    })();
+
+    // Skill & Software detail modal
+    (() => {
+      const ICON_STYLE = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
+      const ICONS = {
+        zap: `<svg ${ICON_STYLE}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+        penTool: `<svg ${ICON_STYLE}><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>`,
+        film: `<svg ${ICON_STYLE}><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M2 16h5M17 8h5M17 16h5"/></svg>`,
+        activity: `<svg ${ICON_STYLE}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+        streaming: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="35" r="2.5" fill="#C99A5A"/><path d="M16.5 28C18.57 25.93 21.18 24.9 24 24.9C26.82 24.9 29.43 25.93 31.5 28" stroke="#C99A5A" stroke-width="2" stroke-linecap="round"/><path d="M11 22.5C14.59 18.91 19.11 17.1 24 17.1C28.89 17.1 33.41 18.91 37 22.5" stroke="#C99A5A" stroke-width="2" stroke-linecap="round"/><path d="M5.5 17C10.45 12.05 16.99 9.5 24 9.5C31.01 9.5 37.55 12.05 42.5 17" stroke="#C99A5A" stroke-width="2" stroke-linecap="round"/></svg>`,
+        kamera: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="16" width="28" height="18" rx="4" stroke="#C99A5A" stroke-width="2"/><path d="M16 16L19 12H29L32 16" stroke="#C99A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="25" r="6" stroke="#C99A5A" stroke-width="2"/><circle cx="33" cy="20" r="1.5" fill="#C99A5A"/></svg>',
+        users: `<svg ${ICON_STYLE}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+        Drone: '<svg width="80" height="80" viewBox="4 4 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="17" y="19" width="14" height="10" rx="3" stroke="#C99A5A" strokeWidth="1.8"/><path d="M17 22H11C9.9 22 9 21.1 9 20V16" stroke="#C99A5A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M31 22H37C38.1 22 39 21.1 39 20V16" stroke="#C99A5A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M6 15C8.5 13.2 12.5 13.2 15 15" stroke="#C99A5A" strokeWidth="1.6" strokeLinecap="round"/><path d="M7 18C9.5 19.8 12.5 19.8 15 18" stroke="#C99A5A" strokeWidth="1.6" strokeLinecap="round"/><path d="M33 15C35.5 13.2 39.5 13.2 42 15" stroke="#C99A5A" strokeWidth="1.6" strokeLinecap="round"/><path d="M33 18C35.5 19.8 38.5 19.8 41 18" stroke="#C99A5A" strokeWidth="1.6" strokeLinecap="round"/><rect x="21" y="29" width="6" height="5" rx="1.5" stroke="#C99A5A" strokeWidth="1.6"/><circle cx="24" cy="31.5" r="1.4" stroke="#C99A5A" strokeWidth="1.4"/><path d="M19 29L16 34" stroke="#C99A5A" strokeWidth="1.6" strokeLinecap="round"/><path d="M29 29L32 34" stroke="#C99A5A" strokeWidth="1.6" strokeLinecap="round"/><path d="M21 10C22.7 8.5 25.3 8.5 27 10" stroke="#C99A5A" strokeWidth="1.5" strokeLinecap="round"/><path d="M19 7.5C21.8 5 26.2 5 29 7.5" stroke="#C99A5A" strokeWidth="1.5" strokeLinecap="round"/></svg>',
+        scissors: `<svg ${ICON_STYLE}><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg>`,
+        image: `<svg ${ICON_STYLE}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>`,
+        shapes: `<svg ${ICON_STYLE}><path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198 0L16.3 8.9a.7.7 0 0 1-.628 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/></svg>`,
+        smartphone: `<svg ${ICON_STYLE}><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>`
+      };
+
+      const SKILLS = {
+        'motion-graphic': {
+          category: 'Adobe After Effect',
+          title: 'Motion Graphic Design',
+          icon: 'layers',
+          desc: 'Menciptakan animasi grafis untuk kebutuhan bumper, lower third, teaser, dan elemen visual dinamis lainnya, dengan perhatian pada ritme, transisi, dan storytelling visual.'
+        },
+        'graphic-design': {
+          category: 'Canva, Adobe Photoshop',
+          title: 'Graphic Design',
+          icon: 'penTool',
+          desc: 'Merancang identitas visual, poster, dan elemen desain 2D yang komunikatif, konsisten dengan branding, serta siap digunakan di berbagai media.'
+        },
+        'video-editing': {
+          category: 'Capcut, Adobe Premiere Pro',
+          title: 'Video Editing',
+          icon: 'film',
+          desc: 'Menyunting footage menjadi konten yang terstruktur dan menarik, mulai dari pemotongan, penataan alur, hingga penyelarasan audio-visual.'
+        },
+        'av-sync': {
+          category: 'Adobe Audition, Premiere Pro',
+          title: 'Audio-Visual Synchronization',
+          icon: 'activity',
+          desc: 'Menyelaraskan elemen suara dan visual secara presisi agar setiap detik konten terasa mulus dan profesional.'
+        },
+        'branding': {
+          category: 'Vmix, OBS Studio',
+          title: 'Streaming & Broadcasting',
+          icon: 'streaming',
+          desc: 'Menguasai vMix dan OBS Studio untuk pengelolaan live streaming, switching, dan broadcasting secara real-time.'
+        },
+        'leadership': {
+          category: 'Broadcasting',
+          title: 'Camera Skills',
+          icon: 'kamera',
+          desc: 'Berpengalaman mengoperasikan berbagai kamera profesional untuk kebutuhan produksi, dokumentasi, dan broadcasting. Camera: Sony PXW-Z190 • PXW-Z90 • NX200 • NX100 • MC88 • MC2500 • A7 II • A7C • A6000'
+        },
+        'after-effects': {
+          category: 'DJI Mini 2',
+          title: 'Drone Pilot',
+          icon: 'Drone',
+          desc: 'Menghasilkan aerial footage cinematic untuk kebutuhan dokumentasi, promosi, dan produksi visual.'
+        },
+      };
+
+      const skillModal = document.getElementById('skillModal');
+      const skillModalBackdrop = document.getElementById('skillModalBackdrop');
+      const skillModalClose = document.getElementById('skillModalClose');
+      const skillModalIcon = document.getElementById('skillModalIcon');
+      const skillModalCategory = document.getElementById('skillModalCategory');
+      const skillModalTitle = document.getElementById('skillModalTitle');
+      const skillModalDesc = document.getElementById('skillModalDesc');
+
+      if (!skillModal) return;
+
+      function openSkillModal(key) {
+        const data = SKILLS[key];
+        if (!data) return;
+        skillModalIcon.innerHTML = ICONS[data.icon] || '';
+        skillModalCategory.textContent = data.category;
+        skillModalTitle.textContent = data.title;
+        skillModalDesc.textContent = data.desc;
+        skillModal.classList.add('open');
+        skillModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeSkillModal() {
+        skillModal.classList.remove('open');
+        skillModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.skill-tag').forEach(btn => {
+        btn.addEventListener('click', () => openSkillModal(btn.dataset.skill));
+      });
+
+      skillModalClose.addEventListener('click', closeSkillModal);
+      skillModalBackdrop.addEventListener('click', closeSkillModal);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && skillModal.classList.contains('open')) closeSkillModal();
+      });
+    })();
+
+    // Portfolio category modal (Graphic Design / Motion Graphic)
+    (() => {
+      const openers = document.querySelectorAll('.portfolio-filter-btn[data-portfolio-target]');
+      const modals = document.querySelectorAll('.portfolio-modal');
+      if (!openers.length || !modals.length) return;
+
+      let activeModal = null;
+      let lastFocused = null;
+
+      function openPortfolioModal(modal, trigger) {
+        if (!modal) return;
+        activeModal = modal;
+        lastFocused = trigger || document.activeElement;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        const closeBtn = modal.querySelector('.portfolio-modal-close');
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
+      }
+
+      function closePortfolioModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (typeof stopAllYouTubeCards === 'function') {
+          stopAllYouTubeCards(modal);
+        }
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+          lastFocused.focus({ preventScroll: true });
+        }
+        activeModal = null;
+      }
+
+      openers.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const modal = document.getElementById(btn.dataset.portfolioTarget);
+          openPortfolioModal(modal, btn);
+        });
+      });
+
+      modals.forEach(modal => {
+        modal.querySelectorAll('[data-portfolio-close]').forEach(el => {
+          el.addEventListener('click', () => closePortfolioModal(modal));
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeModal) closePortfolioModal(activeModal);
+      });
+    })();
+
+
+
+    // ==========================================================================
+    // Experience Projects Floating Modal Manager (KIAN Company & Al Bahjah)
+    // ==========================================================================
+    (function () {
+      const expTriggers = document.querySelectorAll('.tl-stat-item[data-exp-target]');
+      const expModals = document.querySelectorAll('.exp-modal');
+      let activeExpModal = null;
+      let prevFocusedElement = null;
+
+      function openExpModal(modalId, triggerEl) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        prevFocusedElement = triggerEl || document.activeElement;
+        activeExpModal = modal;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        // Focus close button inside modal
+        const closeBtn = modal.querySelector('.exp-modal-close');
+        if (closeBtn) {
+          setTimeout(() => closeBtn.focus({ preventScroll: true }), 100);
+        }
+      }
+
+      function closeExpModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+
+        // Restore body scroll only if no other modals are open
+        const anyModalOpen = document.querySelector('.portfolio-modal.open, .skill-modal.open, .exp-modal.open, .lightbox.open');
+        if (!anyModalOpen) {
+          document.body.style.overflow = '';
+        }
+
+        if (prevFocusedElement && typeof prevFocusedElement.focus === 'function') {
+          prevFocusedElement.focus({ preventScroll: true });
+        }
+        activeExpModal = null;
+      }
+
+      // Trigger click and Enter/Space key listeners on stat items
+      expTriggers.forEach(item => {
+        item.addEventListener('click', () => {
+          const targetId = item.getAttribute('data-exp-target');
+          if (targetId) openExpModal(targetId, item);
+        });
+
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const targetId = item.getAttribute('data-exp-target');
+            if (targetId) openExpModal(targetId, item);
+          }
+        });
+      });
+
+      // Close handlers for experience modals
+      expModals.forEach(modal => {
+        modal.querySelectorAll('[data-exp-close]').forEach(btn => {
+          btn.addEventListener('click', () => closeExpModal(modal));
+        });
+      });
+
+      // Escape key to close active experience modal
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeExpModal) {
+          closeExpModal(activeExpModal);
+        }
+      });
+
+      // Interactive Filter Tabs & Real-time Search within Experience Modals
+      function initModalFilters() {
+        const filterGroups = document.querySelectorAll('.exp-filter-group[data-target]');
+        filterGroups.forEach(group => {
+          const containerId = group.getAttribute('data-target');
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          const filterBtns = group.querySelectorAll('.exp-filter-btn');
+          const cards = container.querySelectorAll('.exp-project-card');
+
+          filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+              filterBtns.forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+
+              const filterVal = btn.getAttribute('data-filter');
+              applyFilters(container);
+            });
+          });
+        });
+
+        const searchInputs = document.querySelectorAll('.exp-search-box input[data-search-target]');
+        searchInputs.forEach(input => {
+          const containerId = input.getAttribute('data-search-target');
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          input.addEventListener('input', () => {
+            applyFilters(container);
+          });
+        });
+
+        function applyFilters(container) {
+          const containerId = container.id;
+          const filterGroup = document.querySelector(`.exp-filter-group[data-target="${containerId}"]`);
+          const searchInput = document.querySelector(`.exp-search-box input[data-search-target="${containerId}"]`);
+
+          const activeBtn = filterGroup ? filterGroup.querySelector('.exp-filter-btn.active') : null;
+          const filterVal = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
+          const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+          const cards = container.querySelectorAll('.exp-project-card');
+          let visibleCount = 0;
+
+          cards.forEach(card => {
+            const cardCat = (card.getAttribute('data-category') || '').toLowerCase();
+            const cardKeywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+            const cardText = card.textContent.toLowerCase();
+
+            let matchesFilter = (filterVal === 'all') || cardCat.includes(filterVal);
+            let matchesQuery = !query || cardKeywords.includes(query) || cardText.includes(query);
+
+            if (matchesFilter && matchesQuery) {
+              card.style.display = 'flex';
+              visibleCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          // Handle no results message
+          let noResultsMsg = container.querySelector('.exp-no-results');
+          if (visibleCount === 0) {
+            if (!noResultsMsg) {
+              noResultsMsg = document.createElement('div');
+              noResultsMsg.className = 'exp-no-results';
+              noResultsMsg.innerHTML = '🔍 Tidak ada proyek yang cocok dengan kata kunci atau filter ini.';
+              container.appendChild(noResultsMsg);
+            }
+            noResultsMsg.style.display = 'block';
+          } else if (noResultsMsg) {
+            noResultsMsg.style.display = 'none';
+          }
+        }
+      }
+
+      initModalFilters();
+    })();
+
+    // ============================================================
+    // SINKRONISASI OTOMATIS JUMLAH PROYEK & KARYA BERDASARKAN ELEMEN ASLI
+    // Menghitung jumlah proyek secara dinamis dari DOM dan memperbarui
+    // nomor stat, badge modal, filter tombol, dan aria-label secara otomatis.
+    // Ketika ada proyek baru ditambahkan, angka langsung terupdate.
+    // ============================================================
+    function syncProjectCounts() {
+      // 1. Sinkronisasi Statistik Proyek Pengalaman (Timeline .tl-stat-item)
+      const expStatItems = document.querySelectorAll('.tl-stat-item[data-exp-target]');
+      expStatItems.forEach(item => {
+        const targetId = item.getAttribute('data-exp-target');
+        if (!targetId) return;
+
+        const modal = document.getElementById(targetId);
+        if (!modal) return;
+
+        const projectCards = modal.querySelectorAll('.exp-project-card');
+        const count = projectCards.length;
+
+        // Perbarui atribut data-count dan angka di badge timeline
+        const numEl = item.querySelector('.tl-stat-number');
+        if (numEl) {
+          const prevCount = parseInt(numEl.getAttribute('data-count'), 10);
+          numEl.setAttribute('data-count', count);
+          // Jika animasi sudah berjalan atau elemen sudah terlihat, update teks langsung
+          if (numEl.dataset.hasAnimated === 'true' || (numEl.textContent && numEl.textContent !== '0' && prevCount !== count)) {
+            numEl.textContent = count;
+          }
+        }
+
+        // Perbarui aria-label pada tombol stat
+        const oldAria = item.getAttribute('aria-label') || '';
+        if (oldAria) {
+          const updatedAria = oldAria.replace(/\d+\+?\s*Proyek/i, `${count}+ Proyek`);
+          item.setAttribute('aria-label', updatedAria);
+        }
+
+        // Perbarui badge di dalam modal header (contoh: "17+ Proyek Selesai")
+        const badgeCount = modal.querySelector('.exp-modal-badge--count');
+        if (badgeCount) {
+          badgeCount.textContent = `${count}+ Proyek Selesai`;
+        }
+
+        // Perbarui tombol filter "Semua" di toolbar modal (contoh: "Semua (17)")
+        const allFilterBtn = modal.querySelector('.exp-filter-btn[data-filter="all"]');
+        if (allFilterBtn) {
+          allFilterBtn.textContent = `Semua (${count})`;
+        }
+
+        // Otomatisasi penomoran indeks kartu proyek (#01, #02, ...)
+        projectCards.forEach((card, idx) => {
+          const indexEl = card.querySelector('.exp-card-index');
+          if (indexEl) {
+            const formattedIndex = '#' + String(idx + 1).padStart(2, '0');
+            if (indexEl.textContent !== formattedIndex) {
+              indexEl.textContent = formattedIndex;
+            }
+          }
+        });
+      });
+
+      // 2. Sinkronisasi Jumlah Karya Portofolio (.portfolio-filter-btn)
+      const portfolioBtns = document.querySelectorAll('.portfolio-filter-btn[data-portfolio-target]');
+      portfolioBtns.forEach(btn => {
+        const targetId = btn.getAttribute('data-portfolio-target');
+        if (!targetId) return;
+
+        const pModal = document.getElementById(targetId);
+        if (!pModal) return;
+
+        const workCards = pModal.querySelectorAll('.work-card');
+        const count = workCards.length;
+
+        // Perbarui teks jumlah karya (contoh: "08 Karya")
+        const countEl = btn.querySelector('.pf-count');
+        if (countEl) {
+          const formatted = String(count).padStart(2, '0');
+          countEl.textContent = `${formatted} Karya`;
+        }
+
+        // Otomatisasi penomoran karya di dalam modal galeri (contoh: "01 / Graphic Design")
+        workCards.forEach((wCard, idx) => {
+          const indexEl = wCard.querySelector('.work-index');
+          if (indexEl) {
+            const formatted = String(idx + 1).padStart(2, '0');
+            const parts = indexEl.textContent.split('/');
+            if (parts.length > 1) {
+              indexEl.textContent = `${formatted} / ${parts.slice(1).join('/').trim()}`;
+            }
+          }
+        });
+      });
+    }
+
+    // Expose fungsi ke window agar dapat dipanggil kapan saja secara global
+    window.syncProjectCounts = syncProjectCounts;
+
+    // Pantau penambahan/penghapusan proyek secara real-time via MutationObserver
+    if (window.MutationObserver) {
+      let mutationDebounce = null;
+      const projectObserver = new MutationObserver((mutations) => {
+        let shouldUpdate = false;
+        for (const mutation of mutations) {
+          if (mutation.type === 'childList') {
+            const hasProjectCard = (nodes) => {
+              for (const node of nodes) {
+                if (node.nodeType === 1) {
+                  if (node.matches && (node.matches('.exp-project-card, .work-card, .tl-stat-item, .tl-item'))) return true;
+                  if (node.querySelector && node.querySelector('.exp-project-card, .work-card, .tl-stat-item, .tl-item')) return true;
+                }
+              }
+              return false;
+            };
+            if (hasProjectCard(mutation.addedNodes) || hasProjectCard(mutation.removedNodes)) {
+              shouldUpdate = true;
+              break;
+            }
+          }
+        }
+        if (shouldUpdate) {
+          if (mutationDebounce) cancelAnimationFrame(mutationDebounce);
+          mutationDebounce = requestAnimationFrame(() => {
+            syncProjectCounts();
+          });
+        }
+      });
+
+      // Mulai observasi DOM untuk mendeteksi perubahan proyek baru
+      projectObserver.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // Animasi Counter Angka Proyek Ditangani (Count-up dari awal hingga target)
+    function initStatCounters() {
+      // Jalankan sinkronisasi awal sebelum animasi agar data-count selalu akurat
+      syncProjectCounts();
+
+      const statNumbers = document.querySelectorAll('.tl-stat-number[data-count]');
+      if (!statNumbers.length) return;
+
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            counterObserver.unobserve(el);
+            animateCountUp(el);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      function animateCountUp(el) {
+        const target = parseInt(el.getAttribute('data-count'), 10) || 0;
+        const duration = 1600; // durasi animasi dalam milidetik
+        let startTime = null;
+
+        function easeOutQuart(x) {
+          return 1 - Math.pow(1 - x, 4);
+        }
+
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easedProgress = easeOutQuart(progress);
+          const currentVal = Math.floor(easedProgress * target);
+
+          el.textContent = currentVal;
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = target;
+            el.dataset.hasAnimated = 'true';
+          }
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      statNumbers.forEach(num => counterObserver.observe(num));
+    }
+    initStatCounters();
+
+  </script>
+
+</body>
+
+</html>
