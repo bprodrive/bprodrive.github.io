@@ -88,11 +88,20 @@
         const data = await response.json();
         currentSha = data.sha;
 
-        // Decode Base64 ke HTML
-        const htmlContent = decodeURIComponent(escape(atob(data.content)));
+        // Decode Base64 ke HTML lengkap
+        const fullHtml = decodeURIComponent(escape(atob(data.content)));
 
-        // Render HTML ke dalam container
-        container.innerHTML = htmlContent;
+        // Buat parser untuk memisahkan head (CSS/Font) dan body
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(fullHtml, 'text/html');
+
+        // Pindahkan semua style/link CSS dari head asli ke document admin
+        doc.head.querySelectorAll('link, style').forEach(node => {
+          document.head.appendChild(node.cloneNode(true));
+        });
+
+        // Render bagian body ke container
+        container.innerHTML = doc.body.innerHTML;
 
         // Aktifkan mode Inline Editing pada teks & judul
         makeElementsEditable();
