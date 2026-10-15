@@ -1,14 +1,14 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content Manager</title>
-  <!-- Script Netlify Identity untuk Login -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TinaCMS Admin</title>
 </head>
 <body>
-  <!-- Script Utama Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script type="module">
+    import { createTinaAdmin } from 'https://unpkg.com/@tinacms/app@latest/dist/index.js';
+    createTinaAdmin();
+  </script>
 </body>
 </html>
