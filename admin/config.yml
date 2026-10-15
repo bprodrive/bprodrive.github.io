@@ -1,0 +1,17 @@
+backend:
+  name: github
+  repo: bprodrive/bprodrive.github.io # Ganti dengan username/nama repo Anda
+  branch: main # Sesuaikan dengan branch default Anda (main atau master)
+
+media_folder: "images/uploads" # Folder tempat menyimpan gambar yang di-upload lewat admin
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+  - label: "Artikel Blog"
+    folder: "content/blog" # Folder tempat file artikel (.md) akan tersimpan otomatis
+    create: true
+    fields:
+      - {label: "Judul", name: "title", widget: "string"}
+      - {label: "Tanggal", name: "date", widget: "datetime"}
+      - {label: "Isi Konten", name: "body", widget: "markdown"}
