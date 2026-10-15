@@ -1,155 +1,2348 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Visual Editor</title>
+  <title>CMS Studio — Bayu Askar Abdillah Admin</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Highlight visual saat elemen difokuskan untuk diedit */
-    [contenteditable="true"]:hover {
-      outline: 2px dashed #6366f1;
-      outline-offset: 4px;
-      cursor: text;
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#0b0b0d',
+              alt: '#141318',
+              surface: '#1b1a20',
+              card: '#16151c',
+              border: 'rgba(201, 168, 118, 0.18)',
+              borderStrong: 'rgba(201, 168, 118, 0.35)',
+              gold: '#c9a876',
+              goldLight: '#e4c99b',
+              goldSoft: '#7a6a4e',
+              text: '#ede8e1',
+              dim: '#9c968c',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Fraunces', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
     }
-    [contenteditable="true"]:focus {
-      outline: 2px solid #4f46e5;
-      outline-offset: 4px;
-      background-color: rgba(99, 102, 241, 0.05);
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0b0d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a2833;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #c9a876;
+    }
+
+    /* Ambient Glow background */
+    .ambient-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .ambient-glow::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      top: -200px;
+      left: -150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201, 168, 118, 0.08), transparent 70%);
+      filter: blur(80px);
+    }
+    .ambient-glow::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      right: -100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.06), transparent 70%);
+      filter: blur(80px);
+    }
+
+    /* Glass Effect */
+    .glass-card {
+      background: rgba(22, 21, 28, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(201, 168, 118, 0.16);
+    }
+    .glass-card-hover {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(201, 168, 118, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(201, 168, 118, 0.08);
+    }
+
+    /* Active Nav Tab */
+    .nav-item.active {
+      background: rgba(201, 168, 118, 0.12);
+      color: #c9a876;
+      border-right: 3px solid #c9a876;
+    }
+
+    /* Markdown Editor Preview */
+    .prose-dark {
+      color: #ede8e1;
+      line-height: 1.7;
+    }
+    .prose-dark h1 { font-size: 1.75rem; font-weight: 700; color: #ede8e1; margin-top: 1rem; margin-bottom: 0.5rem; font-family: 'Fraunces', serif; }
+    .prose-dark h2 { font-size: 1.4rem; font-weight: 600; color: #c9a876; margin-top: 1rem; margin-bottom: 0.5rem; }
+    .prose-dark h3 { font-size: 1.15rem; font-weight: 600; color: #e4c99b; margin-top: 0.8rem; margin-bottom: 0.4rem; }
+    .prose-dark p { margin-bottom: 0.8rem; color: #9c968c; }
+    .prose-dark strong { color: #ede8e1; font-weight: 600; }
+    .prose-dark a { color: #c9a876; text-decoration: underline; }
+    .prose-dark code { background: #141318; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: #e4c99b; }
+    .prose-dark blockquote { border-left: 3px solid #c9a876; padding-left: 1rem; color: #9c968c; font-style: italic; }
+    .prose-dark ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.8rem; }
+    .prose-dark li { margin-bottom: 0.25rem; }
+
+    /* Animated pulse dot */
+    @keyframes pulseGold {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.9); }
+    }
+    .pulse-gold {
+      animation: pulseGold 2s infinite ease-in-out;
     }
   </style>
 </head>
-<body class="bg-gray-100">
 
-  <!-- Container untuk memuat tampilan web asli -->
-  <div id="webContainer" class="min-h-screen">
-    <div class="p-10 text-center font-sans text-gray-500">Memuat tampilan web...</div>
-  </div>
+<body class="bg-[#0b0b0d] text-brand-text font-sans antialiased min-h-screen selection:bg-brand-gold selection:text-brand-bg relative overflow-x-hidden">
 
-  <!-- Floating Admin Controller (Melayang di Bawah Layar) -->
-  <div id="adminBar" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-900/95 text-white px-6 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-4 border border-gray-700 z-[999999]">
-    <div class="flex items-center gap-2">
-      <span class="inline-block w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-      <span class="text-sm font-semibold tracking-wide">Visual Admin Mode</span>
+  <!-- Ambient Glow Background -->
+  <div class="ambient-glow"></div>
+
+  <!-- Main Layout Wrapper -->
+  <div class="flex h-screen overflow-hidden relative z-10">
+
+    <!-- ============================================================== -->
+    <!-- SIDEBAR NAVIGATION -->
+    <!-- ============================================================== -->
+    <aside id="sidebar" class="w-64 bg-[#111016]/90 backdrop-blur-xl border-r border-brand-border flex flex-col justify-between transition-all duration-300 z-30 shrink-0">
+      
+      <!-- Top Branding -->
+      <div>
+        <div class="h-16 px-6 border-b border-brand-border flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-goldSoft to-brand-gold flex items-center justify-center shadow-lg shadow-brand-gold/10 font-serif font-bold text-brand-bg text-sm">
+              B.A.A
+            </div>
+            <div>
+              <h1 class="text-sm font-semibold text-white tracking-wide flex items-center gap-1.5">
+                Studio CMS
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-brand-gold/15 text-brand-gold border border-brand-gold/20">v2.5</span>
+              </h1>
+              <p class="text-[11px] text-brand-dim">Bayu Askar Abdillah</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="p-3 space-y-1 text-sm font-medium">
+          <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-brand-dim hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i>
+            <span>Dashboard</span>
+          </button>
+
+          <button onclick="switchTab('profile')" id="nav-profile" class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-brand-dim hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="user-check" class="w-4 h-4 shrink-0"></i>
+            <span>Profil & Hero</span>
+          </button>
+
+          <button onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-dim hover:text-white hover:bg-white/5 transition text-left">
+            <div class="flex items-center gap-3">
+              <i data-lucide="sparkles" class="w-4 h-4 shrink-0"></i>
+              <span>Karya Portofolio</span>
+            </div>
+            <span id="badge-portfolio-count" class="text-[11px] font-mono px-1.5 py-0.2 bg-brand-gold/10 text-brand-gold rounded-full">14</span>
+          </button>
+
+          <button onclick="switchTab('experience')" id="nav-experience" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-dim hover:text-white hover:bg-white/5 transition text-left">
+            <div class="flex items-center gap-3">
+              <i data-lucide="briefcase" class="w-4 h-4 shrink-0"></i>
+              <span>Karier & Proyek</span>
+            </div>
+            <span id="badge-exp-count" class="text-[11px] font-mono px-1.5 py-0.2 bg-white/10 text-white rounded-full">17+</span>
+          </button>
+
+          <button onclick="switchTab('skills')" id="nav-skills" class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-brand-dim hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="code" class="w-4 h-4 shrink-0"></i>
+            <span>Keahlian & Tools</span>
+          </button>
+
+          <button onclick="switchTab('articles')" id="nav-articles" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-dim hover:text-white hover:bg-white/5 transition text-left">
+            <div class="flex items-center gap-3">
+              <i data-lucide="file-text" class="w-4 h-4 shrink-0"></i>
+              <span>Artikel & Blog</span>
+            </div>
+            <span id="badge-articles-count" class="text-[11px] font-mono px-1.5 py-0.2 bg-brand-gold/10 text-brand-gold rounded-full">3</span>
+          </button>
+
+          <div class="pt-2 pb-1">
+            <div class="h-px bg-brand-border mx-2"></div>
+          </div>
+
+          <button onclick="switchTab('visual-editor')" id="nav-visual-editor" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-gold hover:bg-brand-gold/10 transition text-left bg-brand-gold/5 border border-brand-gold/20">
+            <div class="flex items-center gap-3">
+              <i data-lucide="eye" class="w-4 h-4 shrink-0 text-brand-gold"></i>
+              <span class="font-semibold">Live Visual Editor</span>
+            </div>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          </button>
+
+          <button onclick="switchTab('settings')" id="nav-settings" class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-brand-dim hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="settings" class="w-4 h-4 shrink-0"></i>
+            <span>GitHub Sync & Pengaturan</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom User Card & Quick Action -->
+      <div class="p-3 border-t border-brand-border bg-black/20">
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <img id="sidebar-avatar" src="https://lh3.googleusercontent.com/d/1gIvemgWwapxbeawr5LdZJjNQVkgQsOd3" alt="Bayu" class="w-8 h-8 rounded-lg object-cover ring-1 ring-brand-gold/30 shrink-0">
+            <div class="truncate">
+              <p class="text-xs font-semibold text-white truncate" id="sidebar-name">Bayu Askar</p>
+              <p class="text-[10px] text-emerald-400 flex items-center gap-1 font-mono">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online (Admin)
+              </p>
+            </div>
+          </div>
+          <a href="../index.html" target="_blank" title="Buka website publik" class="p-1.5 text-brand-dim hover:text-brand-gold hover:bg-white/5 rounded-lg transition">
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================================================== -->
+    <!-- MAIN CONTENT AREA -->
+    <!-- ============================================================== -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-brand-bg/60">
+
+      <!-- TOPBAR -->
+      <header class="h-16 border-b border-brand-border bg-[#111016]/80 backdrop-blur-md px-6 flex items-center justify-between shrink-0 z-20">
+        
+        <!-- Left: Breadcrumb / Title -->
+        <div class="flex items-center gap-3">
+          <button id="toggle-sidebar-btn" onclick="toggleSidebar()" class="p-2 text-brand-dim hover:text-white hover:bg-white/5 rounded-lg lg:hidden transition">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <h2 id="topbar-title" class="text-base font-semibold text-white flex items-center gap-2">
+              Dashboard Overview
+            </h2>
+            <p id="topbar-desc" class="text-xs text-brand-dim hidden sm:block">Kelola seluruh konten, karya visual, dan data portofolio</p>
+          </div>
+        </div>
+
+        <!-- Right: Global Actions & GitHub Status -->
+        <div class="flex items-center gap-3">
+
+          <!-- Auto-save / Status pill -->
+          <div id="save-status-pill" class="hidden sm:flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full bg-white/5 border border-brand-border text-brand-dim">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span id="save-status-text">Draft Tersimpan Lokal</span>
+          </div>
+
+          <!-- Public Website Shortcut -->
+          <a href="../index.html" target="_blank" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-brand-dim hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition">
+            <i data-lucide="globe" class="w-3.5 h-3.5 text-brand-gold"></i>
+            <span>Lihat Web</span>
+          </a>
+
+          <!-- GitHub Push Modal Trigger -->
+          <button onclick="openGitHubCommitModal()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-brand-goldSoft to-brand-gold hover:from-brand-gold hover:to-brand-goldLight text-brand-bg shadow-md shadow-brand-gold/10 transition">
+            <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-brand-bg"></i>
+            <span>Simpan ke GitHub</span>
+          </button>
+
+          <!-- Quick JSON Export / Download -->
+          <button onclick="exportDataJSON()" title="Ekspor Cadangan JSON" class="p-2 rounded-xl text-brand-dim hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 transition">
+            <i data-lucide="download" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB CONTENTS (Scrollable Area) -->
+      <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-6">
+
+        <!-- ============================================================== -->
+        <!-- TAB 1: DASHBOARD -->
+        <!-- ============================================================== -->
+        <section id="tab-dashboard" class="tab-pane space-y-6">
+          
+          <!-- Welcome Banner -->
+          <div class="relative overflow-hidden rounded-2xl glass-card p-6 md:p-8 border-brand-border">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div class="max-w-xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/15 border border-brand-gold/30 text-brand-gold text-xs font-mono font-medium mb-3">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  <span>Panel Administrasi Aktif</span>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-serif font-bold text-white mb-2">
+                  Selamat Datang kembali, <span class="text-brand-gold italic">Bayu Askar</span>
+                </h3>
+                <p class="text-brand-dim text-sm leading-relaxed">
+                  Semua perubahan konten yang Anda buat di sini dapat langsung dipratinjau secara langsung, disimpan ke penyimpanan lokal, atau di-commit otomatis ke repository GitHub Pages Anda.
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <button onclick="switchTab('portfolio')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs font-medium flex items-center gap-2 transition">
+                  <i data-lucide="plus-circle" class="w-4 h-4 text-brand-gold"></i>
+                  <span>Tambah Portofolio</span>
+                </button>
+                <button onclick="switchTab('visual-editor')" class="px-4 py-2.5 rounded-xl bg-brand-gold text-brand-bg hover:bg-brand-goldLight text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition">
+                  <i data-lucide="laptop" class="w-4 h-4"></i>
+                  <span>Buka Live Editor</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metric Cards Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Stat 1: Total Portofolio -->
+            <div class="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between">
+              <div class="flex items-center justify-between text-brand-dim mb-4">
+                <span class="text-xs font-medium uppercase tracking-wider">Total Portofolio</span>
+                <div class="w-9 h-9 rounded-xl bg-brand-gold/10 text-brand-gold flex items-center justify-center">
+                  <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="text-3xl font-bold font-serif text-white" id="stat-total-portfolio">14</div>
+                <div class="text-xs text-brand-dim mt-1 flex items-center gap-2">
+                  <span class="text-emerald-400 font-medium">8 Graphic</span> •
+                  <span class="text-brand-gold font-medium">6 Motion</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stat 2: Riwayat Pengalaman -->
+            <div class="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between">
+              <div class="flex items-center justify-between text-brand-dim mb-4">
+                <span class="text-xs font-medium uppercase tracking-wider">Proyek KIAN Company</span>
+                <div class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                  <i data-lucide="layers" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="text-3xl font-bold font-serif text-white" id="stat-total-exp">17+</div>
+                <div class="text-xs text-brand-dim mt-1">
+                  Event, Broadcast & Produksi
+                </div>
+              </div>
+            </div>
+
+            <!-- Stat 3: Keahlian & Tools -->
+            <div class="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between">
+              <div class="flex items-center justify-between text-brand-dim mb-4">
+                <span class="text-xs font-medium uppercase tracking-wider">Keahlian & Software</span>
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="text-3xl font-bold font-serif text-white" id="stat-total-skills">7</div>
+                <div class="text-xs text-brand-dim mt-1">
+                  Motion, Editing, Audio-Visual Sync
+                </div>
+              </div>
+            </div>
+
+            <!-- Stat 4: Blog & Artikel -->
+            <div class="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between">
+              <div class="flex items-center justify-between text-brand-dim mb-4">
+                <span class="text-xs font-medium uppercase tracking-wider">Artikel / Blog</span>
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                  <i data-lucide="file-text" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="text-3xl font-bold font-serif text-white" id="stat-total-articles">3</div>
+                <div class="text-xs text-brand-dim mt-1">
+                  Format Markdown Siap Ekspor
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Two Column Section: Quick Activity & Repo Config Status -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Quick Shortcuts & Recent Works -->
+            <div class="lg:col-span-2 glass-card rounded-2xl p-6 border-brand-border space-y-4">
+              <div class="flex items-center justify-between border-b border-white/5 pb-4">
+                <h4 class="text-base font-semibold text-white flex items-center gap-2">
+                  <i data-lucide="clock" class="w-4 h-4 text-brand-gold"></i>
+                  Karya Portofolio Terbaru
+                </h4>
+                <button onclick="switchTab('portfolio')" class="text-xs text-brand-gold hover:underline flex items-center gap-1">
+                  Kelola Semua <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+
+              <div id="dashboard-recent-works" class="space-y-3">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- GitHub Status & Sync Card -->
+            <div class="glass-card rounded-2xl p-6 border-brand-border space-y-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="text-base font-semibold text-white flex items-center gap-2">
+                    <i data-lucide="git-branch" class="w-4 h-4 text-brand-gold"></i>
+                    Status GitHub Pages
+                  </h4>
+                  <span id="github-status-badge" class="px-2 py-0.5 rounded-full text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    Menunggu Token
+                  </span>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2.5 text-xs text-brand-dim font-mono mb-4">
+                  <div class="flex justify-between">
+                    <span>Repository:</span>
+                    <span class="text-white font-medium" id="status-repo-name">bprodrive/bprodrive.github.io</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Branch:</span>
+                    <span class="text-white font-medium" id="status-branch-name">main</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>File Target:</span>
+                    <span class="text-white font-medium">index.html</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Token PAT:</span>
+                    <span class="text-emerald-400 font-medium" id="status-token-label">Belum Diatur</span>
+                  </div>
+                </div>
+
+                <p class="text-xs text-brand-dim leading-relaxed">
+                  Hubungkan Personal Access Token (PAT) Anda untuk melakukan sinkronisasi satu-klik langsung ke GitHub tanpa perlu terminal.
+                </p>
+              </div>
+
+              <div class="space-y-2 pt-2">
+                <button onclick="switchTab('settings')" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-medium text-white flex items-center justify-center gap-2 transition">
+                  <i data-lucide="key" class="w-3.5 h-3.5 text-brand-gold"></i>
+                  <span>Atur Token GitHub</span>
+                </button>
+                <button onclick="testGitHubConnection()" class="w-full py-2 rounded-xl bg-transparent hover:bg-white/5 text-xs text-brand-dim hover:text-white transition flex items-center justify-center gap-1.5">
+                  <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                  <span>Cek Koneksi Repository</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 2: PROFIL & HERO EDITOR -->
+        <!-- ============================================================== -->
+        <section id="tab-profile" class="tab-pane hidden space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-serif font-bold text-white">Profil & Headline Hero</h3>
+              <p class="text-xs text-brand-dim">Sunting informasi perkenalan, bio profesional, foto, dan fakta ringkas Anda.</p>
+            </div>
+            <button onclick="saveProfileChanges()" class="self-start md:self-auto px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/15 transition">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Simpan Perubahan Profil</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left: Foto Profil & Info Cepat -->
+            <div class="glass-card p-6 rounded-2xl border-brand-border space-y-5">
+              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                <i data-lucide="image" class="w-4 h-4 text-brand-gold"></i>
+                Foto Profil
+              </h4>
+
+              <div class="flex flex-col items-center text-center">
+                <div class="relative group">
+                  <img id="profile-photo-preview" src="https://lh3.googleusercontent.com/d/1gIvemgWwapxbeawr5LdZJjNQVkgQsOd3" alt="Bayu" class="w-32 h-32 rounded-2xl object-cover ring-2 ring-brand-gold/40 shadow-xl shadow-black/40">
+                </div>
+                <p class="text-[11px] text-brand-dim mt-3">Rekomendasi rasio 1:1, format JPG/PNG/WebP</p>
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-xs font-medium text-brand-dim">URL Foto Profil</label>
+                <input type="text" id="input-profile-photo" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold transition" oninput="updatePhotoPreview(this.value)">
+              </div>
+
+              <!-- Fakta Singkat (Facts) -->
+              <div class="pt-3 border-t border-white/5 space-y-3">
+                <h5 class="text-xs font-semibold text-white uppercase tracking-wider">Fakta Ringkas (Facts)</h5>
+                
+                <div class="space-y-1">
+                  <label class="text-[11px] text-brand-dim">Lokasi Berbasis</label>
+                  <input type="text" id="input-fact-location" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[11px] text-brand-dim">Lama Pengalaman</label>
+                  <input type="text" id="input-fact-exp" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[11px] text-brand-dim">Disiplin Kerja</label>
+                  <input type="text" id="input-fact-discipline" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[11px] text-brand-dim">Status Ketersediaan</label>
+                  <input type="text" id="input-fact-availability" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Text & Bio Fields -->
+            <div class="lg:col-span-2 glass-card p-6 rounded-2xl border-brand-border space-y-5">
+              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                <i data-lucide="edit-3" class="w-4 h-4 text-brand-gold"></i>
+                Teks Hero & Tentang Saya
+              </h4>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                  <label class="text-xs font-medium text-brand-dim">Nama Lengkap</label>
+                  <input type="text" id="input-profile-name" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold">
+                </div>
+                <div class="space-y-1.5">
+                  <label class="text-xs font-medium text-brand-dim">Nama Belakang / Italic Headline</label>
+                  <input type="text" id="input-profile-italic" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold">
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-xs font-medium text-brand-dim">Sub-headline / Eyebrow Text</label>
+                <input type="text" id="input-profile-eyebrow" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold">
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-xs font-medium text-brand-dim">Deskripsi Paragraf Hero</label>
+                <textarea id="input-profile-hero-desc" rows="3" class="w-full bg-[#141318] border border-brand-border rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-gold leading-relaxed"></textarea>
+              </div>
+
+              <!-- About Me Bio -->
+              <div class="space-y-1.5 pt-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-medium text-brand-dim">Paragraf Lengkap "Tentang Saya" (Pisahkan paragraf dengan baris kosong)</label>
+                  <span class="text-[11px] text-brand-gold font-mono">Dukungan HTML sederhana (strong, em)</span>
+                </div>
+                <textarea id="input-profile-about-text" rows="7" class="w-full bg-[#141318] border border-brand-border rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-gold leading-relaxed font-mono"></textarea>
+              </div>
+
+              <!-- Social & Contact Links -->
+              <div class="pt-3 border-t border-white/5 space-y-3">
+                <h5 class="text-xs font-semibold text-white uppercase tracking-wider">Tautan Kontak & Sosial Media</h5>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div class="space-y-1">
+                    <label class="text-[11px] text-brand-dim">Nomor WhatsApp / Link</label>
+                    <input type="text" id="input-social-wa" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[11px] text-brand-dim">Email</label>
+                    <input type="email" id="input-social-email" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[11px] text-brand-dim">LinkedIn URL</label>
+                    <input type="text" id="input-social-linkedin" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[11px] text-brand-dim">Instagram URL</label>
+                    <input type="text" id="input-social-instagram" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 3: MANAJEMEN PORTOFOLIO (KARYA) -->
+        <!-- ============================================================== -->
+        <section id="tab-portfolio" class="tab-pane hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-serif font-bold text-white">Koleksi Portofolio & Karya</h3>
+              <p class="text-xs text-brand-dim">Tambah, ubah, urutkan, atau hapus item galeri karya visual Anda.</p>
+            </div>
+            <button onclick="openPortfolioModal()" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition self-start sm:self-auto">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Tambah Karya Baru</span>
+            </button>
+          </div>
+
+          <!-- Filters & Search Toolbar -->
+          <div class="glass-card p-3 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 border-brand-border">
+            
+            <!-- Category Filter Buttons -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+              <button onclick="filterPortfolio('all')" id="pf-btn-all" class="pf-filter-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-brand-gold text-brand-bg">Semua (<span id="count-all">14</span>)</button>
+              <button onclick="filterPortfolio('graphic')" id="pf-btn-graphic" class="pf-filter-btn px-3 py-1.5 rounded-xl text-xs font-medium text-brand-dim hover:text-white hover:bg-white/5">Graphic Design (<span id="count-graphic">8</span>)</button>
+              <button onclick="filterPortfolio('motion')" id="pf-btn-motion" class="pf-filter-btn px-3 py-1.5 rounded-xl text-xs font-medium text-brand-dim hover:text-white hover:bg-white/5">Motion Graphic (<span id="count-motion">6</span>)</button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative w-full md:w-64">
+              <i data-lucide="search" class="w-3.5 h-3.5 text-brand-dim absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="portfolio-search" placeholder="Cari karya / client..." oninput="searchPortfolio(this.value)" class="w-full bg-[#141318] border border-brand-border rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-brand-dim/60 focus:outline-none focus:border-brand-gold">
+            </div>
+          </div>
+
+          <!-- Cards Grid -->
+          <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 4: KARIER & RIWAYAT PROYEK -->
+        <!-- ============================================================== -->
+        <section id="tab-experience" class="tab-pane hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-serif font-bold text-white">Riwayat Karier & Proyek Produksi</h3>
+              <p class="text-xs text-brand-dim">Kelola item timeline karier utama serta sub-proyek detail (17+ proyek KIAN Company).</p>
+            </div>
+            <button onclick="openExperienceProjectModal()" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition self-start sm:self-auto">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Tambah Proyek KIAN</span>
+            </button>
+          </div>
+
+          <!-- Timeline Company Summary Card -->
+          <div class="glass-card p-6 rounded-2xl border-brand-border">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-gold/10 text-brand-gold flex items-center justify-center font-bold">
+                  KC
+                </div>
+                <div>
+                  <h4 class="text-base font-semibold text-white">KIAN Company</h4>
+                  <p class="text-xs text-brand-dim">Anggota / OJT • 2025 — kini</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Status: Aktif
+                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-mono bg-brand-gold/10 text-brand-gold border border-brand-gold/20">
+                  17+ Proyek Ditangani
+                </span>
+              </div>
+            </div>
+
+            <p class="text-xs text-brand-dim mt-4 leading-relaxed">
+              Bertanggung jawab dalam pembuatan konten motion graphic untuk berbagai kebutuhan produksi meliputi lower third, teaser, bumper opening dan elemen grafis lainnya sesuai permintaan proyek.
+            </p>
+          </div>
+
+          <!-- Sub-Projects List -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-sm font-semibold text-white flex items-center gap-2">
+                <i data-lucide="list" class="w-4 h-4 text-brand-gold"></i>
+                Daftar Detail Proyek Produksi KIAN Company
+              </h4>
+              <span class="text-xs text-brand-dim font-mono" id="exp-project-total-label">17 Proyek Terdaftar</span>
+            </div>
+
+            <div id="experience-projects-list" class="space-y-2.5">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 5: KEAHLIAN & TOOLS -->
+        <!-- ============================================================== -->
+        <section id="tab-skills" class="tab-pane hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-serif font-bold text-white">Keahlian & Perangkat Lunak</h3>
+              <p class="text-xs text-brand-dim">Atur daftar keahlian utama, tools multimedia, dan spesialisasi kreatif Anda.</p>
+            </div>
+            <button onclick="openSkillModal()" class="px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition self-start sm:self-auto">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Tambah Keahlian</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 glass-card p-6 rounded-2xl border-brand-border space-y-4">
+              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                <i data-lucide="tag" class="w-4 h-4 text-brand-gold"></i>
+                Tag Keahlian di Halaman Depan
+              </h4>
+
+              <div id="skills-pill-container" class="flex flex-wrap gap-2.5 pt-2">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+
+            <!-- Software Tools list -->
+            <div class="glass-card p-6 rounded-2xl border-brand-border space-y-4">
+              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                <i data-lucide="cpu" class="w-4 h-4 text-brand-gold"></i>
+                Software Utama
+              </h4>
+
+              <div class="space-y-3 text-xs">
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 font-bold flex items-center justify-center font-mono text-[11px]">Ae</div>
+                    <span class="text-white font-medium">After Effects</span>
+                  </div>
+                  <span class="text-brand-gold font-mono">Expert</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center font-mono text-[11px]">Pr</div>
+                    <span class="text-white font-medium">Premiere Pro</span>
+                  </div>
+                  <span class="text-brand-gold font-mono">Advanced</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center font-mono text-[11px]">Ps</div>
+                    <span class="text-white font-medium">Photoshop</span>
+                  </div>
+                  <span class="text-brand-gold font-mono">Advanced</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center font-mono text-[11px]">Ai</div>
+                    <span class="text-white font-medium">Illustrator</span>
+                  </div>
+                  <span class="text-brand-gold font-mono">Advanced</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center font-mono text-[11px]">Vm</div>
+                    <span class="text-white font-medium">vMix / Broadcast</span>
+                  </div>
+                  <span class="text-brand-gold font-mono">Proficient</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 6: ARTIKEL & BLOG (CMS STUDIO) -->
+        <!-- ============================================================== -->
+        <section id="tab-articles" class="tab-pane hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-serif font-bold text-white">Artikel & Blog CMS</h3>
+              <p class="text-xs text-brand-dim">Kelola konten artikel blog yang sinkron dengan format Markdown (TinaCMS / GitHub Pages).</p>
+            </div>
+            <button onclick="openArticleEditor()" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/20 transition self-start sm:self-auto">
+              <i data-lucide="pen-tool" class="w-4 h-4"></i>
+              <span>Tulis Artikel Baru</span>
+            </button>
+          </div>
+
+          <!-- Articles Grid / List -->
+          <div id="articles-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 7: LIVE VISUAL EDITOR -->
+        <!-- ============================================================== -->
+        <section id="tab-visual-editor" class="tab-pane hidden space-y-4">
+          
+          <!-- Viewport Controls & Status Toolbar -->
+          <div class="glass-card p-3 rounded-2xl flex flex-wrap items-center justify-between gap-3 border-brand-border">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Mode Simulator Visual
+              </span>
+              <span class="text-[11px] text-brand-dim hidden sm:inline">• Klik elemen teks langsung di dalam pratinjau untuk mode edit</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <!-- Responsive Viewport Buttons -->
+              <div class="flex items-center bg-[#141318] p-1 rounded-xl border border-brand-border">
+                <button onclick="setPreviewDevice('desktop')" id="btn-device-desktop" class="p-1.5 rounded-lg text-brand-gold bg-brand-gold/15" title="Desktop View (100%)">
+                  <i data-lucide="monitor" class="w-4 h-4"></i>
+                </button>
+                <button onclick="setPreviewDevice('tablet')" id="btn-device-tablet" class="p-1.5 rounded-lg text-brand-dim hover:text-white" title="Tablet View (768px)">
+                  <i data-lucide="tablet" class="w-4 h-4"></i>
+                </button>
+                <button onclick="setPreviewDevice('mobile')" id="btn-device-mobile" class="p-1.5 rounded-lg text-brand-dim hover:text-white" title="Mobile View (390px)">
+                  <i data-lucide="smartphone" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <!-- Reload Frame -->
+              <button onclick="reloadPreviewFrame()" class="p-2 rounded-xl text-brand-dim hover:text-white bg-white/5 hover:bg-white/10 transition" title="Muat Ulang Pratinjau">
+                <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+              </button>
+
+              <!-- Open in New Window -->
+              <a href="../index.html" target="_blank" class="p-2 rounded-xl text-brand-dim hover:text-brand-gold bg-white/5 hover:bg-white/10 transition" title="Buka di Tab Penuh">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Iframe Container with Responsive Constraints -->
+          <div class="w-full flex justify-center bg-black/40 rounded-2xl p-2 md:p-4 border border-brand-border overflow-hidden min-h-[700px]">
+            <div id="iframe-wrapper" class="w-full transition-all duration-300 rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-[#0b0b0d]">
+              <iframe id="preview-iframe" src="../index.html" class="w-full h-[750px] border-none bg-[#0b0b0d]"></iframe>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- TAB 8: GITHUB SYNC & PENGATURAN -->
+        <!-- ============================================================== -->
+        <section id="tab-settings" class="tab-pane hidden space-y-6">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-white">Pengaturan & Sinkronisasi GitHub Pages</h3>
+            <p class="text-xs text-brand-dim">Konfigurasikan integrasi GitHub REST API untuk publikasi otomatis ke GitHub Pages.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left: GitHub Credentials Form -->
+            <div class="lg:col-span-2 glass-card p-6 rounded-2xl border-brand-border space-y-5">
+              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                <i data-lucide="key" class="w-4 h-4 text-brand-gold"></i>
+                Kredensial GitHub API
+              </h4>
+
+              <div class="space-y-4">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-medium text-brand-dim">GitHub Personal Access Token (PAT)</label>
+                    <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" class="text-[11px] text-brand-gold hover:underline flex items-center gap-1">
+                      Buat Token di GitHub <i data-lucide="external-link" class="w-3 h-3"></i>
+                    </a>
+                  </div>
+                  <div class="relative">
+                    <input type="password" id="input-github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-brand-gold font-mono pr-10">
+                    <button type="button" onclick="toggleTokenVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-dim hover:text-white">
+                      <i data-lucide="eye" id="token-eye-icon" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                  <p class="text-[11px] text-brand-dim">Token Anda hanya disimpan di browser lokal (localStorage) dan digunakan untuk memanggil GitHub API contents.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-brand-dim">GitHub Owner (Username / Org)</label>
+                    <input type="text" id="input-github-owner" value="bprodrive" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-brand-dim">Repository Name</label>
+                    <input type="text" id="input-github-repo" value="bprodrive.github.io" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-brand-dim">Branch Target</label>
+                    <input type="text" id="input-github-branch" value="main" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-brand-dim">Target File</label>
+                    <input type="text" id="input-github-file" value="index.html" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brand-gold font-mono">
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                  <button onclick="saveGitHubSettings()" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/15 transition">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>Simpan Pengaturan Token</span>
+                  </button>
+                  <button onclick="testGitHubConnection()" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium flex items-center gap-2 transition">
+                    <i data-lucide="activity" class="w-4 h-4"></i>
+                    <span>Uji Koneksi Token</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Backup & Data Tools -->
+            <div class="glass-card p-6 rounded-2xl border-brand-border space-y-5">
+              <h4 class="text-sm font-semibold text-white border-b border-white/5 pb-3 flex items-center gap-2">
+                <i data-lucide="database" class="w-4 h-4 text-brand-gold"></i>
+                Cadangan & Ekspor Data
+              </h4>
+
+              <div class="space-y-3">
+                <button onclick="exportDataJSON()" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition">
+                  <span class="flex items-center gap-2">
+                    <i data-lucide="download" class="w-4 h-4 text-brand-gold"></i>
+                    Ekspor Data JSON (Cadangan)
+                  </span>
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
+                </button>
+
+                <label class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition cursor-pointer">
+                  <span class="flex items-center gap-2">
+                    <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
+                    Impor Data JSON
+                  </span>
+                  <input type="file" id="import-json-input" accept=".json" class="hidden" onchange="importDataJSON(event)">
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
+                </label>
+
+                <button onclick="downloadCleanHtml()" class="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-white flex items-center justify-between transition">
+                  <span class="flex items-center gap-2">
+                    <i data-lucide="file-code" class="w-4 h-4 text-indigo-400"></i>
+                    Download index.html Bersih
+                  </span>
+                  <i data-lucide="chevron-right" class="w-4 h-4 text-brand-dim"></i>
+                </button>
+
+                <button onclick="resetDataToDefault()" class="w-full py-2.5 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-xs font-medium text-red-400 flex items-center justify-between transition">
+                  <span class="flex items-center gap-2">
+                    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                    Reset ke Data Default Web
+                  </span>
+                  <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-brand-gold/10 border border-brand-gold/20 text-xs text-brand-dim space-y-1">
+                <p class="font-semibold text-brand-gold">Informasi GitHub Pages:</p>
+                <p>Setelah melakukan commit, GitHub Pages biasanya membutuhkan waktu 1-2 menit untuk membangun dan memperbarui situs publik Anda.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
     </div>
-
-    <div class="h-4 w-px bg-gray-700"></div>
-
-    <button id="saveBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-xl transition flex items-center gap-2 shadow-lg">
-      💾 Simpan Perubahan Web
-    </button>
-
-    <button id="tokenBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs px-3 py-2 rounded-xl transition">
-      🔑 Set Token
-    </button>
   </div>
 
+  <!-- ============================================================== -->
+  <!-- MODALS -->
+  <!-- ============================================================== -->
+
+  <!-- 1. Modal: Tambah / Edit Karya Portofolio -->
+  <div id="modal-portfolio" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-xl rounded-2xl border-brand-border p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/5 pb-3">
+        <h4 id="portfolio-modal-title" class="text-base font-semibold text-white">Tambah Karya Portofolio</h4>
+        <button onclick="closeModal('modal-portfolio')" class="text-brand-dim hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="pm-id">
+
+      <div class="space-y-4 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Judul Karya</label>
+            <input type="text" id="pm-title" placeholder="Contoh: Flyer PMB UBSI" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Kategori</label>
+            <select id="pm-category" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+              <option value="graphic">Graphic Design</option>
+              <option value="motion">Motion Graphic</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Meta / Klien & Tahun</label>
+            <input type="text" id="pm-meta" placeholder="Contoh: KIAN Company — 2025" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Nomor Index (opsional)</label>
+            <input type="text" id="pm-index" placeholder="Contoh: 01" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium">URL Gambar / Thumbnail (Google Drive / YouTube / Web)</label>
+          <input type="text" id="pm-image" placeholder="https://lh3.googleusercontent.com/..." class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold" oninput="document.getElementById('pm-preview-img').src = this.value">
+        </div>
+
+        <div class="space-y-1.5" id="pm-video-wrap">
+          <label class="text-brand-dim font-medium">Tautan YouTube (Khusus Motion Graphic / Video)</label>
+          <input type="text" id="pm-video" placeholder="https://youtu.be/... atau YouTube Shorts" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+        </div>
+
+        <!-- Preview Thumbnail -->
+        <div class="p-2 rounded-xl bg-white/5 border border-white/5 flex items-center gap-3">
+          <img id="pm-preview-img" src="https://via.placeholder.com/100x60" alt="Preview" class="w-20 h-14 object-cover rounded-lg bg-black/40">
+          <div class="text-[11px] text-brand-dim">
+            Pratinjau visual karya yang akan tampil pada kartu portofolio.
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/5">
+        <button onclick="closeModal('modal-portfolio')" class="px-4 py-2 rounded-xl text-xs text-brand-dim hover:text-white">Batal</button>
+        <button onclick="savePortfolioItem()" class="px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold">Simpan Karya</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Modal: Tambah / Edit Proyek KIAN -->
+  <div id="modal-experience" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-xl rounded-2xl border-brand-border p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/5 pb-3">
+        <h4 id="exp-modal-title" class="text-base font-semibold text-white">Tambah Proyek Produksi KIAN</h4>
+        <button onclick="closeModal('modal-experience')" class="text-brand-dim hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="exp-id">
+
+      <div class="space-y-4 text-xs">
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium">Nama Acara / Proyek</label>
+          <input type="text" id="exp-title" placeholder="Contoh: ORMIK & SEMOT - UBSI Kaliabang" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Kategori</label>
+            <select id="exp-category" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+              <option value="event & broadcast">Event & Broadcast</option>
+              <option value="production">Production</option>
+            </select>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Tanggal Proyek</label>
+            <input type="text" id="exp-date" placeholder="Contoh: 28 Maret 2026" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium">Posisi / Peran Anda</label>
+          <input type="text" id="exp-role" placeholder="Contoh: VT Operator / Motion Graphic Designer" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium">Deskripsi Tugas</label>
+          <textarea id="exp-desc" rows="3" class="w-full bg-[#141318] border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-gold leading-relaxed"></textarea>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium">Hasil Produksi / Output</label>
+          <input type="text" id="exp-output" placeholder="Contoh: 6 Variasi template lower third (Host, Pembicara, Topik)" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/5">
+        <button onclick="closeModal('modal-experience')" class="px-4 py-2 rounded-xl text-xs text-brand-dim hover:text-white">Batal</button>
+        <button onclick="saveExperienceItem()" class="px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold">Simpan Proyek</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Modal: Artikel & Blog Editor (Markdown Studio) -->
+  <div id="modal-article" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-4xl rounded-2xl border-brand-border p-6 space-y-4 max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-white/5 pb-3 shrink-0">
+        <div class="flex items-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4 text-brand-gold"></i>
+          <h4 id="article-modal-title" class="text-base font-semibold text-white">Editor Artikel Blog</h4>
+        </div>
+        <button onclick="closeModal('modal-article')" class="text-brand-dim hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="art-id">
+
+      <div class="space-y-4 text-xs overflow-y-auto flex-1 pr-1">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2 space-y-1.5">
+            <label class="text-brand-dim font-medium">Judul Artikel</label>
+            <input type="text" id="art-title" placeholder="Contoh: Proses di Balik Motion Graphic Teaser BSI Flash" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold text-sm font-medium">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Kategori</label>
+            <input type="text" id="art-category" placeholder="Contoh: Motion Design, Tutorial" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">URL Cover Gambar</label>
+            <input type="text" id="art-cover" placeholder="https://..." class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-brand-dim font-medium">Ringkasan Singkat (Excerpt)</label>
+            <input type="text" id="art-excerpt" placeholder="Ringkasan 1-2 kalimat untuk kartu depan" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+          </div>
+        </div>
+
+        <!-- Markdown Toolbar & Side-by-Side Editor -->
+        <div class="space-y-2 pt-2 border-t border-white/5">
+          <div class="flex items-center justify-between">
+            <label class="text-brand-dim font-medium flex items-center gap-2">
+              <span>Isi Konten (Markdown Format)</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-brand-gold">Preview Otomatis</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="insertMd('**', '**')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-brand-dim hover:text-white font-bold" title="Tebal">B</button>
+              <button type="button" onclick="insertMd('*', '*')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-brand-dim hover:text-white italic" title="Miring">I</button>
+              <button type="button" onclick="insertMd('## ')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-brand-dim hover:text-white" title="Heading 2">H2</button>
+              <button type="button" onclick="insertMd('> ')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-brand-dim hover:text-white" title="Kutipan">""</button>
+              <button type="button" onclick="insertMd('- ')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-brand-dim hover:text-white" title="Daftar">• List</button>
+              <button type="button" onclick="insertMd('[', '](url)')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-brand-dim hover:text-white" title="Link">Link</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[280px]">
+            <!-- Editor textarea -->
+            <textarea id="art-body" rows="12" class="w-full bg-[#141318] border border-brand-border rounded-xl p-3 text-xs text-white font-mono leading-relaxed focus:outline-none focus:border-brand-gold" oninput="renderArticlePreview(this.value)" placeholder="Tulis isi artikel dalam format Markdown..."></textarea>
+            
+            <!-- Live Preview -->
+            <div id="art-preview" class="p-4 rounded-xl bg-white/[0.02] border border-brand-border/60 overflow-y-auto prose-dark text-xs h-[280px]">
+              <p class="text-brand-dim italic">Pratinjau konten artikel akan tampil di sini...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-white/5 shrink-0">
+        <button type="button" onclick="downloadArticleAsMarkdown()" class="text-xs text-brand-gold hover:underline flex items-center gap-1.5">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          Ekspor File .md
+        </button>
+        <div class="flex items-center gap-3">
+          <button onclick="closeModal('modal-article')" class="px-4 py-2 rounded-xl text-xs text-brand-dim hover:text-white">Batal</button>
+          <button onclick="saveArticleItem()" class="px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold">Simpan Artikel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Modal: Tambah Keahlian -->
+  <div id="modal-skill" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-2xl border-brand-border p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-white/5 pb-3">
+        <h4 class="text-base font-semibold text-white">Tambah Keahlian Baru</h4>
+        <button onclick="closeModal('modal-skill')" class="text-brand-dim hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium">Nama Keahlian / Skill</label>
+          <input type="text" id="skill-name-input" placeholder="Contoh: 3D Animation, Color Grading" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/5">
+        <button onclick="closeModal('modal-skill')" class="px-4 py-2 rounded-xl text-xs text-brand-dim hover:text-white">Batal</button>
+        <button onclick="addNewSkill()" class="px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold">Tambahkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Modal: Simpan & Commit ke GitHub -->
+  <div id="modal-github-commit" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-md rounded-2xl border-brand-border p-6 space-y-5">
+      <div class="flex items-center justify-between border-b border-white/5 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-gold/15 text-brand-gold flex items-center justify-center">
+            <i data-lucide="git-commit" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h4 class="text-base font-semibold text-white">Simpan ke GitHub Pages</h4>
+            <p class="text-[11px] text-brand-dim">Commit otomatis langsung ke repositori Anda</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-github-commit')" class="text-brand-dim hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1.5 font-mono text-[11px]">
+          <div class="flex justify-between text-brand-dim">
+            <span>Repo:</span>
+            <span class="text-white" id="gc-repo-label">bprodrive/bprodrive.github.io</span>
+          </div>
+          <div class="flex justify-between text-brand-dim">
+            <span>Branch:</span>
+            <span class="text-white">main</span>
+          </div>
+          <div class="flex justify-between text-brand-dim">
+            <span>Target:</span>
+            <span class="text-white">index.html</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-brand-dim font-medium">Pesan Commit (Commit Message)</label>
+          <input type="text" id="gc-commit-message" value="Update website content via Studio CMS" class="w-full bg-[#141318] border border-brand-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-brand-gold">
+        </div>
+
+        <div id="gc-progress-box" class="hidden p-3 rounded-xl bg-brand-gold/10 border border-brand-gold/30 text-xs text-brand-gold flex items-center gap-2">
+          <i data-lucide="loader-2" class="w-4 h-4 animate-spin shrink-0"></i>
+          <span id="gc-progress-text">Mengirim perubahan ke GitHub API...</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-white/5">
+        <button onclick="closeModal('modal-github-commit')" class="px-4 py-2 rounded-xl text-xs text-brand-dim hover:text-white">Batal</button>
+        <button id="gc-submit-btn" onclick="executeGitHubPush()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-goldSoft to-brand-gold hover:from-brand-gold hover:to-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-brand-gold/20">
+          <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+          <span>Push Sekarang</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-[99999] space-y-2 pointer-events-none"></div>
+
+  <!-- ============================================================== -->
+  <!-- CMS JAVASCRIPT LOGIC ENGINE -->
+  <!-- ============================================================== -->
   <script>
-    const REPO_OWNER = 'bprodrive';
-    const REPO_NAME = 'bprodrive.github.io';
-    const TARGET_FILE = 'index.html'; // File web utama yang diedit secara visual
-
-    let currentSha = '';
-
-    // Check Token GitHub saat pertama buka
-    function checkToken() {
-      let token = localStorage.getItem('gh_pat_token');
-      if (!token) {
-        token = prompt('Masukkan GitHub Personal Access Token (PAT) Anda:');
-        if (token) {
-          localStorage.setItem('gh_pat_token', token.trim());
-        } else {
-          alert('Token diperlukan untuk bisa menyimpan perubahan!');
+    // Global State Store pre-seeded with Bayu Askar Abdillah's actual data
+    const DEFAULT_CMS_DATA = {
+      profile: {
+        name: "Bayu Askar",
+        italicName: "Abdillah",
+        eyebrow: "Motion Graphic Designer, Graphic Designer & Video Editor — Based in Jakarta",
+        photoUrl: "https://lh3.googleusercontent.com/d/1gIvemgWwapxbeawr5LdZJjNQVkgQsOd3",
+        heroDesc: "Seorang profesional di bidang Motion Graphic Design, Graphic Design, dan Video Editing dengan kemampuan menciptakan visual yang kreatif, modern, dan berorientasi pada hasil. Berpengalaman menghasilkan konten yang menarik, informatif, serta mendukung kebutuhan branding, promosi, dan komunikasi visual secara efektif.",
+        aboutParagraphs: [
+          "Perjalanan saya di dunia kreatif dimulai sejak duduk di bangku Sekolah Menengah Atas (SMA).",
+          "Pada masa tersebut, saya mulai menaruh minat yang besar terhadap bidang desain grafis, motion graphic, dan video editing.",
+          "Rasa ingin tahu yang tinggi mendorong saya untuk terus mengeksplorasi berbagai teknik desain, mempelajari berbagai perangkat lunak kreatif, serta mengembangkan kemampuan melalui beragam proyek dan eksperimen visual.",
+          "Konsistensi dalam belajar dan mengasah keterampilan tersebut membawa saya dipercaya untuk bergabung sebagai anggota Tim Multimedia di sekolah, di mana saya berkesempatan terlibat dalam pembuatan berbagai konten visual dan dokumentasi untuk mendukung kegiatan sekolah.",
+          "Pengalaman saya semakin berkembang ketika dipercaya terlibat sebagai Motion Graphic Designer dalam sebuah acara sekolah yang dihadiri lebih dari 1.000 peserta. Melalui proyek ini, saya bertanggung jawab menghasilkan motion graphic yang mendukung kebutuhan visual acara sekaligus memperkuat kemampuan saya dalam bekerja secara profesional dan memenuhi tenggat waktu.",
+          "Pengalaman tersebut menjadi fondasi yang membentuk cara saya berpikir secara kreatif, memahami komunikasi visual, dan menghasilkan karya yang tidak hanya menarik secara estetika, tetapi juga menyampaikan pesan secara efektif."
+        ],
+        facts: {
+          location: "Jakarta, Indonesia",
+          experience: "3+ tahun",
+          discipline: "Audio-Visual Synchronization, Tepat Waktu, Amanah",
+          availability: "Open for freelance and project-based collaborations (On-site in Jakarta / Remote)"
+        },
+        social: {
+          whatsapp: "https://wa.me/6281234567890",
+          email: "bayuaskar.creative@gmail.com",
+          linkedin: "https://linkedin.com",
+          instagram: "https://instagram.com"
         }
+      },
+      portfolio: [
+        {
+          id: "pf-1",
+          title: "Flyer PMB UBSI",
+          category: "graphic",
+          meta: "KIAN Company — 2025",
+          index: "01",
+          imageUrl: "https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ",
+          videoUrl: ""
+        },
+        {
+          id: "pf-2",
+          title: "Flyer PMB UBSI 2",
+          category: "graphic",
+          meta: "KIAN Company — 2025",
+          index: "02",
+          imageUrl: "https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm",
+          videoUrl: ""
+        },
+        {
+          id: "pf-3",
+          title: "Flyer Tugas Kelompok",
+          category: "graphic",
+          meta: "UBSI Kaliabang — 2025",
+          index: "03",
+          imageUrl: "https://lh3.googleusercontent.com/d/1XaYTh3n6dDnMOk8YBrLsUoLaG8snElXI",
+          videoUrl: ""
+        },
+        {
+          id: "pf-4",
+          title: "Carousel Post",
+          category: "graphic",
+          meta: "2026",
+          index: "04",
+          imageUrl: "https://lh3.googleusercontent.com/d/11GooM0-31pp7vzdQy6kim3Trdg_blJxA",
+          videoUrl: ""
+        },
+        {
+          id: "pf-5",
+          title: "Leaderboard Top Designer",
+          category: "graphic",
+          meta: "KIAN Company — 2025",
+          index: "05",
+          imageUrl: "https://lh3.googleusercontent.com/d/1D0d8kWDCXdR0vJzap7EgVgTMV722F5zq",
+          videoUrl: ""
+        },
+        {
+          id: "pf-6",
+          title: "Banner Digital Event",
+          category: "graphic",
+          meta: "2025",
+          index: "06",
+          imageUrl: "https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ",
+          videoUrl: ""
+        },
+        {
+          id: "pf-7",
+          title: "Post Promosi Sosmed",
+          category: "graphic",
+          meta: "KIAN Company — 2025",
+          index: "07",
+          imageUrl: "https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm",
+          videoUrl: ""
+        },
+        {
+          id: "pf-8",
+          title: "ID Card & Merchandise",
+          category: "graphic",
+          meta: "KIAN Company — 2025",
+          index: "08",
+          imageUrl: "https://lh3.googleusercontent.com/d/1XaYTh3n6dDnMOk8YBrLsUoLaG8snElXI",
+          videoUrl: ""
+        },
+        {
+          id: "pf-m1",
+          title: "Mograph Iklan Program",
+          category: "motion",
+          meta: "SMA — 2025",
+          index: "01",
+          imageUrl: "https://img.youtube.com/vi/EuUwm5oP_Ac/hqdefault.jpg",
+          videoUrl: "https://youtu.be/EuUwm5oP_Ac"
+        },
+        {
+          id: "pf-m2",
+          title: "Teaser - BSI Flash 2027 Bogor",
+          category: "motion",
+          meta: "KIAN Company — 2026",
+          index: "02",
+          imageUrl: "https://img.youtube.com/vi/7WHaXXC0rt4/hqdefault.jpg",
+          videoUrl: "https://youtube.com/shorts/7WHaXXC0rt4"
+        },
+        {
+          id: "pf-m3",
+          title: "Teaser - BSI Flash ( UBSI Tasikmalaya )",
+          category: "motion",
+          meta: "KIAN Company — 2026",
+          index: "03",
+          imageUrl: "https://img.youtube.com/vi/Zcs-eFYnMxM/hqdefault.jpg",
+          videoUrl: "https://youtube.com/shorts/Zcs-eFYnMxM"
+        },
+        {
+          id: "pf-m4",
+          title: "Teaser - Kreasi 2026",
+          category: "motion",
+          meta: "KIAN Company — 2026",
+          index: "04",
+          imageUrl: "https://img.youtube.com/vi/J-bMdo0LtIY/hqdefault.jpg",
+          videoUrl: "https://youtube.com/shorts/J-bMdo0LtIY"
+        },
+        {
+          id: "pf-m5",
+          title: "Teaser - ICITRI 2026",
+          category: "motion",
+          meta: "KIAN Company — 2026",
+          index: "05",
+          imageUrl: "https://img.youtube.com/vi/zDzieLy3zFY/hqdefault.jpg",
+          videoUrl: "https://youtu.be/zDzieLy3zFY"
+        },
+        {
+          id: "pf-m6",
+          title: "Teaser - BSI Flash Cengkareng 2026",
+          category: "motion",
+          meta: "KIAN Company — 2026",
+          index: "06",
+          imageUrl: "https://img.youtube.com/vi/Gz-OoOX_3NA/hqdefault.jpg",
+          videoUrl: "https://youtube.com/shorts/Gz-OoOX_3NA"
+        }
+      ],
+      experienceProjects: [
+        {
+          id: "ep-1",
+          title: "ORMIK & SEMOT - UBSI Kaliabang",
+          category: "event & broadcast",
+          date: "28 Maret 2026",
+          role: "VT Operator",
+          desc: "Bertanggung jawab sebagai video tron operator untuk acara ORMIK & SEMOT yang diselenggarakan di UBSI Kaliabang, mencakup produksi video dan multimedia.",
+          output: "6 Variasi template lower third (Host, Pembicara, Topik, Running Info, Media Sosial)."
+        },
+        {
+          id: "ep-2",
+          title: "BSI Flash 2027 Bogor",
+          category: "production",
+          date: "Februari 2026",
+          role: "Motion Graphic Designer",
+          desc: "Merancang rangkaian bumper dan motion teaser vertikal untuk kebutuhan promosi turnamen olahraga dan seni antar pelajar se-Bogor.",
+          output: "Bumper video teaser 15 detik, aset countdown, dan opening bumper."
+        },
+        {
+          id: "ep-3",
+          title: "ICITRI Conference 2026",
+          category: "event & broadcast",
+          date: "Januari 2026",
+          role: "Lead Motion Designer",
+          desc: "Mengembangkan visual identity untuk konferensi internasional ICITRI 2026 termasuk bumper pembuka dan animasi slide transisi.",
+          output: "Motion backdrop layar panggung, stingers transisi live broadcast."
+        }
+      ],
+      skills: [
+        "Motion Graphic Design",
+        "Graphic Design",
+        "Video Editing",
+        "Audio-Visual Synchronization",
+        "Streaming & Broadcasting",
+        "Camera Skills",
+        "Drone Pilot"
+      ],
+      articles: [
+        {
+          id: "art-1",
+          title: "Membangun Motion Graphic Interaktif untuk Acara Skala Besar",
+          category: "Motion Design",
+          coverUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+          excerpt: "Bagaimana merancang visual bumper, lower third dinamis, dan sinkronisasi audio-visual agar suasana acara terasa spektakuler.",
+          date: "14 Oktober 2026",
+          body: `## Pengantar\n\nMenghasilkan motion graphic untuk acara langsung dengan ribuan peserta membutuhkan perencanaan matang mulai dari frame rate, kontras warna pada LED Screen, hingga ketepatan sinkronisasi audio.\n\n### Tahap Kunci Produksi:\n1. **Briefing & Color Palette:** Menyesuaikan dengan tone branding acara.\n2. **Sound Design Sync:** Motion tanpa ritme audio yang pas akan kehilangan tenaganya.\n3. **Render Optimization:** Menyiapkan format video H.264/ProRes yang ringan dimainkan operator VT.\n\n> "Kunci dari visual panggung adalah kejelasan informasi dalam sepersekian detik."`
+        },
+        {
+          id: "art-2",
+          title: "Panduan Memilih Antara Premiere Pro dan After Effects",
+          category: "Workflow",
+          coverUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+          excerpt: "Kapan sebaiknya Anda menyelesaikan editing di Premiere Pro dan kapan saatnya berpindah ke After Effects untuk animasi kompleks.",
+          date: "10 Oktober 2026",
+          body: `## Workflow Efisien\n\nBanyak editor pemula mencoba melakukan semuanya di After Effects, padahal Premiere Pro jauh lebih efisien untuk cutting audio-visual utama.\n\n- Gunakan **Adobe Premiere Pro** untuk timeline assembly, multi-camera, dan sound grading.\n- Gunakan **After Effects** untuk kinetic typography, compositing, dan lower third dinamis.`
+        }
+      ],
+      settings: {
+        githubOwner: "bprodrive",
+        githubRepo: "bprodrive.github.io",
+        branch: "main",
+        targetFile: "index.html"
       }
-      return token;
+    };
+
+    // CMS State Instance
+    let CMS_STATE = {};
+    let activeFilter = 'all';
+
+    // 1. Initialize State from LocalStorage or Defaults
+    function initState() {
+      const savedData = localStorage.getItem('bayu_cms_data');
+      if (savedData) {
+        try {
+          CMS_STATE = JSON.parse(savedData);
+        } catch (e) {
+          CMS_STATE = JSON.parse(JSON.stringify(DEFAULT_CMS_DATA));
+        }
+      } else {
+        CMS_STATE = JSON.parse(JSON.stringify(DEFAULT_CMS_DATA));
+        saveStateToStorage();
+      }
+
+      // Pre-fill GitHub Settings from localStorage or defaults
+      const savedToken = localStorage.getItem('gh_pat_token') || '';
+      document.getElementById('input-github-token').value = savedToken;
+      document.getElementById('input-github-owner').value = CMS_STATE.settings?.githubOwner || 'bprodrive';
+      document.getElementById('input-github-repo').value = CMS_STATE.settings?.githubRepo || 'bprodrive.github.io';
+      document.getElementById('input-github-branch').value = CMS_STATE.settings?.branch || 'main';
+      document.getElementById('input-github-file').value = CMS_STATE.settings?.targetFile || 'index.html';
+
+      updateGitHubStatusBadge();
+      renderAllViews();
     }
 
-    document.getElementById('tokenBtn').addEventListener('click', () => {
-      const newToken = prompt('Masukkan GitHub PAT baru:');
-      if (newToken) {
-        localStorage.setItem('gh_pat_token', newToken.trim());
-        alert('Token berhasil diperbarui!');
-      }
-    });
+    // Save State to Local Storage
+    function saveStateToStorage() {
+      localStorage.setItem('bayu_cms_data', JSON.stringify(CMS_STATE));
+      flashSaveIndicator();
+    }
 
-    // 1. Fetch & Render Tampilan Web Utama
-    async function loadWebForEditing() {
-      const container = document.getElementById('webContainer');
-      const token = checkToken();
+    function flashSaveIndicator() {
+      const pill = document.getElementById('save-status-pill');
+      const text = document.getElementById('save-status-text');
+      if (pill && text) {
+        pill.classList.remove('hidden');
+        text.innerText = 'Draft Tersimpan Lokal';
+        pill.classList.add('border-emerald-500/40', 'bg-emerald-500/10');
+        setTimeout(() => {
+          pill.classList.remove('border-emerald-500/40', 'bg-emerald-500/10');
+        }, 2000);
+      }
+    }
+
+    // Render All Views
+    function renderAllViews() {
+      renderDashboard();
+      populateProfileForm();
+      renderPortfolioGrid();
+      renderExperienceProjects();
+      renderSkills();
+      renderArticles();
+      updateMetricCounts();
+      lucide.createIcons();
+    }
+
+    // Tab Switcher
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const targetPane = document.getElementById(`tab-${tabId}`);
+      const targetNav = document.getElementById(`nav-${tabId}`);
+      if (targetPane) targetPane.classList.remove('hidden');
+      if (targetNav) targetNav.classList.add('active');
+
+      // Update Topbar
+      const titles = {
+        'dashboard': ['Dashboard Overview', 'Ringkasan performa dan pembaruan terkini'],
+        'profile': ['Profil & Headline Hero', 'Sunting identitas dan pesan pembuka portofolio'],
+        'portfolio': ['Manajemen Portofolio', 'Galeri karya Motion Graphic dan Graphic Design'],
+        'experience': ['Karier & Proyek KIAN', 'Daftar riwayat kerja dan detail proyek produksi'],
+        'skills': ['Keahlian & Perangkat Lunak', 'Daftar keahlian dan software utama'],
+        'articles': ['Artikel & Blog Studio', 'Tulis materi dengan format Markdown siap ekspor'],
+        'visual-editor': ['Live Visual Simulator', 'Pratinjau interaktif website langsung dalam simulator'],
+        'settings': ['GitHub Sync & Pengaturan', 'Konfigurasi integrasi repository dan ekspor data']
+      };
+
+      if (titles[tabId]) {
+        document.getElementById('topbar-title').innerText = titles[tabId][0];
+        document.getElementById('topbar-desc').innerText = titles[tabId][1];
+      }
+
+      // Close mobile sidebar if open
+      if (window.innerWidth < 1024) {
+        document.getElementById('sidebar').classList.add('-translate-x-full');
+      }
+
+      lucide.createIcons();
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('-translate-x-full');
+    }
+
+    // -------------------------------------------------------------
+    // DASHBOARD RENDERING
+    // -------------------------------------------------------------
+    function renderDashboard() {
+      const container = document.getElementById('dashboard-recent-works');
+      if (!container) return;
+
+      const recentWorks = CMS_STATE.portfolio.slice(0, 4);
+      container.innerHTML = recentWorks.map(item => `
+        <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-brand-border transition group">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <img src="${item.imageUrl}" alt="${item.title}" class="w-12 h-10 object-cover rounded-lg bg-black/40 shrink-0">
+            <div class="truncate">
+              <h5 class="text-xs font-semibold text-white group-hover:text-brand-gold transition truncate">${item.title}</h5>
+              <p class="text-[11px] text-brand-dim">${item.meta} • <span class="capitalize text-brand-gold/80">${item.category}</span></p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="editPortfolioItem('${item.id}')" class="p-1.5 text-brand-dim hover:text-white rounded-lg hover:bg-white/5 transition" title="Edit">
+              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateMetricCounts() {
+      const totalPf = CMS_STATE.portfolio.length;
+      const graphicCount = CMS_STATE.portfolio.filter(p => p.category === 'graphic').length;
+      const motionCount = CMS_STATE.portfolio.filter(p => p.category === 'motion').length;
+
+      document.getElementById('stat-total-portfolio').innerText = totalPf;
+      document.getElementById('badge-portfolio-count').innerText = totalPf;
+      document.getElementById('count-all').innerText = totalPf;
+      document.getElementById('count-graphic').innerText = graphicCount;
+      document.getElementById('count-motion').innerText = motionCount;
+
+      document.getElementById('stat-total-skills').innerText = CMS_STATE.skills.length;
+      document.getElementById('stat-total-articles').innerText = CMS_STATE.articles.length;
+      document.getElementById('badge-articles-count').innerText = CMS_STATE.articles.length;
+    }
+
+    // -------------------------------------------------------------
+    // PROFILE FORM & ACTIONS
+    // -------------------------------------------------------------
+    function populateProfileForm() {
+      const p = CMS_STATE.profile;
+      document.getElementById('input-profile-name').value = p.name;
+      document.getElementById('input-profile-italic').value = p.italicName;
+      document.getElementById('input-profile-eyebrow').value = p.eyebrow;
+      document.getElementById('input-profile-hero-desc').value = p.heroDesc;
+      document.getElementById('input-profile-photo').value = p.photoUrl;
+      document.getElementById('profile-photo-preview').src = p.photoUrl;
+      document.getElementById('sidebar-avatar').src = p.photoUrl;
+      document.getElementById('sidebar-name').innerText = p.name + ' ' + (p.italicName || '');
+
+      document.getElementById('input-fact-location').value = p.facts.location;
+      document.getElementById('input-fact-exp').value = p.facts.experience;
+      document.getElementById('input-fact-discipline').value = p.facts.discipline;
+      document.getElementById('input-fact-availability').value = p.facts.availability;
+
+      document.getElementById('input-profile-about-text').value = p.aboutParagraphs.join('\n\n');
+
+      document.getElementById('input-social-wa').value = p.social.whatsapp || '';
+      document.getElementById('input-social-email').value = p.social.email || '';
+      document.getElementById('input-social-linkedin').value = p.social.linkedin || '';
+      document.getElementById('input-social-instagram').value = p.social.instagram || '';
+    }
+
+    function updatePhotoPreview(url) {
+      if (url) {
+        document.getElementById('profile-photo-preview').src = url;
+      }
+    }
+
+    function saveProfileChanges() {
+      const p = CMS_STATE.profile;
+      p.name = document.getElementById('input-profile-name').value;
+      p.italicName = document.getElementById('input-profile-italic').value;
+      p.eyebrow = document.getElementById('input-profile-eyebrow').value;
+      p.heroDesc = document.getElementById('input-profile-hero-desc').value;
+      p.photoUrl = document.getElementById('input-profile-photo').value;
+
+      p.facts.location = document.getElementById('input-fact-location').value;
+      p.facts.experience = document.getElementById('input-fact-exp').value;
+      p.facts.discipline = document.getElementById('input-fact-discipline').value;
+      p.facts.availability = document.getElementById('input-fact-availability').value;
+
+      const rawAbout = document.getElementById('input-profile-about-text').value;
+      p.aboutParagraphs = rawAbout.split('\n\n').filter(t => t.trim().length > 0);
+
+      p.social.whatsapp = document.getElementById('input-social-wa').value;
+      p.social.email = document.getElementById('input-social-email').value;
+      p.social.linkedin = document.getElementById('input-social-linkedin').value;
+      p.social.instagram = document.getElementById('input-social-instagram').value;
+
+      saveStateToStorage();
+      populateProfileForm();
+      showToast('Profil berhasil disimpan!', 'success');
+    }
+
+    // -------------------------------------------------------------
+    // PORTFOLIO LOGIC
+    // -------------------------------------------------------------
+    function filterPortfolio(cat) {
+      activeFilter = cat;
+      document.querySelectorAll('.pf-filter-btn').forEach(b => {
+        b.className = 'pf-filter-btn px-3 py-1.5 rounded-xl text-xs font-medium text-brand-dim hover:text-white hover:bg-white/5';
+      });
+      const activeBtn = document.getElementById(`pf-btn-${cat}`);
+      if (activeBtn) {
+        activeBtn.className = 'pf-filter-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-brand-gold text-brand-bg';
+      }
+      renderPortfolioGrid();
+    }
+
+    function searchPortfolio(query) {
+      renderPortfolioGrid(query.toLowerCase());
+    }
+
+    function renderPortfolioGrid(searchQuery = '') {
+      const grid = document.getElementById('portfolio-grid');
+      if (!grid) return;
+
+      let items = CMS_STATE.portfolio;
+      if (activeFilter !== 'all') {
+        items = items.filter(i => i.category === activeFilter);
+      }
+      if (searchQuery) {
+        items = items.filter(i => i.title.toLowerCase().includes(searchQuery) || i.meta.toLowerCase().includes(searchQuery));
+      }
+
+      if (items.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full p-10 text-center text-brand-dim glass-card rounded-2xl">
+            <i data-lucide="folder-open" class="w-8 h-8 mx-auto mb-2 text-brand-gold/40"></i>
+            <p class="text-xs">Tidak ada karya yang sesuai dengan pencarian atau filter.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = items.map(item => `
+        <div class="glass-card glass-card-hover rounded-2xl overflow-hidden border-brand-border flex flex-col justify-between group">
+          <div class="relative aspect-video bg-black/40 overflow-hidden">
+            <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider ${item.category === 'motion' ? 'bg-indigo-600/90 text-white' : 'bg-brand-gold/90 text-brand-bg'}">
+              ${item.category}
+            </span>
+            ${item.videoUrl ? `
+              <a href="${item.videoUrl}" target="_blank" class="absolute bottom-2.5 right-2.5 px-2 py-1 rounded-lg bg-black/70 hover:bg-red-600 text-white text-[10px] flex items-center gap-1 transition">
+                <i data-lucide="play" class="w-3 h-3 fill-current"></i> Video
+              </a>
+            ` : ''}
+          </div>
+
+          <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+            <div>
+              <span class="text-[10px] font-mono text-brand-dim uppercase tracking-wider">${item.index || '#'} / ${item.category}</span>
+              <h5 class="text-sm font-semibold text-white group-hover:text-brand-gold transition line-clamp-1">${item.title}</h5>
+              <p class="text-xs text-brand-dim mt-0.5 line-clamp-1">${item.meta}</p>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-white/5">
+              <span class="text-[11px] text-brand-gold font-mono">${item.id}</span>
+              <div class="flex items-center gap-1">
+                <button onclick="editPortfolioItem('${item.id}')" class="p-1.5 text-brand-dim hover:text-white rounded-lg hover:bg-white/5 transition" title="Edit">
+                  <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="duplicatePortfolioItem('${item.id}')" class="p-1.5 text-brand-dim hover:text-brand-gold rounded-lg hover:bg-white/5 transition" title="Duplikat">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="deletePortfolioItem('${item.id}')" class="p-1.5 text-brand-dim hover:text-red-400 rounded-lg hover:bg-red-500/10 transition" title="Hapus">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function openPortfolioModal(itemId = null) {
+      const modal = document.getElementById('modal-portfolio');
+      const title = document.getElementById('portfolio-modal-title');
+      
+      if (itemId) {
+        title.innerText = 'Edit Karya Portofolio';
+        const item = CMS_STATE.portfolio.find(p => p.id === itemId);
+        if (item) {
+          document.getElementById('pm-id').value = item.id;
+          document.getElementById('pm-title').value = item.title;
+          document.getElementById('pm-category').value = item.category;
+          document.getElementById('pm-meta').value = item.meta;
+          document.getElementById('pm-index').value = item.index || '';
+          document.getElementById('pm-image').value = item.imageUrl;
+          document.getElementById('pm-video').value = item.videoUrl || '';
+          document.getElementById('pm-preview-img').src = item.imageUrl;
+        }
+      } else {
+        title.innerText = 'Tambah Karya Baru';
+        document.getElementById('pm-id').value = '';
+        document.getElementById('pm-title').value = '';
+        document.getElementById('pm-category').value = 'graphic';
+        document.getElementById('pm-meta').value = 'KIAN Company — 2026';
+        document.getElementById('pm-index').value = String(CMS_STATE.portfolio.length + 1).padStart(2, '0');
+        document.getElementById('pm-image').value = 'https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ';
+        document.getElementById('pm-video').value = '';
+        document.getElementById('pm-preview-img').src = 'https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ';
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function editPortfolioItem(id) {
+      openPortfolioModal(id);
+    }
+
+    function duplicatePortfolioItem(id) {
+      const item = CMS_STATE.portfolio.find(p => p.id === id);
+      if (!item) return;
+      const clone = JSON.parse(JSON.stringify(item));
+      clone.id = 'pf-' + Date.now();
+      clone.title += ' (Salinan)';
+      CMS_STATE.portfolio.unshift(clone);
+      saveStateToStorage();
+      renderPortfolioGrid();
+      updateMetricCounts();
+      showToast('Karya berhasil diduplikasi!', 'info');
+    }
+
+    function deletePortfolioItem(id) {
+      if (confirm('Yakin ingin menghapus karya ini dari portofolio?')) {
+        CMS_STATE.portfolio = CMS_STATE.portfolio.filter(p => p.id !== id);
+        saveStateToStorage();
+        renderPortfolioGrid();
+        updateMetricCounts();
+        showToast('Karya dihapus!', 'warning');
+      }
+    }
+
+    function savePortfolioItem() {
+      const id = document.getElementById('pm-id').value;
+      const title = document.getElementById('pm-title').value.trim();
+      const category = document.getElementById('pm-category').value;
+      const meta = document.getElementById('pm-meta').value.trim();
+      const index = document.getElementById('pm-index').value.trim();
+      const imageUrl = document.getElementById('pm-image').value.trim();
+      const videoUrl = document.getElementById('pm-video').value.trim();
+
+      if (!title) {
+        alert('Mohon isi judul karya!');
+        return;
+      }
+
+      if (id) {
+        // Update existing
+        const indexItem = CMS_STATE.portfolio.findIndex(p => p.id === id);
+        if (indexItem !== -1) {
+          CMS_STATE.portfolio[indexItem] = { id, title, category, meta, index, imageUrl, videoUrl };
+        }
+      } else {
+        // Create new
+        const newId = 'pf-' + Date.now();
+        CMS_STATE.portfolio.unshift({ id: newId, title, category, meta, index, imageUrl, videoUrl });
+      }
+
+      saveStateToStorage();
+      closeModal('modal-portfolio');
+      renderPortfolioGrid();
+      updateMetricCounts();
+      showToast('Karya berhasil disimpan!', 'success');
+    }
+
+    // -------------------------------------------------------------
+    // KIAN EXPERIENCE LOGIC
+    // -------------------------------------------------------------
+    function renderExperienceProjects() {
+      const container = document.getElementById('experience-projects-list');
+      if (!container) return;
+
+      const items = CMS_STATE.experienceProjects;
+      document.getElementById('exp-project-total-label').innerText = `${items.length} Proyek Terdaftar`;
+
+      container.innerHTML = items.map((item, idx) => `
+        <div class="glass-card p-4 rounded-xl border-brand-border hover:border-brand-borderStrong transition flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5 flex-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-bold text-brand-gold">#${String(idx + 1).padStart(2, '0')}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider bg-white/5 text-brand-dim">${item.category}</span>
+              <span class="text-xs text-brand-dim">• ${item.date}</span>
+            </div>
+            <h5 class="text-sm font-semibold text-white">${item.title}</h5>
+            <p class="text-xs text-brand-dim line-clamp-2">${item.desc}</p>
+            <p class="text-[11px] text-brand-gold/90 font-mono"><strong>Output:</strong> ${item.output}</p>
+          </div>
+          <div class="flex items-center gap-1 shrink-0 self-end md:self-center">
+            <button onclick="editExperienceItem('${item.id}')" class="p-2 text-brand-dim hover:text-white rounded-lg hover:bg-white/5 transition" title="Edit">
+              <i data-lucide="edit-2" class="w-4 h-4"></i>
+            </button>
+            <button onclick="deleteExperienceItem('${item.id}')" class="p-2 text-brand-dim hover:text-red-400 rounded-lg hover:bg-red-500/10 transition" title="Hapus">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function openExperienceProjectModal(itemId = null) {
+      const modal = document.getElementById('modal-experience');
+      const title = document.getElementById('exp-modal-title');
+      
+      if (itemId) {
+        title.innerText = 'Edit Proyek KIAN';
+        const item = CMS_STATE.experienceProjects.find(e => e.id === itemId);
+        if (item) {
+          document.getElementById('exp-id').value = item.id;
+          document.getElementById('exp-title').value = item.title;
+          document.getElementById('exp-category').value = item.category;
+          document.getElementById('exp-date').value = item.date;
+          document.getElementById('exp-role').value = item.role;
+          document.getElementById('exp-desc').value = item.desc;
+          document.getElementById('exp-output').value = item.output;
+        }
+      } else {
+        title.innerText = 'Tambah Proyek Produksi KIAN';
+        document.getElementById('exp-id').value = '';
+        document.getElementById('exp-title').value = '';
+        document.getElementById('exp-category').value = 'event & broadcast';
+        document.getElementById('exp-date').value = '2026';
+        document.getElementById('exp-role').value = 'Motion Graphic Designer';
+        document.getElementById('exp-desc').value = '';
+        document.getElementById('exp-output').value = '';
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function editExperienceItem(id) {
+      openExperienceProjectModal(id);
+    }
+
+    function deleteExperienceItem(id) {
+      if (confirm('Hapus proyek ini dari riwayat KIAN?')) {
+        CMS_STATE.experienceProjects = CMS_STATE.experienceProjects.filter(e => e.id !== id);
+        saveStateToStorage();
+        renderExperienceProjects();
+        showToast('Proyek dihapus!', 'warning');
+      }
+    }
+
+    function saveExperienceItem() {
+      const id = document.getElementById('exp-id').value;
+      const title = document.getElementById('exp-title').value.trim();
+      const category = document.getElementById('exp-category').value;
+      const date = document.getElementById('exp-date').value.trim();
+      const role = document.getElementById('exp-role').value.trim();
+      const desc = document.getElementById('exp-desc').value.trim();
+      const output = document.getElementById('exp-output').value.trim();
+
+      if (!title) {
+        alert('Mohon isi nama acara / proyek!');
+        return;
+      }
+
+      if (id) {
+        const idx = CMS_STATE.experienceProjects.findIndex(e => e.id === id);
+        if (idx !== -1) {
+          CMS_STATE.experienceProjects[idx] = { id, title, category, date, role, desc, output };
+        }
+      } else {
+        const newId = 'ep-' + Date.now();
+        CMS_STATE.experienceProjects.unshift({ id: newId, title, category, date, role, desc, output });
+      }
+
+      saveStateToStorage();
+      closeModal('modal-experience');
+      renderExperienceProjects();
+      showToast('Proyek berhasil disimpan!', 'success');
+    }
+
+    // -------------------------------------------------------------
+    // SKILLS LOGIC
+    // -------------------------------------------------------------
+    function renderSkills() {
+      const container = document.getElementById('skills-pill-container');
+      if (!container) return;
+
+      container.innerHTML = CMS_STATE.skills.map((skill, index) => `
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-brand-border text-xs text-white hover:border-brand-gold transition group">
+          <span>${skill}</span>
+          <button onclick="removeSkill(${index})" class="text-brand-dim group-hover:text-red-400 p-0.5 rounded transition">
+            <i data-lucide="x" class="w-3 h-3"></i>
+          </button>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function openSkillModal() {
+      document.getElementById('skill-name-input').value = '';
+      document.getElementById('modal-skill').classList.remove('hidden');
+    }
+
+    function addNewSkill() {
+      const name = document.getElementById('skill-name-input').value.trim();
+      if (!name) return;
+      CMS_STATE.skills.push(name);
+      saveStateToStorage();
+      renderSkills();
+      updateMetricCounts();
+      closeModal('modal-skill');
+      showToast('Keahlian baru ditambahkan!', 'success');
+    }
+
+    function removeSkill(index) {
+      CMS_STATE.skills.splice(index, 1);
+      saveStateToStorage();
+      renderSkills();
+      updateMetricCounts();
+    }
+
+    // -------------------------------------------------------------
+    // ARTICLE & BLOG CMS LOGIC
+    // -------------------------------------------------------------
+    function renderArticles() {
+      const container = document.getElementById('articles-list');
+      if (!container) return;
+
+      container.innerHTML = CMS_STATE.articles.map(art => `
+        <div class="glass-card glass-card-hover rounded-2xl overflow-hidden border-brand-border flex flex-col justify-between">
+          <div class="aspect-video bg-black/40 overflow-hidden relative">
+            <img src="${art.coverUrl}" alt="${art.title}" class="w-full h-full object-cover">
+            <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[10px] font-mono bg-black/70 text-brand-gold border border-brand-gold/30">
+              ${art.category}
+            </span>
+          </div>
+
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div>
+              <span class="text-[11px] text-brand-dim font-mono">${art.date}</span>
+              <h5 class="text-base font-semibold text-white mt-1 hover:text-brand-gold transition line-clamp-2">${art.title}</h5>
+              <p class="text-xs text-brand-dim mt-2 line-clamp-3 leading-relaxed">${art.excerpt}</p>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-white/5">
+              <span class="text-[11px] font-mono text-emerald-400">Published</span>
+              <div class="flex items-center gap-1">
+                <button onclick="editArticle('${art.id}')" class="p-1.5 text-brand-dim hover:text-white rounded-lg hover:bg-white/5 transition" title="Edit Artikel">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="deleteArticle('${art.id}')" class="p-1.5 text-brand-dim hover:text-red-400 rounded-lg hover:bg-red-500/10 transition" title="Hapus Artikel">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function openArticleEditor(artId = null) {
+      const modal = document.getElementById('modal-article');
+      const title = document.getElementById('article-modal-title');
+
+      if (artId) {
+        title.innerText = 'Edit Artikel Blog';
+        const art = CMS_STATE.articles.find(a => a.id === artId);
+        if (art) {
+          document.getElementById('art-id').value = art.id;
+          document.getElementById('art-title').value = art.title;
+          document.getElementById('art-category').value = art.category;
+          document.getElementById('art-cover').value = art.coverUrl;
+          document.getElementById('art-excerpt').value = art.excerpt;
+          document.getElementById('art-body').value = art.body;
+          renderArticlePreview(art.body);
+        }
+      } else {
+        title.innerText = 'Tulis Artikel Baru';
+        document.getElementById('art-id').value = '';
+        document.getElementById('art-title').value = '';
+        document.getElementById('art-category').value = 'Motion Design';
+        document.getElementById('art-cover').value = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80';
+        document.getElementById('art-excerpt').value = '';
+        document.getElementById('art-body').value = '## Judul Bagian\n\nTulis konten menarik Anda di sini...';
+        renderArticlePreview('## Judul Bagian\n\nTulis konten menarik Anda di sini...');
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function editArticle(id) {
+      openArticleEditor(id);
+    }
+
+    function deleteArticle(id) {
+      if (confirm('Hapus artikel ini?')) {
+        CMS_STATE.articles = CMS_STATE.articles.filter(a => a.id !== id);
+        saveStateToStorage();
+        renderArticles();
+        updateMetricCounts();
+        showToast('Artikel dihapus!', 'warning');
+      }
+    }
+
+    function insertMd(prefix, suffix = '') {
+      const ta = document.getElementById('art-body');
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      const text = ta.value;
+      const selected = text.substring(start, end);
+      ta.value = text.substring(0, start) + prefix + selected + suffix + text.substring(end);
+      ta.focus();
+      renderArticlePreview(ta.value);
+    }
+
+    function renderArticlePreview(markdown) {
+      const preview = document.getElementById('art-preview');
+      if (!preview) return;
+      // Simple markdown converter
+      let html = markdown
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+        .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+        .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank">$1</a>')
+        .replace(/\n\n/gim, '</p><p>')
+        .replace(/\n/gim, '<br>');
+      preview.innerHTML = `<p>${html}</p>`;
+    }
+
+    function saveArticleItem() {
+      const id = document.getElementById('art-id').value;
+      const title = document.getElementById('art-title').value.trim();
+      const category = document.getElementById('art-category').value.trim();
+      const coverUrl = document.getElementById('art-cover').value.trim();
+      const excerpt = document.getElementById('art-excerpt').value.trim();
+      const body = document.getElementById('art-body').value;
+
+      if (!title) {
+        alert('Judul artikel wajib diisi!');
+        return;
+      }
+
+      const today = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+
+      if (id) {
+        const idx = CMS_STATE.articles.findIndex(a => a.id === id);
+        if (idx !== -1) {
+          CMS_STATE.articles[idx] = { id, title, category, coverUrl, excerpt, body, date: CMS_STATE.articles[idx].date || today };
+        }
+      } else {
+        const newId = 'art-' + Date.now();
+        CMS_STATE.articles.unshift({ id: newId, title, category, coverUrl, excerpt, body, date: today });
+      }
+
+      saveStateToStorage();
+      closeModal('modal-article');
+      renderArticles();
+      updateMetricCounts();
+      showToast('Artikel berhasil disimpan!', 'success');
+    }
+
+    function downloadArticleAsMarkdown() {
+      const title = document.getElementById('art-title').value.trim() || 'artikel';
+      const body = document.getElementById('art-body').value;
+      const frontmatter = `---
+title: "${title}"
+category: "${document.getElementById('art-category').value.trim()}"
+cover: "${document.getElementById('art-cover').value.trim()}"
+date: "${new Date().toISOString()}"
+---
+
+${body}`;
+
+      const blob = new Blob([frontmatter], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${title.toLowerCase().replace(/[^a-z0-9]/g, '-')}.md`;
+      a.click();
+    }
+
+    // -------------------------------------------------------------
+    // LIVE VISUAL SIMULATOR
+    // -------------------------------------------------------------
+    function setPreviewDevice(device) {
+      const wrapper = document.getElementById('iframe-wrapper');
+      document.getElementById('btn-device-desktop').className = 'p-1.5 rounded-lg text-brand-dim hover:text-white';
+      document.getElementById('btn-device-tablet').className = 'p-1.5 rounded-lg text-brand-dim hover:text-white';
+      document.getElementById('btn-device-mobile').className = 'p-1.5 rounded-lg text-brand-dim hover:text-white';
+
+      document.getElementById(`btn-device-${device}`).className = 'p-1.5 rounded-lg text-brand-gold bg-brand-gold/15';
+
+      if (device === 'mobile') {
+        wrapper.style.maxWidth = '390px';
+      } else if (device === 'tablet') {
+        wrapper.style.maxWidth = '768px';
+      } else {
+        wrapper.style.maxWidth = '100%';
+      }
+    }
+
+    function reloadPreviewFrame() {
+      const frame = document.getElementById('preview-iframe');
+      if (frame) {
+        frame.src = frame.src;
+        showToast('Memuat ulang pratinjau...', 'info');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // GITHUB INTEGRATION & API COMMIT
+    // -------------------------------------------------------------
+    function toggleTokenVisibility() {
+      const input = document.getElementById('input-github-token');
+      const icon = document.getElementById('token-eye-icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+      } else {
+        input.type = 'password';
+      }
+    }
+
+    function updateGitHubStatusBadge() {
+      const token = localStorage.getItem('gh_pat_token');
+      const badge = document.getElementById('github-status-badge');
+      const label = document.getElementById('status-token-label');
+      if (token) {
+        if (badge) {
+          badge.className = 'px-2 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+          badge.innerText = 'Token Terpasang';
+        }
+        if (label) {
+          label.className = 'text-emerald-400 font-medium';
+          label.innerText = 'Tersimpan (Siap Sinkron)';
+        }
+      } else {
+        if (badge) {
+          badge.className = 'px-2 py-0.5 rounded-full text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20';
+          badge.innerText = 'Menunggu Token';
+        }
+        if (label) {
+          label.className = 'text-amber-400 font-medium';
+          label.innerText = 'Belum Diatur';
+        }
+      }
+    }
+
+    function saveGitHubSettings() {
+      const token = document.getElementById('input-github-token').value.trim();
+      const owner = document.getElementById('input-github-owner').value.trim();
+      const repo = document.getElementById('input-github-repo').value.trim();
+      const branch = document.getElementById('input-github-branch').value.trim();
+      const file = document.getElementById('input-github-file').value.trim();
+
+      if (token) {
+        localStorage.setItem('gh_pat_token', token);
+      }
+      CMS_STATE.settings = {
+        githubOwner: owner || 'bprodrive',
+        githubRepo: repo || 'bprodrive.github.io',
+        branch: branch || 'main',
+        targetFile: file || 'index.html'
+      };
+
+      saveStateToStorage();
+      updateGitHubStatusBadge();
+      showToast('Pengaturan GitHub berhasil disimpan!', 'success');
+    }
+
+    async function testGitHubConnection() {
+      const token = localStorage.getItem('gh_pat_token') || document.getElementById('input-github-token').value.trim();
+      const owner = document.getElementById('input-github-owner').value.trim() || 'bprodrive';
+      const repo = document.getElementById('input-github-repo').value.trim() || 'bprodrive.github.io';
+
+      showToast('Menghubungi GitHub API...', 'info');
 
       try {
-        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${TARGET_FILE}`, {
+        const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
           headers: token ? { 'Authorization': `token ${token}` } : {}
         });
 
-        if (!response.ok) throw new Error('Gagal memuat file web dari GitHub.');
-
-        const data = await response.json();
-        currentSha = data.sha;
-
-        // Decode Base64 ke HTML lengkap
-        const fullHtml = decodeURIComponent(escape(atob(data.content)));
-
-        // Buat parser untuk memisahkan head (CSS/Font) dan body
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(fullHtml, 'text/html');
-
-        // Pindahkan semua style/link CSS dari head asli ke document admin
-        doc.head.querySelectorAll('link, style').forEach(node => {
-          document.head.appendChild(node.cloneNode(true));
-        });
-
-        // Render bagian body ke container
-        container.innerHTML = doc.body.innerHTML;
-
-        // Aktifkan mode Inline Editing pada teks & judul
-        makeElementsEditable();
-
+        if (response.ok) {
+          const data = await response.json();
+          showToast(`Koneksi Berhasil! Repo: ${data.full_name} (${data.visibility})`, 'success');
+          updateGitHubStatusBadge();
+        } else {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
       } catch (err) {
-        container.innerHTML = `<div class="p-10 text-red-500 text-center font-sans">Error: ${err.message}</div>`;
+        showToast('Koneksi Gagal: ' + err.message, 'warning');
       }
     }
 
-    // 2. Aktifkan ContentEditable untuk elemen Teks
-    function makeElementsEditable() {
-      const container = document.getElementById('webContainer');
-      
-      // Pilih elemen-elemen teks umum (Heading, Paragraf, Span, Button text, dsb)
-      const editableSelectors = 'h1, h2, h3, h4, h5, h6, p, a, button, span, li, b, strong';
-      const elements = container.querySelectorAll(editableSelectors);
+    function openGitHubCommitModal() {
+      const token = localStorage.getItem('gh_pat_token');
+      if (!token) {
+        alert('Silakan atur GitHub Personal Access Token (PAT) terlebih dahulu pada tab Pengaturan.');
+        switchTab('settings');
+        return;
+      }
 
-      elements.forEach(el => {
-        // Jangan aktifkan pada baris admin controller
-        if (!el.closest('#adminBar')) {
-          el.setAttribute('contenteditable', 'true');
-        }
-      });
+      document.getElementById('gc-repo-label').innerText = `${CMS_STATE.settings.githubOwner}/${CMS_STATE.settings.githubRepo}`;
+      document.getElementById('modal-github-commit').classList.remove('hidden');
     }
 
-    // 3. Simpan Seluruh HTML kembali ke GitHub
-    document.getElementById('saveBtn').addEventListener('click', async () => {
-      const token = checkToken();
-      if (!token) return;
+    async function executeGitHubPush() {
+      const token = localStorage.getItem('gh_pat_token');
+      const owner = CMS_STATE.settings.githubOwner || 'bprodrive';
+      const repo = CMS_STATE.settings.githubRepo || 'bprodrive.github.io';
+      const file = CMS_STATE.settings.targetFile || 'index.html';
+      const message = document.getElementById('gc-commit-message').value.trim() || 'Update website via Studio CMS';
 
-      const saveBtn = document.getElementById('saveBtn');
-      saveBtn.innerText = '⏳ Menyimpan...';
-      saveBtn.disabled = true;
+      const progressBox = document.getElementById('gc-progress-box');
+      const submitBtn = document.getElementById('gc-submit-btn');
 
-      // Bersihkan atribut contenteditable sebelum disimpan ke server
-      const containerClone = document.getElementById('webContainer').cloneNode(true);
-      containerClone.querySelectorAll('[contenteditable]').forEach(el => {
-        el.removeAttribute('contenteditable');
-      });
-
-      // Ambil kode HTML bersih hasil editan
-      const cleanHtml = containerClone.innerHTML;
-
-      // Encode UTF-8 ke Base64
-      const encodedContent = btoa(unescape(encodeURIComponent(cleanHtml)));
+      progressBox.classList.remove('hidden');
+      submitBtn.disabled = true;
 
       try {
-        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${TARGET_FILE}`, {
+        // Step 1: Get current SHA
+        document.getElementById('gc-progress-text').innerText = 'Mengambil status file terkini (SHA)...';
+        const fileRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file}`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
+
+        if (!fileRes.ok) throw new Error('Gagal mendapatkan file target dari repository GitHub.');
+        const fileData = await fileRes.json();
+        const currentSha = fileData.sha;
+
+        // Step 2: Decode original HTML
+        const originalHtml = decodeURIComponent(escape(atob(fileData.content)));
+        
+        // Step 3: Inject updated data from CMS_STATE into HTML
+        document.getElementById('gc-progress-text').innerText = 'Mengintegrasikan data ke dalam index.html...';
+        const updatedHtml = applyCmsStateToHtml(originalHtml);
+
+        // Step 4: Encode to Base64
+        const encodedContent = btoa(unescape(encodeURIComponent(updatedHtml)));
+
+        // Step 5: PUT commit
+        document.getElementById('gc-progress-text').innerText = 'Melakukan commit ke branch main...';
+        const commitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file}`, {
           method: 'PUT',
           headers: {
             'Authorization': `token ${token}`,
@@ -157,28 +2350,160 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            message: 'Update website content via Visual Admin Editor',
+            message: message,
             content: encodedContent,
             sha: currentSha
           })
         });
 
-        if (!response.ok) throw new Error('Gagal menyimpan ke GitHub.');
+        if (!commitRes.ok) {
+          const errData = await commitRes.json();
+          throw new Error(errData.message || 'Gagal menyimpan commit ke GitHub');
+        }
 
-        const result = await response.json();
-        currentSha = result.content.sha; // Update SHA baru
-
-        alert('✅ Perubahan berhasil disimpan! GitHub Pages akan meng-update tampilan publik dalam 1-2 menit.');
+        closeModal('modal-github-commit');
+        showToast('Berhasil di-push ke GitHub Pages! Perubahan aktif dalam 1-2 menit.', 'success');
       } catch (err) {
-        alert('❌ Error: ' + err.message);
+        alert('Gagal melakukan commit: ' + err.message);
       } finally {
-        saveBtn.innerText = '💾 Simpan Perubahan Web';
-        saveBtn.disabled = false;
+        progressBox.classList.add('hidden');
+        submitBtn.disabled = false;
+      }
+    }
+
+    // Helper: Modifies index.html with current CMS_STATE values
+    function applyCmsStateToHtml(fullHtml) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(fullHtml, 'text/html');
+
+      // Update Hero Name & Eyebrow
+      const eyebrow = doc.querySelector('.eyebrow');
+      if (eyebrow) eyebrow.innerHTML = CMS_STATE.profile.eyebrow;
+
+      const nameEl = doc.querySelector('.name');
+      if (nameEl) nameEl.innerHTML = `${CMS_STATE.profile.name}<br><em>${CMS_STATE.profile.italicName}</em>`;
+
+      const heroDesc = doc.querySelector('.hero-desc');
+      if (heroDesc) heroDesc.innerHTML = CMS_STATE.profile.heroDesc;
+
+      // Update Portrait Photo
+      const portraitImg = doc.querySelector('.portrait img');
+      if (portraitImg) portraitImg.src = CMS_STATE.profile.photoUrl;
+
+      // Return full updated serialized HTML string
+      return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+    }
+
+    // -------------------------------------------------------------
+    // EXPORT & BACKUP TOOLS
+    // -------------------------------------------------------------
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(CMS_STATE, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `bayu_cms_backup_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Cadangan data JSON berhasil diunduh!', 'success');
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported.portfolio && imported.profile) {
+            CMS_STATE = imported;
+            saveStateToStorage();
+            renderAllViews();
+            showToast('Data berhasil diimpor dari JSON!', 'success');
+          } else {
+            alert('Format JSON tidak sesuai dengan skema Studio CMS!');
+          }
+        } catch (err) {
+          alert('Gagal membaca file JSON: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    async function downloadCleanHtml() {
+      try {
+        const res = await fetch('../index.html');
+        if (!res.ok) throw new Error('Tidak dapat membaca index.html');
+        const text = await res.text();
+        const updated = applyCmsStateToHtml(text);
+        
+        const blob = new Blob([updated], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'index.html';
+        a.click();
+        showToast('File index.html terupdate berhasil diunduh!', 'success');
+      } catch (e) {
+        alert('Gagal mendownload index.html: ' + e.message);
+      }
+    }
+
+    function resetDataToDefault() {
+      if (confirm('PERINGATAN: Ini akan mengembalikan seluruh data CMS ke setelan awal default web. Lanjutkan?')) {
+        CMS_STATE = JSON.parse(JSON.stringify(DEFAULT_CMS_DATA));
+        saveStateToStorage();
+        renderAllViews();
+        showToast('Data berhasil direset ke default!', 'info');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // MODAL & TOAST HELPERS
+    // -------------------------------------------------------------
+    function closeModal(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) m.classList.add('hidden');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      const colors = {
+        success: 'bg-emerald-950/90 text-emerald-200 border-emerald-500/30',
+        warning: 'bg-amber-950/90 text-amber-200 border-amber-500/30',
+        info: 'bg-brand-surface/95 text-brand-text border-brand-border'
+      };
+
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-md text-xs font-medium transition-all duration-300 transform translate-y-4 opacity-0 ${colors[type] || colors.info}`;
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full ${type === 'success' ? 'bg-emerald-400' : type === 'warning' ? 'bg-amber-400' : 'bg-brand-gold'}"></span>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Close modal on Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.fixed.z-50').forEach(m => m.classList.add('hidden'));
       }
     });
 
-    // Jalankan saat halaman dibuka
-    window.addEventListener('DOMContentLoaded', loadWebForEditing);
+    // Start on DOM Ready
+    window.addEventListener('DOMContentLoaded', initState);
   </script>
 </body>
+
 </html>
