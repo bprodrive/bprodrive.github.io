@@ -2624,6 +2624,337 @@
       color: var(--gold);
       font-weight: 600;
     }
+
+    /* ============================================================ */
+    /* ARTIKEL & BLOG SECTION STYLES */
+    /* ============================================================ */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 28px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .articles-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .article-card {
+      background: linear-gradient(165deg, rgba(27, 26, 32, 0.85) 0%, rgba(20, 19, 24, 0.95) 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .article-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(201, 168, 118, 0.45);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(201, 168, 118, 0.12);
+    }
+
+    .article-cover {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #0b0b0d;
+    }
+
+    .article-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .article-card:hover .article-cover img {
+      transform: scale(1.06);
+    }
+
+    .article-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(11, 11, 13, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(201, 168, 118, 0.3);
+    }
+
+    .article-info {
+      padding: 22px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .article-date {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--gold-soft);
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .article-title {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      line-height: 1.35;
+      color: var(--text);
+      font-weight: 400;
+      margin-bottom: 10px;
+      transition: color 0.25s ease;
+    }
+
+    .article-card:hover .article-title {
+      color: var(--gold);
+    }
+
+    .article-excerpt {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .article-read-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      background: rgba(201, 168, 118, 0.08);
+      border: 1px solid rgba(201, 168, 118, 0.25);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      width: fit-content;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .article-read-btn .arrow {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .article-card:hover .article-read-btn {
+      background: var(--gold);
+      color: var(--bg);
+      border-color: var(--gold);
+      box-shadow: 0 4px 15px rgba(201, 168, 118, 0.3);
+    }
+
+    .article-card:hover .article-read-btn .arrow {
+      transform: translateX(4px);
+    }
+
+    /* Article Reader Modal */
+    .article-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
+    }
+
+    .article-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .article-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 11, 13, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      cursor: pointer;
+    }
+
+    .article-modal-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 820px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(165deg, rgba(27, 26, 32, 0.98) 0%, rgba(16, 15, 20, 0.99) 100%);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.9), 0 0 45px rgba(201, 168, 118, 0.12);
+      transform: translateY(24px) scale(0.97);
+      filter: blur(4px);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .article-modal.open .article-modal-card {
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .article-modal-head {
+      padding: 20px 28px;
+      border-bottom: 1px solid rgba(201, 168, 118, 0.15);
+      background: rgba(20, 19, 24, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .article-modal-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .article-modal-badge {
+      background: rgba(201, 168, 118, 0.12);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(201, 168, 118, 0.25);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .article-modal-date {
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-family: var(--mono);
+    }
+
+    .article-modal-close {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-dim);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-size: 1.4rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .article-modal-close:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      transform: rotate(90deg);
+    }
+
+    .article-modal-body-scroll {
+      padding: 28px 32px 36px;
+      overflow-y: auto;
+      max-height: calc(88vh - 80px);
+    }
+
+    .article-modal-cover-wrap {
+      width: 100%;
+      max-height: 340px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      border: 1px solid rgba(201, 168, 118, 0.2);
+    }
+
+    .article-modal-cover-wrap img {
+      width: 100%;
+      height: 100%;
+      max-height: 340px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .article-modal-title {
+      font-family: var(--serif);
+      font-size: 1.85rem;
+      line-height: 1.25;
+      color: var(--text);
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    .article-modal-content {
+      color: #d8d3cb;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .article-modal-content h2,
+    .article-modal-content h3,
+    .article-modal-content h4 {
+      font-family: var(--serif);
+      color: var(--gold);
+      margin-top: 28px;
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+
+    .article-modal-content h2 { font-size: 1.4rem; }
+    .article-modal-content h3 { font-size: 1.2rem; }
+    .article-modal-content h4 { font-size: 1.05rem; }
+
+    .article-modal-content p {
+      margin-bottom: 16px;
+    }
+
+    .article-modal-content blockquote {
+      margin: 20px 0;
+      padding: 12px 20px;
+      border-left: 3px solid var(--gold);
+      background: rgba(201, 168, 118, 0.06);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .article-modal-content ul,
+    .article-modal-content ol {
+      margin: 16px 0 20px 24px;
+    }
+
+    .article-modal-content li {
+      margin-bottom: 8px;
+    }
+
+    .article-modal-content strong {
+      color: #fff;
+    }
   </style>
 </head>
 
@@ -2640,6 +2971,7 @@
       <a href="#perjalanan">Perjalanan</a>
       <a href="#karya">Karya</a>
       <a href="#keahlian">Keahlian</a>
+      <a href="#artikel">Artikel</a>
       <a href="#kontak">Kontak</a>
     </nav>
   </header>
@@ -2854,7 +3186,7 @@
           </span>
           <span class="pf-text">
             <span class="pf-title">Motion Graphic</span>
-            <span class="pf-count">05 Karya</span>
+            <span class="pf-count">06 Karya</span>
           </span>
           <span class="pf-arrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -2880,7 +3212,7 @@
           aria-label="Tutup galeri">&times;</button>
       </div>
       <div class="portfolio-modal-gallery-wrap">
-        <div class="work-grid portfolio-modal-gallery">
+        <div class="work-grid portfolio-modal-gallery" id="pmGraphicGallery">
           <div class="work-card">
             <span class="work-index">01 / Graphic Design</span>
             <div class="work-visual work-visual--natural"><img
@@ -2919,31 +3251,31 @@
                 src="https://lh3.googleusercontent.com/d/1D0d8kWDCXdR0vJzap7EgVgTMV722F5zq"
                 alt="Leaderboard Top Designer" loading="lazy"></div>
             <div class="work-title">Leaderboard Top Designer</div>
-            <div class="work-meta">2026</div>
+            <div class="work-meta">KIAN Company — 2025</div>
           </div>
           <div class="work-card">
             <span class="work-index">06 / Graphic Design</span>
             <div class="work-visual work-visual--natural"><img
-                src="https://lh3.googleusercontent.com/d/1sJ9EE3PjFzU6lroeDppR8Nm-_p0lGN17"
-                alt="Leaderboard Video Editor" loading="lazy"></div>
-            <div class="work-title">Leaderboard Video Editor</div>
-            <div class="work-meta">2026</div>
+                src="https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ"
+                alt="Banner Digital Event" loading="lazy"></div>
+            <div class="work-title">Banner Digital Event</div>
+            <div class="work-meta">2025</div>
           </div>
           <div class="work-card">
             <span class="work-index">07 / Graphic Design</span>
             <div class="work-visual work-visual--natural"><img
-                src="https://lh3.googleusercontent.com/d/1CYl4UfnQYPdUFtEV9PNTUipn8yLZ1tWG" alt="Troopers Design"
+                src="https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm" alt="Post Promosi Sosmed"
                 loading="lazy"></div>
-            <div class="work-title">Troopers Design</div>
-            <div class="work-meta">2026</div>
+            <div class="work-title">Post Promosi Sosmed</div>
+            <div class="work-meta">KIAN Company — 2025</div>
           </div>
           <div class="work-card">
             <span class="work-index">08 / Graphic Design</span>
             <div class="work-visual work-visual--natural"><img
-                src="https://lh3.googleusercontent.com/d/1U3lDUNHPOuXBeWlLugJ9ERna7IQgIhSZ" alt="Insight Design"
+                src="https://lh3.googleusercontent.com/d/1XaYTh3n6dDnMOk8YBrLsUoLaG8snElXI" alt="ID Card & Merchandise"
                 loading="lazy"></div>
-            <div class="work-title">Insight Design</div>
-            <div class="work-meta">2026</div>
+            <div class="work-title">ID Card & Merchandise</div>
+            <div class="work-meta">KIAN Company — 2025</div>
           </div>
         </div>
       </div>
@@ -2963,7 +3295,7 @@
           aria-label="Tutup galeri">&times;</button>
       </div>
       <div class="portfolio-modal-gallery-wrap">
-        <div class="work-grid portfolio-modal-gallery">
+        <div class="work-grid portfolio-modal-gallery" id="pmMotionGallery">
           <div class="work-card">
             <span class="work-index">01 / Motion Graphic</span>
             <div class="work-visual youtube-card" data-video-id="EuUwm5oP_Ac" data-url="https://youtu.be/EuUwm5oP_Ac">
@@ -3119,7 +3451,7 @@
         <span class="section-num">04</span>
         <h2 class="section-title">Keahlian &amp; <em>Software</em></h2>
       </div>
-      <div class="skill-tags reveal">
+      <div class="skill-tags reveal" id="skillTagsContainer">
         <button class="skill-tag" type="button" data-skill="motion-graphic">Motion Graphic Design</button>
         <button class="skill-tag" type="button" data-skill="graphic-design">Graphic Design</button>
         <button class="skill-tag" type="button" data-skill="video-editing">Video Editing</button>
@@ -4003,9 +4335,56 @@
   </div>
 
   <div class="container">
-    <section class="section contact-section" id="kontak">
+    <!-- ========================================================= -->
+    <!-- SECTION 05: ARTIKEL & WAWASAN -->
+    <!-- ========================================================= -->
+    <section class="section" id="artikel">
       <div class="section-head reveal">
         <span class="section-num">05</span>
+        <h2 class="section-title">Artikel &amp; <em>Wawasan</em></h2>
+      </div>
+      <p class="reveal" style="color: var(--text-dim); font-size: 0.95rem; max-width: 680px; margin-top: -12px; margin-bottom: 32px;">
+        Catatan, panduan alur kerja, dan wawasan seputar motion graphic, desain visual, serta produksi video.
+      </p>
+
+      <div class="articles-grid reveal" id="articlesGrid">
+        <div class="article-card" data-article-id="art-1">
+          <div class="article-cover">
+            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="Membangun Motion Graphic Interaktif untuk Acara Skala Besar" loading="lazy">
+            <span class="article-badge">Motion Design</span>
+          </div>
+          <div class="article-info">
+            <span class="article-date">14 Oktober 2026</span>
+            <h3 class="article-title">Membangun Motion Graphic Interaktif untuk Acara Skala Besar</h3>
+            <p class="article-excerpt">Bagaimana merancang visual bumper, lower third dinamis, dan sinkronisasi audio-visual agar suasana acara terasa spektakuler.</p>
+            <button class="article-read-btn" type="button" data-article-id="art-1">
+              Baca Artikel <span class="arrow">&rarr;</span>
+            </button>
+          </div>
+        </div>
+        <div class="article-card" data-article-id="art-2">
+          <div class="article-cover">
+            <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80" alt="Panduan Memilih Antara Premiere Pro dan After Effects" loading="lazy">
+            <span class="article-badge">Workflow</span>
+          </div>
+          <div class="article-info">
+            <span class="article-date">10 Oktober 2026</span>
+            <h3 class="article-title">Panduan Memilih Antara Premiere Pro dan After Effects</h3>
+            <p class="article-excerpt">Kapan sebaiknya Anda menyelesaikan editing di Premiere Pro dan kapan saatnya berpindah ke After Effects untuk animasi kompleks.</p>
+            <button class="article-read-btn" type="button" data-article-id="art-2">
+              Baca Artikel <span class="arrow">&rarr;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SECTION 06: KONTAK -->
+    <!-- ========================================================= -->
+    <section class="section contact-section" id="kontak">
+      <div class="section-head reveal">
+        <span class="section-num">06</span>
         <h2 class="section-title">Let's <em>Collaborate !!</em></h2>
       </div>
 
@@ -4046,6 +4425,27 @@
     </svg>
   </button>
 
+
+  <!-- Article Reader Modal -->
+  <div class="article-modal" id="articleModal" aria-hidden="true">
+    <div class="article-modal-backdrop" data-article-close></div>
+    <div class="article-modal-card" role="dialog" aria-modal="true" aria-labelledby="artModalTitle">
+      <div class="article-modal-head">
+        <div class="article-modal-meta-top">
+          <span class="article-modal-badge" id="artModalCategory">Motion Design</span>
+          <span class="article-modal-date" id="artModalDate">14 Oktober 2026</span>
+        </div>
+        <button class="article-modal-close" type="button" data-article-close aria-label="Tutup artikel">&times;</button>
+      </div>
+      <div class="article-modal-body-scroll">
+        <div class="article-modal-cover-wrap" id="artModalCoverWrap">
+          <img id="artModalCover" src="" alt="" loading="lazy">
+        </div>
+        <h3 class="article-modal-title" id="artModalTitle"></h3>
+        <div class="article-modal-content" id="artModalBody"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Graphic Design Image Lightbox -->
   <div class="image-lightbox" id="imageLightbox" aria-hidden="true">
@@ -4439,11 +4839,12 @@
         }, 250);
       }
 
-      document.querySelectorAll('.work-visual--natural img').forEach(img => {
-        img.addEventListener('click', (e) => {
+      document.addEventListener('click', (e) => {
+        const img = e.target.closest('.work-visual--natural img');
+        if (img) {
           e.stopPropagation();
           openLightbox(img);
-        });
+        }
       });
 
       closeBtn.addEventListener('click', closeLightbox);
@@ -4633,8 +5034,11 @@
         document.body.style.overflow = '';
       }
 
-      document.querySelectorAll('.skill-tag').forEach(btn => {
-        btn.addEventListener('click', () => openSkillModal(btn.dataset.skill));
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.skill-tag');
+        if (btn && btn.dataset.skill) {
+          openSkillModal(btn.dataset.skill);
+        }
       });
 
       skillModalClose.addEventListener('click', closeSkillModal);
@@ -5034,6 +5438,319 @@
     }
     initStatCounters();
 
+    // ============================================================
+    // CMS DYNAMIC HYDRATION & ARTICLE READER CONTROLLER
+    // Menghubungkan Beranda secara real-time dengan Studio CMS
+    // (LocalStorage & PostMessage Iframe Simulator)
+    // ============================================================
+    (function () {
+      let currentArticles = [
+        {
+          id: "art-1",
+          title: "Membangun Motion Graphic Interaktif untuk Acara Skala Besar",
+          category: "Motion Design",
+          coverUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+          excerpt: "Bagaimana merancang visual bumper, lower third dinamis, dan sinkronisasi audio-visual agar suasana acara terasa spektakuler.",
+          date: "14 Oktober 2026",
+          body: `## Pengantar\n\nMenghasilkan motion graphic untuk acara langsung dengan ribuan peserta membutuhkan perencanaan matang mulai dari frame rate, kontras warna pada LED Screen, hingga ketepatan sinkronisasi audio.\n\n### Tahap Kunci Produksi:\n1. **Briefing & Color Palette:** Menyesuaikan dengan tone branding acara.\n2. **Sound Design Sync:** Motion tanpa ritme audio yang pas akan kehilangan tenaganya.\n3. **Render Optimization:** Menyiapkan format video H.264/ProRes yang ringan dimainkan operator VT.\n\n> "Kunci dari visual panggung adalah kejelasan informasi dalam sepersekian detik."`
+        },
+        {
+          id: "art-2",
+          title: "Panduan Memilih Antara Premiere Pro dan After Effects",
+          category: "Workflow",
+          coverUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+          excerpt: "Kapan sebaiknya Anda menyelesaikan editing di Premiere Pro dan kapan saatnya berpindah ke After Effects untuk animasi kompleks.",
+          date: "10 Oktober 2026",
+          body: `## Workflow Efisien\n\nBanyak editor pemula mencoba melakukan semuanya di After Effects, padahal Premiere Pro jauh lebih efisien untuk cutting audio-visual utama.\n\n- Gunakan **Adobe Premiere Pro** untuk timeline assembly, multi-camera, dan sound grading.\n- Gunakan **After Effects** untuk kinetic typography, compositing, dan lower third dinamis.`
+        }
+      ];
+
+      function parseMarkdown(md) {
+        if (!md) return '';
+        return md
+          .replace(/^### (.*$)/gim, '<h4>$1</h4>')
+          .replace(/^## (.*$)/gim, '<h3>$1</h3>')
+          .replace(/^# (.*$)/gim, '<h2>$1</h2>')
+          .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+          .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+          .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+          .replace(/^[-\*]\s+(.*$)/gim, '<li>$1</li>')
+          .replace(/(<li>.*<\/li>)/gims, '<ul>$1</ul>')
+          .replace(/\n\n/gim, '</p><p>')
+          .replace(/\n/gim, '<br>');
+      }
+
+      function openArticleModal(id) {
+        const modal = document.getElementById('articleModal');
+        const art = currentArticles.find(a => a.id === id);
+        if (!modal || !art) return;
+
+        const badge = document.getElementById('artModalCategory');
+        const date = document.getElementById('artModalDate');
+        const coverWrap = document.getElementById('artModalCoverWrap');
+        const cover = document.getElementById('artModalCover');
+        const title = document.getElementById('artModalTitle');
+        const body = document.getElementById('artModalBody');
+
+        if (badge) badge.textContent = art.category || 'Artikel';
+        if (date) date.textContent = art.date || '';
+        if (title) title.textContent = art.title || '';
+
+        if (cover && coverWrap) {
+          if (art.coverUrl) {
+            cover.src = art.coverUrl;
+            cover.alt = art.title;
+            coverWrap.style.display = 'block';
+          } else {
+            coverWrap.style.display = 'none';
+          }
+        }
+
+        if (body) {
+          body.innerHTML = `<p>${parseMarkdown(art.body || art.excerpt || '')}</p>`;
+        }
+
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        const closeBtn = modal.querySelector('.article-modal-close');
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
+      }
+
+      function closeArticleModal() {
+        const modal = document.getElementById('articleModal');
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        const anyModalOpen = document.querySelector('.portfolio-modal.open, .skill-modal.open, .exp-modal.open, .lightbox.open');
+        if (!anyModalOpen) {
+          document.body.style.overflow = '';
+        }
+      }
+
+      // Event listener tombol tutup artikel
+      document.addEventListener('click', (e) => {
+        if (e.target.matches('[data-article-close]') || e.target.closest('[data-article-close]')) {
+          closeArticleModal();
+        }
+        const readBtn = e.target.closest('.article-read-btn, .article-card');
+        if (readBtn && !e.target.closest('a')) {
+          const artId = readBtn.getAttribute('data-article-id');
+          if (artId) {
+            e.preventDefault();
+            openArticleModal(artId);
+          }
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('articleModal');
+          if (modal && modal.classList.contains('open')) {
+            closeArticleModal();
+          }
+        }
+      });
+
+      function getYouTubeId(url) {
+        if (!url) return '';
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:shorts\/|embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+        return match ? match[1] : '';
+      }
+
+      // Terapkan CMS Data ke Tampilan DOM Beranda
+      function applyCmsDataToDOM(cmsData) {
+        if (!cmsData) return;
+
+        // 1. Profil
+        if (cmsData.profile) {
+          const p = cmsData.profile;
+          const eyebrow = document.querySelector('.eyebrow');
+          if (eyebrow && p.eyebrow) eyebrow.innerHTML = p.eyebrow;
+
+          const nameEl = document.querySelector('.name');
+          if (nameEl && p.name) nameEl.innerHTML = `${p.name}<br><em>${p.italicName || ''}</em>`;
+
+          const heroDesc = document.querySelector('.hero-desc');
+          if (heroDesc && p.heroDesc) heroDesc.innerHTML = p.heroDesc;
+
+          const portraitImg = document.querySelector('.portrait img');
+          if (portraitImg && p.photoUrl) {
+            portraitImg.src = p.photoUrl;
+            portraitImg.alt = `${p.name} ${p.italicName || ''}`.trim();
+          }
+
+          const aboutText = document.querySelector('.about-text');
+          if (aboutText && p.aboutParagraphs && p.aboutParagraphs.length) {
+            const factsEl = aboutText.querySelector('.facts');
+            const paragraphsHtml = p.aboutParagraphs.map(text => `<p>${text}</p>`).join('\n          ');
+            if (factsEl) {
+              const factValues = factsEl.querySelectorAll('.fact-value');
+              if (factValues.length >= 4 && p.facts) {
+                if (p.facts.location) factValues[0].textContent = p.facts.location;
+                if (p.facts.experience) factValues[1].textContent = p.facts.experience;
+                if (p.facts.discipline) factValues[2].textContent = p.facts.discipline;
+                if (p.facts.availability) factValues[3].textContent = p.facts.availability;
+              }
+              aboutText.innerHTML = paragraphsHtml + '\n          ' + factsEl.outerHTML;
+            }
+          }
+
+          if (p.social) {
+            const contactBig = document.querySelector('.contact-big');
+            if (contactBig && p.social.email) {
+              contactBig.href = `mailto:${p.social.email}`;
+              contactBig.textContent = p.social.email;
+            }
+            const socialsEl = document.querySelector('.socials');
+            if (socialsEl) {
+              let sHtml = '';
+              if (p.social.instagram) sHtml += `<a href="${p.social.instagram}" target="_blank" rel="noopener noreferrer">Instagram</a>`;
+              if (p.social.linkedin) sHtml += `<a href="${p.social.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>`;
+              if (p.social.whatsapp) sHtml += `<a href="${p.social.whatsapp}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`;
+              if (sHtml) socialsEl.innerHTML = sHtml;
+            }
+          }
+        }
+
+        // 2. Portofolio (Graphic Design & Motion Graphic)
+        if (Array.isArray(cmsData.portfolio)) {
+          const graphicItems = cmsData.portfolio.filter(item => item.category === 'graphic');
+          const motionItems = cmsData.portfolio.filter(item => item.category === 'motion');
+
+          // Update count badge tombol kategori
+          const graphicBtnCount = document.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalGraphic"] .pf-count');
+          if (graphicBtnCount) graphicBtnCount.textContent = `${String(graphicItems.length).padStart(2, '0')} Karya`;
+
+          const motionBtnCount = document.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalMotion"] .pf-count');
+          if (motionBtnCount) motionBtnCount.textContent = `${String(motionItems.length).padStart(2, '0')} Karya`;
+
+          // Render Graphic Gallery Grid
+          const graphicGallery = document.getElementById('pmGraphicGallery') || document.querySelector('#portfolioModalGraphic .work-grid');
+          if (graphicGallery && graphicItems.length) {
+            graphicGallery.innerHTML = graphicItems.map((item, idx) => `
+              <div class="work-card">
+                <span class="work-index">${String(idx + 1).padStart(2, '0')} / Graphic Design</span>
+                <div class="work-visual work-visual--natural"><img src="${item.imageUrl}" alt="${item.title}" loading="lazy"></div>
+                <div class="work-title">${item.title}</div>
+                <div class="work-meta">${item.meta}</div>
+              </div>
+            `).join('');
+          }
+
+          // Render Motion Gallery Grid
+          const motionGallery = document.getElementById('pmMotionGallery') || document.querySelector('#portfolioModalMotion .work-grid');
+          if (motionGallery && motionItems.length) {
+            motionGallery.innerHTML = motionItems.map((item, idx) => {
+              const videoId = getYouTubeId(item.videoUrl);
+              return `
+                <div class="work-card">
+                  <span class="work-index">${String(idx + 1).padStart(2, '0')} / Motion Graphic</span>
+                  <div class="work-visual youtube-card" data-video-id="${videoId}" data-url="${item.videoUrl}">
+                    <img src="${item.imageUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '')}" alt="${item.title}" loading="lazy">
+                    <button class="play-btn" aria-label="Putar Video">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="work-title">${item.title}</div>
+                  <div class="work-meta">${item.meta}</div>
+                  ${item.videoUrl ? `
+                  <div class="work-action">
+                    <a href="${item.videoUrl}" target="_blank" rel="noopener noreferrer" class="youtube-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                      </svg>
+                      Tonton di YouTube
+                    </a>
+                  </div>` : ''}
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        // 3. Keahlian & Software
+        if (Array.isArray(cmsData.skills) && cmsData.skills.length) {
+          const skillContainer = document.getElementById('skillTagsContainer');
+          if (skillContainer) {
+            skillContainer.innerHTML = cmsData.skills.map(sk => {
+              const slug = sk.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+              return `<button class="skill-tag" type="button" data-skill="${slug}">${sk}</button>`;
+            }).join('');
+          }
+        }
+
+        // 4. Artikel & Blog
+        if (Array.isArray(cmsData.articles) && cmsData.articles.length) {
+          currentArticles = cmsData.articles;
+          const grid = document.getElementById('articlesGrid');
+          if (grid) {
+            grid.innerHTML = cmsData.articles.map(art => `
+              <div class="article-card" data-article-id="${art.id}">
+                <div class="article-cover">
+                  <img src="${art.coverUrl}" alt="${art.title}" loading="lazy">
+                  <span class="article-badge">${art.category}</span>
+                </div>
+                <div class="article-info">
+                  <span class="article-date">${art.date}</span>
+                  <h3 class="article-title">${art.title}</h3>
+                  <p class="article-excerpt">${art.excerpt}</p>
+                  <button class="article-read-btn" type="button" data-article-id="${art.id}">
+                    Baca Artikel <span class="arrow">&rarr;</span>
+                  </button>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Jalankan ulang fungsi sinkronisasi proyek dan gambar
+        if (typeof syncProjectCounts === 'function') syncProjectCounts();
+        if (typeof initSeamlessImageLoading === 'function') initSeamlessImageLoading();
+
+        // Reveal observer update
+        document.querySelectorAll('.reveal:not(.in)').forEach(el => {
+          if (observer) observer.observe(el);
+        });
+      }
+
+      // Expose ke global
+      window.applyCmsDataToDOM = applyCmsDataToDOM;
+
+      // Inisialisasi awal saat load
+      try {
+        const saved = localStorage.getItem('bayu_cms_data');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          applyCmsDataToDOM(parsed);
+        } else if (window.__INITIAL_CMS_STATE__) {
+          applyCmsDataToDOM(window.__INITIAL_CMS_STATE__);
+        }
+      } catch (e) {
+        console.warn('Gagal memuat CMS state:', e);
+      }
+
+      // Listener storage event (bila tab admin melakukan save)
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'bayu_cms_data' && e.newValue) {
+          try {
+            const data = JSON.parse(e.newValue);
+            applyCmsDataToDOM(data);
+          } catch (err) {}
+        }
+      });
+
+      // Listener postMessage (ketika berjalan di dalam Iframe simulator Live Visual Editor)
+      window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'CMS_UPDATE' && e.data.data) {
+          applyCmsDataToDOM(e.data.data);
+        }
+      });
+    })();
   </script>
 
 </body>
