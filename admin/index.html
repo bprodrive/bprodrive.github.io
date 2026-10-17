@@ -1931,20 +1931,47 @@
         },
         {
           id: "pf-7",
-          title: "Post Promosi Sosmed",
+          title: "Leaderboard Video Editor",
           category: "graphic",
-          meta: "KIAN Company — 2025",
+          meta: "2026",
           index: "07",
-          imageUrl: "https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm",
+          imageUrl: "https://lh3.googleusercontent.com/d/1sJ9EE3PjFzU6lroeDppR8Nm-_p0lGN17",
           videoUrl: ""
         },
         {
           id: "pf-8",
-          title: "ID Card & Merchandise",
+          title: "Post Promosi Sosmed",
           category: "graphic",
           meta: "KIAN Company — 2025",
           index: "08",
+          imageUrl: "https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm",
+          videoUrl: ""
+        },
+        {
+          id: "pf-9",
+          title: "Troopers Design",
+          category: "graphic",
+          meta: "2026",
+          index: "09",
+          imageUrl: "https://lh3.googleusercontent.com/d/1CYl4UfnQYPdUFtEV9PNTUipn8yLZ1tWG",
+          videoUrl: ""
+        },
+        {
+          id: "pf-10",
+          title: "ID Card & Merchandise",
+          category: "graphic",
+          meta: "KIAN Company — 2025",
+          index: "10",
           imageUrl: "https://lh3.googleusercontent.com/d/1XaYTh3n6dDnMOk8YBrLsUoLaG8snElXI",
+          videoUrl: ""
+        },
+        {
+          id: "pf-11",
+          title: "Insight Design",
+          category: "graphic",
+          meta: "2026",
+          index: "11",
+          imageUrl: "https://lh3.googleusercontent.com/d/1U3lDUNHPOuXBeWlLugJ9ERna7IQgIhSZ",
           videoUrl: ""
         },
         {
@@ -2218,6 +2245,9 @@
           }
           if (!CMS_STATE.articles || CMS_STATE.articles.length === 0) {
             CMS_STATE.articles = JSON.parse(JSON.stringify(DEFAULT_CMS_DATA.articles));
+          }
+          if (!CMS_STATE.portfolio || CMS_STATE.portfolio.filter(p => p.category === 'graphic').length < 11) {
+            CMS_STATE.portfolio = JSON.parse(JSON.stringify(DEFAULT_CMS_DATA.portfolio));
           }
           saveStateToStorage();
         } catch (e) {
