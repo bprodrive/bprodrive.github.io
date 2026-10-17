@@ -1913,64 +1913,37 @@
         },
         {
           id: "pf-5",
-          title: "Leaderboard Top Designer",
+          title: "Leaderboard Design",
           category: "graphic",
-          meta: "KIAN Company — 2025",
+          meta: "KIAN Company — 2026",
           index: "05",
           imageUrl: "https://lh3.googleusercontent.com/d/1D0d8kWDCXdR0vJzap7EgVgTMV722F5zq",
           videoUrl: ""
         },
         {
           id: "pf-6",
-          title: "Banner Digital Event",
+          title: "Leaderboard Carousel Design",
           category: "graphic",
-          meta: "2025",
+          meta: "KIAN Company - 2026",
           index: "06",
-          imageUrl: "https://lh3.googleusercontent.com/d/10zIg_E2vnBYbwRfS6un5JAx05zZc5ToZ",
-          videoUrl: ""
-        },
-        {
-          id: "pf-7",
-          title: "Leaderboard Video Editor",
-          category: "graphic",
-          meta: "2026",
-          index: "07",
           imageUrl: "https://lh3.googleusercontent.com/d/1sJ9EE3PjFzU6lroeDppR8Nm-_p0lGN17",
           videoUrl: ""
         },
         {
-          id: "pf-8",
-          title: "Post Promosi Sosmed",
+          id: "pf-7",
+          title: "Troopers Batch #2 Design",
           category: "graphic",
-          meta: "KIAN Company — 2025",
-          index: "08",
-          imageUrl: "https://lh3.googleusercontent.com/d/1G-HKcpp_JLjIqd0Kl3JemWOgkk_ZB6zm",
-          videoUrl: ""
-        },
-        {
-          id: "pf-9",
-          title: "Troopers Design",
-          category: "graphic",
-          meta: "2026",
-          index: "09",
+          meta: "KIAN Company — 2026",
+          index: "07",
           imageUrl: "https://lh3.googleusercontent.com/d/1CYl4UfnQYPdUFtEV9PNTUipn8yLZ1tWG",
           videoUrl: ""
         },
         {
-          id: "pf-10",
-          title: "ID Card & Merchandise",
+          id: "pf-8",
+          title: "Insight Content",
           category: "graphic",
-          meta: "KIAN Company — 2025",
-          index: "10",
-          imageUrl: "https://lh3.googleusercontent.com/d/1XaYTh3n6dDnMOk8YBrLsUoLaG8snElXI",
-          videoUrl: ""
-        },
-        {
-          id: "pf-11",
-          title: "Insight Design",
-          category: "graphic",
-          meta: "2026",
-          index: "11",
+          meta: "KIAN Company — 2026",
+          index: "08",
           imageUrl: "https://lh3.googleusercontent.com/d/1U3lDUNHPOuXBeWlLugJ9ERna7IQgIhSZ",
           videoUrl: ""
         },
@@ -2246,7 +2219,7 @@
           if (!CMS_STATE.articles || CMS_STATE.articles.length === 0) {
             CMS_STATE.articles = JSON.parse(JSON.stringify(DEFAULT_CMS_DATA.articles));
           }
-          if (!CMS_STATE.portfolio || CMS_STATE.portfolio.filter(p => p.category === 'graphic').length < 11) {
+          if (!CMS_STATE.portfolio || CMS_STATE.portfolio.filter(p => p.category === 'graphic').length < 8) {
             CMS_STATE.portfolio = JSON.parse(JSON.stringify(DEFAULT_CMS_DATA.portfolio));
           }
           saveStateToStorage();
