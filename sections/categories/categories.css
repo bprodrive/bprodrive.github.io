@@ -1,0 +1,137 @@
+/* ==========================================================================
+   SECTION: KARTU KATEGORI PORTOFOLIO (Graphic Design & Motion Graphic)
+   Lokasi modul: sections/categories/categories.css
+   ========================================================================== */
+
+.portfolio-filters {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 640px) {
+  .portfolio-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+.portfolio-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 30px 32px;
+  background: linear-gradient(160deg, var(--bg-alt), var(--bg));
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  color: var(--text);
+  font-family: var(--sans);
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.portfolio-filter-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 60%;
+  left: -60%;
+  opacity: 0;
+  background: linear-gradient(105deg,
+      transparent 0%,
+      rgba(201, 168, 118, 0.06) 30%,
+      rgba(255, 240, 190, 0.22) 50%,
+      rgba(201, 168, 118, 0.06) 70%,
+      transparent 100%);
+  pointer-events: none;
+  transform: translateX(-100%);
+}
+
+.portfolio-filter-btn:hover::before,
+.portfolio-filter-btn:focus-visible::before {
+  animation: swipeOnce 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.portfolio-filter-btn:hover,
+.portfolio-filter-btn:focus-visible {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px -22px rgba(201, 168, 118, 0.4);
+  background: linear-gradient(160deg, var(--surface), var(--bg-alt));
+}
+
+.pf-icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease;
+}
+
+.pf-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.portfolio-filter-btn:hover .pf-icon,
+.portfolio-filter-btn:focus-visible .pf-icon {
+  border-color: var(--gold);
+  background: rgba(201, 168, 118, 0.12);
+  transform: scale(1.08);
+}
+
+.pf-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pf-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
+
+.portfolio-filter-btn:hover .pf-title,
+.portfolio-filter-btn:focus-visible .pf-title {
+  color: var(--gold);
+}
+
+.pf-count {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pf-arrow {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  display: flex;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease;
+}
+
+.pf-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.portfolio-filter-btn:hover .pf-arrow,
+.portfolio-filter-btn:focus-visible .pf-arrow {
+  color: var(--gold);
+  transform: translateX(5px);
+}
