@@ -3037,7 +3037,7 @@
                 sesuai permintaan proyek. Berkolaborasi dengan tim produksi untuk menghasilkan visual yang komunikatif,
                 konsisten dengan branding, serta siap digunakan pada berbagai platform media.</div>
               <div class="tl-stats">
-                <div class="tl-stat-item" role="button" tabindex="0" data-exp-target="expModalKian" aria-haspopup="dialog" aria-label="Buka detail 17+ Proyek Ditangani di KIAN Company" title="Klik untuk membuka detail proyek">
+                <div class="tl-stat-item" role="button" tabindex="0" data-exp-target="expModalKian" aria-haspopup="dialog" aria-label="Buka detail 19+ Proyek Ditangani di KIAN Company" title="Klik untuk membuka detail proyek">
                   <div class="tl-stat-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -3047,7 +3047,7 @@
                   </div>
                   <div class="tl-stat-info">
                     <div class="tl-stat-number-wrap">
-                      <span class="tl-stat-number" data-count="17">0</span><span class="tl-stat-plus">+</span>
+                      <span class="tl-stat-number" data-count="19">0</span><span class="tl-stat-plus">+</span>
                     </div>
                     <span class="tl-stat-label">Proyek Ditangani</span>
                   </div>
@@ -3415,7 +3415,7 @@
           <div class="exp-modal-badges">
             <span class="exp-modal-badge">KIAN Company</span>
             <span class="exp-modal-badge exp-modal-badge--year">2025 — Kini</span>
-            <span class="exp-modal-badge exp-modal-badge--count">17+ Proyek Selesai</span>
+            <span class="exp-modal-badge exp-modal-badge--count">19+ Proyek Selesai</span>
             <span class="exp-modal-badge exp-modal-badge--year">Anggota / OJT</span>
           </div>
           <h3 class="exp-modal-title" id="expKianTitle">Detail Proyek &amp; <em>Kontribusi Produksi</em></h3>
@@ -3427,7 +3427,7 @@
 
       <div class="exp-modal-toolbar">
         <div class="exp-filter-group" data-target="expKianBody">
-          <button class="exp-filter-btn active" data-filter="all">Semua (17)</button>
+          <button class="exp-filter-btn active" data-filter="all">Semua (19)</button>
           <button class="exp-filter-btn exp-filter-btn--event" data-filter="event &amp; broadcast">Event &amp;
             Broadcast</button>
           <button class="exp-filter-btn" data-filter="production">Production</button>
@@ -3442,6 +3442,28 @@
       </div>
 
       <div class="exp-modal-body" id="expKianBody">
+        <!-- 01 -->
+        <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="Switcher">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#01</span>
+            <span class="exp-card-tag">Event &amp; Broadcast</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>19 Agustus 2026</span>
+          </div>
+          <h4 class="exp-card-title">Seminar Economic Review - Thamrin Nine</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">Switcher</span></div>
+          <p class="exp-card-desc">Mengoperasikan Switcher dari awal acara sampai berakhir nya acara.</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> Multiview Cam Record dan switching dengan baik
+          </div>
+        </div>
         <!-- 01 -->
         <div class="exp-project-card" data-category="event &amp; broadcast" data-keywords="VT Operator">
           <div class="exp-card-header">
@@ -5148,8 +5170,8 @@
         if (numEl) {
           const prevCount = parseInt(numEl.getAttribute('data-count'), 10);
           numEl.setAttribute('data-count', count);
-          // Jika animasi sudah berjalan atau elemen sudah terlihat, update teks langsung
-          if (numEl.dataset.hasAnimated === 'true' || (numEl.textContent && numEl.textContent !== '0' && prevCount !== count)) {
+          // Selalu update angka langsung bila animasi selesai atau terjadi perubahan nilai
+          if (numEl.dataset.hasAnimated === 'true' || (numEl.textContent && numEl.textContent !== '0') || prevCount !== count) {
             numEl.textContent = count;
           }
         }
@@ -5196,22 +5218,32 @@
 
         const workCards = pModal.querySelectorAll('.work-card');
         const count = workCards.length;
+        const formatted = String(count).padStart(2, '0');
 
-        // Perbarui teks jumlah karya (contoh: "08 Karya")
+        // Perbarui teks jumlah karya pada tombol filter (contoh: "08 Karya")
         const countEl = btn.querySelector('.pf-count');
         if (countEl) {
-          const formatted = String(count).padStart(2, '0');
           countEl.textContent = `${formatted} Karya`;
+        }
+
+        // Perbarui teks jumlah karya pada header modal galeri
+        const eyebrowEl = pModal.querySelector('.portfolio-modal-eyebrow');
+        if (eyebrowEl) {
+          const catNum = targetId.includes('Graphic') ? '01' : '02';
+          eyebrowEl.textContent = `Kategori ${catNum} • ${formatted} Karya`;
         }
 
         // Otomatisasi penomoran karya di dalam modal galeri (contoh: "01 / Graphic Design")
         workCards.forEach((wCard, idx) => {
           const indexEl = wCard.querySelector('.work-index');
           if (indexEl) {
-            const formatted = String(idx + 1).padStart(2, '0');
+            const num = String(idx + 1).padStart(2, '0');
             const parts = indexEl.textContent.split('/');
             if (parts.length > 1) {
-              indexEl.textContent = `${formatted} / ${parts.slice(1).join('/').trim()}`;
+              indexEl.textContent = `${num} / ${parts.slice(1).join('/').trim()}`;
+            } else {
+              const defaultCat = targetId.includes('Graphic') ? 'Graphic Design' : 'Motion Graphic';
+              indexEl.textContent = `${num} / ${defaultCat}`;
             }
           }
         });
@@ -5428,6 +5460,14 @@
         return match ? match[1] : '';
       }
 
+      function formatCategoryTag(cat) {
+        if (!cat) return 'Event & Broadcast';
+        const c = String(cat).trim();
+        if (c.toLowerCase() === 'event & broadcast') return 'Event & Broadcast';
+        if (c.toLowerCase() === 'production') return 'Production';
+        return c.replace(/\b\w/g, l => l.toUpperCase());
+      }
+
       // Terapkan CMS Data ke Tampilan DOM Beranda
       function applyCmsDataToDOM(cmsData) {
         if (!cmsData) return;
@@ -5538,6 +5578,56 @@
                 </div>
               `;
             }).join('');
+          }
+        }
+
+        // 2b. Proyek Pengalaman KIAN (Experience Projects)
+        if (Array.isArray(cmsData.experienceProjects)) {
+          const expItems = cmsData.experienceProjects;
+          const expTotal = expItems.length;
+
+          const expKianBody = document.getElementById('expKianBody');
+          if (expKianBody && expItems.length) {
+            expKianBody.innerHTML = expItems.map((item, idx) => `
+              <div class="exp-project-card" data-category="${item.category || ''}" data-keywords="${((item.role || '') + ' ' + (item.title || '') + ' ' + (item.output || '')).trim()}">
+                <div class="exp-card-header">
+                  <span class="exp-card-index">#${String(idx + 1).padStart(2, '0')}</span>
+                  <span class="exp-card-tag">${formatCategoryTag(item.category)}</span>
+                  <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>${item.date || ''}</span>
+                </div>
+                <h4 class="exp-card-title">${item.title || ''}</h4>
+                <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">${item.role || ''}</span></div>
+                <p class="exp-card-desc">${item.desc || ''}</p>
+                <div class="exp-card-output">
+                  <strong>Hasil Produksi:</strong> ${item.output || ''}
+                </div>
+                ${item.tools ? `<div class="exp-card-tools">${(Array.isArray(item.tools) ? item.tools : String(item.tools).split(',')).map(t => `<span class="exp-tool-pill">${t.trim()}</span>`).join('')}</div>` : ''}
+              </div>
+            `).join('\n        ');
+          }
+
+          const expBadge = document.querySelector('#expModalKian .exp-modal-badge--count');
+          if (expBadge) expBadge.textContent = `${expTotal}+ Proyek Selesai`;
+
+          const expAllBtn = document.querySelector('#expModalKian .exp-filter-btn[data-filter="all"]');
+          if (expAllBtn) expAllBtn.textContent = `Semua (${expTotal})`;
+
+          const kianStatItem = document.querySelector('.tl-stat-item[data-exp-target="expModalKian"]');
+          if (kianStatItem) {
+            const numEl = kianStatItem.querySelector('.tl-stat-number');
+            if (numEl) {
+              numEl.setAttribute('data-count', expTotal);
+              numEl.textContent = expTotal;
+            }
+            kianStatItem.setAttribute('aria-label', `Buka detail ${expTotal}+ Proyek Ditangani di KIAN Company`);
           }
         }
 

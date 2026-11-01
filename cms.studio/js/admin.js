@@ -25,10 +25,18 @@ function esc(v) {
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-/** Hanya izinkan http(s). Menolak javascript:, data:, dsb. */
+/** Hanya izinkan http(s), relative images/, atau data:image. Menolak javascript:, dsb. */
 function safeUrl(u) {
   const s = String(u ?? '').trim();
-  return /^https?:\/\//i.test(s) ? s : '';
+  return /^https?:\/\//i.test(s) || /^\.?\/?images\//i.test(s) || /^data:image\//i.test(s) ? s : '';
+}
+
+function formatCategoryTag(cat) {
+  if (!cat) return 'Event & Broadcast';
+  const c = String(cat).trim();
+  if (c.toLowerCase() === 'event & broadcast') return 'Event & Broadcast';
+  if (c.toLowerCase() === 'production') return 'Production';
+  return c.replace(/\b\w/g, (l) => l.toUpperCase());
 }
 
 function extractYtId(url) {
@@ -436,9 +444,11 @@ let activeFilter = 'all';
 let portfolioSearchQuery = '';
 let previewBound = false;
 
+const getDefaultData = () => (typeof DEFAULT_CMS_DATA !== 'undefined' ? DEFAULT_CMS_DATA : (window.DEFAULT_CMS_DATA || { profile: {}, portfolio: [], experienceProjects: [], skills: [], articles: [], settings: {} }));
+
 /** Gabungkan data tersimpan dengan default TANPA menimpa data pengguna. */
 function normalizeState(raw) {
-  const d = clone(DEFAULT_CMS_DATA);
+  const d = clone(getDefaultData());
   const s = raw && typeof raw === 'object' ? raw : {};
   const sp = s.profile && typeof s.profile === 'object' ? s.profile : {};
 
@@ -473,7 +483,7 @@ function normalizeState(raw) {
 /** Migrasi SEKALI untuk data versi lama (sebelumnya dijalankan di setiap login dan bisa menghapus data). */
 function migrateLegacy(saved) {
   if (saved._schema) return saved;
-  const d = DEFAULT_CMS_DATA;
+  const d = getDefaultData();
   if (!saved.experienceProjects || saved.experienceProjects.length <= 3) saved.experienceProjects = clone(d.experienceProjects);
   if (!saved.articles || saved.articles.length === 0) saved.articles = clone(d.articles);
   if (!saved.portfolio || saved.portfolio.filter((p) => p.category === 'graphic').length < 8) saved.portfolio = clone(d.portfolio);
@@ -856,7 +866,7 @@ function savePortfolioItem() {
   const videoUrl = $('pm-video').value.trim();
 
   if (!title) { alert('Mohon isi judul karya!'); return; }
-  if (imageUrl && !safeUrl(imageUrl)) { alert('URL gambar harus diawali http:// atau https://'); return; }
+  if (imageUrl && !safeUrl(imageUrl)) { alert('URL gambar harus diawali http://, https://, atau path images/...'); return; }
   if (videoUrl && !extractYtId(videoUrl)) { alert('Tautan YouTube tidak valid (youtu.be / youtube.com/watch / shorts).'); return; }
   if (category === 'graphic' && !imageUrl) { alert('Karya Graphic Design wajib punya URL gambar.'); return; }
   if (category === 'motion' && !videoUrl) { alert('Karya Motion Graphic wajib punya tautan YouTube.'); return; }
@@ -1186,8 +1196,8 @@ function reloadPreviewFrame() {
    10. GITHUB
    ============================================================= */
 const GH_TOKEN_KEY = 'gh_pat_token';
-const PERSIST_GH_TOKEN = false;      // true = token tetap tersimpan di localStorage (kurang aman)
-const CLEAR_TOKEN_ON_LOCK = true;    // hapus token saat logout / auto-lock
+const PERSIST_GH_TOKEN = true;      // true = token tetap tersimpan di localStorage agar tidak hilang saat reload
+const CLEAR_TOKEN_ON_LOCK = false;   // jangan hapus token saat logout / auto-lock
 
 function getGitHubToken() {
   let t = sessionStorage.getItem(GH_TOKEN_KEY) || '';
@@ -1489,6 +1499,11 @@ function applyCmsStateToHtml(fullHtml) {
     const motionBtn = doc.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalMotion"] .pf-count');
     if (motionBtn) motionBtn.textContent = `${String(motionItems.length).padStart(2, '0')} Karya`;
 
+    const graphicEyebrow = doc.querySelector('#portfolioModalGraphic .portfolio-modal-eyebrow');
+    if (graphicEyebrow) graphicEyebrow.textContent = `Kategori 01 • ${String(graphicItems.length).padStart(2, '0')} Karya`;
+    const motionEyebrow = doc.querySelector('#portfolioModalMotion .portfolio-modal-eyebrow');
+    if (motionEyebrow) motionEyebrow.textContent = `Kategori 02 • ${String(motionItems.length).padStart(2, '0')} Karya`;
+
     const graphicGallery = doc.getElementById('pmGraphicGallery') || doc.querySelector('#portfolioModalGraphic .work-grid');
     if (graphicGallery) {
       graphicGallery.innerHTML = graphicItems.map((item, idx) => `
@@ -1527,6 +1542,55 @@ function applyCmsStateToHtml(fullHtml) {
           </div>` : ''}
         </div>`;
       }).join('');
+    }
+  }
+
+  // 7b. Proyek Pengalaman KIAN
+  if (Array.isArray(CMS_STATE.experienceProjects)) {
+    const expItems = CMS_STATE.experienceProjects;
+    const expTotal = expItems.length;
+
+    const expKianBody = doc.getElementById('expKianBody');
+    if (expKianBody) {
+      expKianBody.innerHTML = expItems.map((item, idx) => `
+        <div class="exp-project-card" data-category="${esc(item.category || '')}" data-keywords="${esc(((item.role || '') + ' ' + (item.title || '') + ' ' + (item.output || '')).trim())}">
+          <div class="exp-card-header">
+            <span class="exp-card-index">#${String(idx + 1).padStart(2, '0')}</span>
+            <span class="exp-card-tag">${esc(formatCategoryTag(item.category))}</span>
+            <span class="exp-card-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>${esc(item.date || '')}</span>
+          </div>
+          <h4 class="exp-card-title">${esc(item.title || '')}</h4>
+          <div class="exp-card-role"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg><span class="exp-role-label">Posisi:</span><span class="exp-role-val">${esc(item.role || '')}</span></div>
+          <p class="exp-card-desc">${esc(item.desc || '')}</p>
+          <div class="exp-card-output">
+            <strong>Hasil Produksi:</strong> ${esc(item.output || '')}
+          </div>
+          ${item.tools ? `<div class="exp-card-tools">${(Array.isArray(item.tools) ? item.tools : String(item.tools).split(',')).map((t) => `<span class="exp-tool-pill">${esc(t.trim())}</span>`).join('')}</div>` : ''}
+        </div>`).join('\n        ');
+    }
+
+    const expBadge = doc.querySelector('#expModalKian .exp-modal-badge--count');
+    if (expBadge) expBadge.textContent = `${expTotal}+ Proyek Selesai`;
+
+    const expAllBtn = doc.querySelector('#expModalKian .exp-filter-btn[data-filter="all"]');
+    if (expAllBtn) expAllBtn.textContent = `Semua (${expTotal})`;
+
+    const kianStatItem = doc.querySelector('.tl-stat-item[data-exp-target="expModalKian"]');
+    if (kianStatItem) {
+      const numEl = kianStatItem.querySelector('.tl-stat-number');
+      if (numEl) {
+        numEl.setAttribute('data-count', expTotal);
+        numEl.textContent = expTotal;
+      }
+      kianStatItem.setAttribute('aria-label', `Buka detail ${expTotal}+ Proyek Ditangani di KIAN Company`);
     }
   }
 
@@ -1629,7 +1693,7 @@ async function downloadCleanHtml() {
 function resetDataToDefault() {
   if (!confirm('PERINGATAN: Ini akan mengembalikan seluruh data CMS ke setelan awal default web. Lanjutkan?')) return;
   const keepSettings = CMS_STATE.settings;
-  CMS_STATE = normalizeState(clone(DEFAULT_CMS_DATA));
+  CMS_STATE = normalizeState(clone(getDefaultData()));
   CMS_STATE.settings = keepSettings;
   saveStateToStorage();
   renderAllViews();
