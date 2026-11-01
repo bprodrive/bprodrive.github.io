@@ -1053,16 +1053,20 @@
                   </div>
 
                   <div class="flex items-center gap-3 pt-2">
-                    <button onclick="saveGitHubSettings()"
+                    <button type="button" id="btn-save-gh-settings" onclick="saveGitHubSettings()"
                       class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-bg text-xs font-semibold flex items-center gap-2 shadow-lg shadow-brand-gold/15 transition">
                       <i data-lucide="save" class="w-4 h-4"></i>
                       <span>Simpan Pengaturan Token</span>
                     </button>
-                    <button onclick="testGitHubConnection()"
+                    <button type="button" id="btn-test-gh-settings" onclick="testGitHubConnection()"
                       class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium flex items-center gap-2 transition">
                       <i data-lucide="activity" class="w-4 h-4"></i>
                       <span>Uji Koneksi Token</span>
                     </button>
+                  </div>
+
+                  <!-- Feedback Alert Box for Token & Settings -->
+                  <div id="github-settings-feedback" class="hidden text-xs rounded-xl p-3.5 border transition-all duration-300 flex items-start gap-2.5">
                   </div>
                 </div>
               </div>
@@ -1580,6 +1584,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Floating Toast Notifications Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 pointer-events-none max-w-sm w-full px-4"></div>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>

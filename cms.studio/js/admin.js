@@ -1258,25 +1258,80 @@ function validateGitHubSettings(s) {
   return '';
 }
 
+/* Helper: escape HTML agar pesan aman dari XSS */
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function setSettingsFeedback(type, message) {
+  const el = $('github-settings-feedback');
+  if (!el) return;
+  el.classList.remove('hidden');
+
+  // Inline style sebagai fallback — Tailwind CDN mungkin tidak compile class runtime
+  const styles = {
+    success: { bg: 'rgba(6,78,59,0.85)',  text: '#d1fae5', border: 'rgba(52,211,153,0.4)',  icon: 'check-circle-2' },
+    warning: { bg: 'rgba(120,53,15,0.85)', text: '#fef3c7', border: 'rgba(251,191,36,0.4)',  icon: 'alert-triangle' },
+    error:   { bg: 'rgba(127,29,29,0.85)', text: '#fecaca', border: 'rgba(239,68,68,0.4)',   icon: 'x-circle' },
+    info:    { bg: 'rgba(30,58,138,0.85)',  text: '#bfdbfe', border: 'rgba(96,165,250,0.35)', icon: 'info' }
+  };
+  const s = styles[type] || styles.info;
+  el.style.background = s.bg;
+  el.style.color = s.text;
+  el.style.borderColor = s.border;
+
+  el.innerHTML = `
+    <i data-lucide="${s.icon}" class="w-4 h-4 shrink-0" style="margin-top:2px"></i>
+    <div style="flex:1;line-height:1.6">${escapeHtml(message)}</div>
+  `;
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
 function saveGitHubSettings() {
-  const token = $('input-github-token').value.trim();
+  const rawToken = $('input-github-token').value;
+  // Bersihkan token dari whitespace dan prefix Bearer jika ada
+  const token = (rawToken || '').trim().replace(/^Bearer\s+/i, '').replace(/['"]/g, '');
+  $('input-github-token').value = token;
+
   const settings = {
-    githubOwner: $('input-github-owner').value.trim() || 'bprodrive',
-    githubRepo: $('input-github-repo').value.trim() || 'bprodrive.github.io',
-    branch: $('input-github-branch').value.trim() || 'main',
-    targetFile: $('input-github-file').value.trim() || 'index.html'
+    githubOwner: ($('input-github-owner').value || '').trim() || 'bprodrive',
+    githubRepo: ($('input-github-repo').value || '').trim() || 'bprodrive.github.io',
+    branch: ($('input-github-branch').value || '').trim() || 'main',
+    targetFile: ($('input-github-file').value || '').trim() || 'index.html'
   };
   const err = validateGitHubSettings(settings);
-  if (err) { alert(err); return; }
-  if (token && !/^[A-Za-z0-9_-]{20,255}$/.test(token)) { alert('Format token tidak dikenali. Salin ulang token dari GitHub.'); return; }
+  if (err) {
+    setSettingsFeedback('error', err);
+    showToast(err, 'warning');
+    return;
+  }
+  if (token && !/^[A-Za-z0-9_.-]{15,255}$/.test(token)) {
+    const msg = 'Format token tidak dikenali. Pastikan menyalin token lengkap dari GitHub (misal ghp_... atau github_pat_...).';
+    setSettingsFeedback('warning', msg);
+    showToast(msg, 'warning');
+    return;
+  }
 
-  if (token) setGitHubToken(token);
-  else { sessionStorage.removeItem(GH_TOKEN_KEY); localStorage.removeItem(GH_TOKEN_KEY); } // kosongkan = hapus token
+  if (token) {
+    setGitHubToken(token);
+  } else {
+    sessionStorage.removeItem(GH_TOKEN_KEY);
+    localStorage.removeItem(GH_TOKEN_KEY);
+  }
 
   CMS_STATE.settings = settings;
   saveStateToStorage();
   updateGitHubStatusBadge();
-  showToast(token ? 'Pengaturan GitHub berhasil disimpan!' : 'Pengaturan disimpan. Token dihapus.', 'success');
+
+  const successMsg = token
+    ? 'Pengaturan GitHub & Token berhasil disimpan!'
+    : 'Pengaturan disimpan. Token dikosongkan.';
+  setSettingsFeedback('success', successMsg + ' Anda sekarang dapat menguji koneksi token atau melakukan auto-push.');
+  showToast(successMsg, 'success');
 }
 
 /* ----- Helper API GitHub ----- */
@@ -1320,25 +1375,71 @@ function base64ToUtf8(b64) {
 }
 
 async function testGitHubConnection() {
-  const token = $('input-github-token').value.trim() || getGitHubToken(); // pakai isi form dulu
-  const owner = $('input-github-owner').value.trim() || 'bprodrive';
-  const repo = $('input-github-repo').value.trim() || 'bprodrive.github.io';
+  const tokenInput = $('input-github-token').value;
+  const token = (tokenInput || '').trim().replace(/^Bearer\s+/i, '').replace(/['"]/g, '') || getGitHubToken();
+  const owner = ($('input-github-owner').value || '').trim() || 'bprodrive';
+  const repo = ($('input-github-repo').value || '').trim() || 'bprodrive.github.io';
 
+  const btn = $('btn-test-gh-settings');
+  const originalBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menguji...</span>`;
+    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+  }
+
+  setSettingsFeedback('info', 'Sedang menghubungi GitHub API dan memverifikasi token...');
   showToast('Menghubungi GitHub API...', 'info');
+
   try {
-    const res = await fetch(`${GH_API}/repos/${owner}/${repo}`, { headers: token ? ghHeaders(token) : { Accept: 'application/vnd.github+json' } });
+    let authUser = null;
+    // 1. Jika token disediakan, verifikasi identitas token lewat /user
+    if (token) {
+      const userRes = await fetch(`${GH_API}/user`, { headers: ghHeaders(token) });
+      if (!userRes.ok) {
+        throw await ghError(userRes);
+      }
+      authUser = await userRes.json();
+    }
+
+    // 2. Ambil informasi repository
+    const res = await fetch(`${GH_API}/repos/${owner}/${repo}`, {
+      headers: token ? ghHeaders(token) : { Accept: 'application/vnd.github+json' }
+    });
     if (!res.ok) throw await ghError(res);
     const data = await res.json();
+
     if (!token) {
-      showToast(`Repo ${data.full_name} terbaca, tetapi token belum diisi.`, 'warning');
-    } else if (!data.permissions || !data.permissions.push) {
-      showToast(`Terhubung ke ${data.full_name}, tetapi token TIDAK punya izin push.`, 'warning');
+      const warnMsg = `Repository ${data.full_name} terbaca publik, namun Personal Access Token (PAT) belum diisi. Anda perlu token untuk push perubahan.`;
+      setSettingsFeedback('warning', warnMsg);
+      showToast(warnMsg, 'warning');
     } else {
-      showToast(`Koneksi Berhasil! ${data.full_name} (${data.visibility}) — izin push OK.`, 'success');
+      // Periksa izin push:
+      // Bisa dicek dari permissions.push, permissions.admin, atau authUser.login sama dengan repo owner
+      const isOwner = authUser && authUser.login && authUser.login.toLowerCase() === owner.toLowerCase();
+      const hasPush = data.permissions ? Boolean(data.permissions.push || data.permissions.admin) : true;
+
+      if (!hasPush && !isOwner) {
+        const warnPerm = `Terhubung ke ${data.full_name} sebagai @${authUser.login}, namun akun/token ini mungkin tidak memiliki hak push ke repository ini.`;
+        setSettingsFeedback('warning', warnPerm);
+        showToast(warnPerm, 'warning');
+      } else {
+        const successMsg = `Koneksi Berhasil! Terhubung ke ${data.full_name} (${data.visibility || 'public'}) sebagai @${authUser ? authUser.login : 'authorized'} — Izin Push OK.`;
+        setSettingsFeedback('success', successMsg);
+        showToast(successMsg, 'success');
+      }
     }
     updateGitHubStatusBadge();
   } catch (err) {
-    showToast('Koneksi Gagal: ' + err.message, 'warning');
+    const errMsg = 'Koneksi Gagal: ' + (err.message || 'Tidak dapat terhubung ke GitHub API.');
+    setSettingsFeedback('error', errMsg);
+    showToast(errMsg, 'warning');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnHtml;
+      if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+    }
   }
 }
 
@@ -1712,26 +1813,31 @@ function showToast(message, type = 'info') {
   const container = $('toast-container');
   if (!container) return;
 
-  const colors = {
-    success: 'bg-emerald-950/90 text-emerald-200 border-emerald-500/30',
-    warning: 'bg-amber-950/90 text-amber-200 border-amber-500/30',
-    info: 'bg-brand-surface/95 text-brand-text border-brand-border'
-  };
+  // Gunakan CSS class dari admin.css, bukan Tailwind dynamic class
+  const cssClass = type === 'success' ? 'toast-success' : type === 'warning' ? 'toast-warning' : 'toast-info';
+  const dotColors = { success: '#34d399', warning: '#fbbf24', info: '#c9a876' };
+
   const toast = document.createElement('div');
-  toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-md text-xs font-medium transition-all duration-300 transform translate-y-4 opacity-0 ${colors[type] || colors.info}`;
+  toast.className = `toast-item ${cssClass}`;
+  toast.style.transform = 'translateY(16px)';
+  toast.style.opacity = '0';
 
   const dot = document.createElement('span');
-  dot.className = `w-2 h-2 rounded-full shrink-0 ${type === 'success' ? 'bg-emerald-400' : type === 'warning' ? 'bg-amber-400' : 'bg-brand-gold'}`;
+  dot.style.cssText = `width:8px;height:8px;border-radius:50%;flex-shrink:0;background:${dotColors[type] || dotColors.info}`;
   const txt = document.createElement('span');
   txt.textContent = message; // textContent: pesan error dari luar tidak bisa menyisipkan HTML
   toast.append(dot, txt);
 
   container.appendChild(toast);
-  setTimeout(() => toast.classList.remove('translate-y-4', 'opacity-0'), 10);
+  requestAnimationFrame(() => {
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
+  });
   setTimeout(() => {
-    toast.classList.add('opacity-0', 'translate-y-2');
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
     setTimeout(() => toast.remove(), 300);
-  }, 3500);
+  }, 4000);
 }
 
 // Delegasi klik: menggantikan onclick="fn('${id}')" yang rawan injeksi lewat id/judul
