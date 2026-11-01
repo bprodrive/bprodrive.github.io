@@ -872,7 +872,7 @@
         // Perbarui teks jumlah karya pada header modal galeri
         const eyebrowEl = pModal.querySelector('.portfolio-modal-eyebrow');
         if (eyebrowEl) {
-          const catNum = targetId.includes('Graphic') ? '01' : '02';
+          const catNum = targetId.includes('Graphic') ? '01' : (targetId.includes('Motion') ? '02' : '03');
           eyebrowEl.textContent = `Kategori ${catNum} • ${formatted} Karya`;
         }
 
@@ -885,7 +885,7 @@
             if (parts.length > 1) {
               indexEl.textContent = `${num} / ${parts.slice(1).join('/').trim()}`;
             } else {
-              const defaultCat = targetId.includes('Graphic') ? 'Graphic Design' : 'Motion Graphic';
+              const defaultCat = targetId.includes('Graphic') ? 'Graphic Design' : (targetId.includes('Motion') ? 'Motion Graphic' : 'Video Showcase');
               indexEl.textContent = `${num} / ${defaultCat}`;
             }
           }
@@ -1166,10 +1166,11 @@
           }
         }
 
-        // 2. Portofolio (Graphic Design & Motion Graphic)
+        // 2. Portofolio (Graphic Design, Motion Graphic, & Video Showcase)
         if (Array.isArray(cmsData.portfolio)) {
           const graphicItems = cmsData.portfolio.filter(item => item.category === 'graphic');
           const motionItems = cmsData.portfolio.filter(item => item.category === 'motion');
+          const videoItems = cmsData.portfolio.filter(item => item.category === 'video');
 
           // Update count badge tombol kategori
           const graphicBtnCount = document.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalGraphic"] .pf-count');
@@ -1177,6 +1178,17 @@
 
           const motionBtnCount = document.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalMotion"] .pf-count');
           if (motionBtnCount) motionBtnCount.textContent = `${String(motionItems.length).padStart(2, '0')} Karya`;
+
+          const videoBtnCount = document.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalVideo"] .pf-count');
+          if (videoBtnCount) videoBtnCount.textContent = `${String(videoItems.length).padStart(2, '0')} Karya`;
+
+          // Update eyebrow header modal
+          const graphicEyebrow = document.querySelector('#portfolioModalGraphic .portfolio-modal-eyebrow');
+          if (graphicEyebrow) graphicEyebrow.textContent = `Kategori 01 • ${String(graphicItems.length).padStart(2, '0')} Karya`;
+          const motionEyebrow = document.querySelector('#portfolioModalMotion .portfolio-modal-eyebrow');
+          if (motionEyebrow) motionEyebrow.textContent = `Kategori 02 • ${String(motionItems.length).padStart(2, '0')} Karya`;
+          const videoEyebrow = document.querySelector('#portfolioModalVideo .portfolio-modal-eyebrow');
+          if (videoEyebrow) videoEyebrow.textContent = `Kategori 03 • ${String(videoItems.length).padStart(2, '0')} Karya`;
 
           // Render Graphic Gallery Grid
           const graphicGallery = document.getElementById('pmGraphicGallery') || document.querySelector('#portfolioModalGraphic .work-grid');
@@ -1214,6 +1226,38 @@
                     <a href="${item.videoUrl}" target="_blank" rel="noopener noreferrer" class="youtube-link">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                      </svg>
+                      Tonton di YouTube
+                    </a>
+                  </div>` : ''}
+                </div>
+              `;
+            }).join('');
+          }
+
+          // Render Video Showcase Gallery Grid
+          const videoGallery = document.getElementById('pmVideoGallery') || document.querySelector('#portfolioModalVideo .work-grid');
+          if (videoGallery && videoItems.length) {
+            videoGallery.innerHTML = videoItems.map((item, idx) => {
+              const videoId = getYouTubeId(item.videoUrl);
+              return `
+                <div class="work-card">
+                  <span class="work-index">${String(idx + 1).padStart(2, '0')} / Video Showcase</span>
+                  <div class="work-visual youtube-card" data-video-id="${videoId}" data-url="${item.videoUrl || ''}">
+                    <img src="${item.imageUrl || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '')}" alt="${item.title}" loading="lazy">
+                    <button class="play-btn" aria-label="Putar Video">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="work-title">${item.title}</div>
+                  <div class="work-meta">${item.meta}</div>
+                  ${item.videoUrl ? `
+                  <div class="work-action">
+                    <a href="${item.videoUrl}" target="_blank" rel="noopener noreferrer" class="youtube-link">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                       </svg>
                       Tonton di YouTube
                     </a>

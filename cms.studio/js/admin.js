@@ -631,6 +631,7 @@ function updateMetricCounts() {
   const total = CMS_STATE.portfolio.length;
   const graphic = CMS_STATE.portfolio.filter((p) => p.category === 'graphic').length;
   const motion = CMS_STATE.portfolio.filter((p) => p.category === 'motion').length;
+  const video = CMS_STATE.portfolio.filter((p) => p.category === 'video').length;
   const expTotal = CMS_STATE.experienceProjects.length;
 
   const set = (id, v) => { const el = $(id); if (el) el.innerText = v; };
@@ -639,18 +640,20 @@ function updateMetricCounts() {
   set('count-all', total);
   set('count-graphic', graphic);
   set('count-motion', motion);
+  set('count-video', video);
   set('stat-total-skills', CMS_STATE.skills.length);
   set('stat-total-articles', CMS_STATE.articles.length);
   set('badge-articles-count', CMS_STATE.articles.length);
   set('stat-total-exp', expTotal);
   set('badge-exp-count', expTotal);
 
-  // baris "8 Graphic • 6 Motion" yang sebelumnya hardcode di HTML
+  // baris status "8 Graphic • 6 Motion • 2 Video"
   const stat = $('stat-total-portfolio');
   if (stat && stat.parentElement) {
     const spans = stat.parentElement.querySelectorAll('span');
     if (spans[0]) spans[0].textContent = `${graphic} Graphic`;
     if (spans[1]) spans[1].textContent = `${motion} Motion`;
+    if (spans[2]) spans[2].textContent = `${video} Video`;
   }
 }
 
@@ -767,7 +770,7 @@ function renderPortfolioGrid() {
     <div class="glass-card glass-card-hover rounded-2xl overflow-hidden border-brand-border flex flex-col justify-between group">
       <div class="relative aspect-video bg-black/40 overflow-hidden">
         <img src="${esc(thumbSrc(item))}" alt="${esc(item.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-        <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider ${item.category === 'motion' ? 'bg-indigo-600/90 text-white' : 'bg-brand-gold/90 text-brand-bg'}">
+        <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider ${item.category === 'motion' ? 'bg-indigo-600/90 text-white' : (item.category === 'video' ? 'bg-rose-600/90 text-white' : 'bg-brand-gold/90 text-brand-bg')}">
           ${esc(item.category)}
         </span>
         ${video ? `
@@ -1594,16 +1597,21 @@ function applyCmsStateToHtml(fullHtml) {
   if (Array.isArray(CMS_STATE.portfolio)) {
     const graphicItems = CMS_STATE.portfolio.filter((p) => p.category === 'graphic');
     const motionItems = CMS_STATE.portfolio.filter((p) => p.category === 'motion');
+    const videoItems = CMS_STATE.portfolio.filter((p) => p.category === 'video');
 
     const graphicBtn = doc.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalGraphic"] .pf-count');
     if (graphicBtn) graphicBtn.textContent = `${String(graphicItems.length).padStart(2, '0')} Karya`;
     const motionBtn = doc.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalMotion"] .pf-count');
     if (motionBtn) motionBtn.textContent = `${String(motionItems.length).padStart(2, '0')} Karya`;
+    const videoBtn = doc.querySelector('.portfolio-filter-btn[data-portfolio-target="portfolioModalVideo"] .pf-count');
+    if (videoBtn) videoBtn.textContent = `${String(videoItems.length).padStart(2, '0')} Karya`;
 
     const graphicEyebrow = doc.querySelector('#portfolioModalGraphic .portfolio-modal-eyebrow');
     if (graphicEyebrow) graphicEyebrow.textContent = `Kategori 01 • ${String(graphicItems.length).padStart(2, '0')} Karya`;
     const motionEyebrow = doc.querySelector('#portfolioModalMotion .portfolio-modal-eyebrow');
     if (motionEyebrow) motionEyebrow.textContent = `Kategori 02 • ${String(motionItems.length).padStart(2, '0')} Karya`;
+    const videoEyebrow = doc.querySelector('#portfolioModalVideo .portfolio-modal-eyebrow');
+    if (videoEyebrow) videoEyebrow.textContent = `Kategori 03 • ${String(videoItems.length).padStart(2, '0')} Karya`;
 
     const graphicGallery = doc.getElementById('pmGraphicGallery') || doc.querySelector('#portfolioModalGraphic .work-grid');
     if (graphicGallery) {
@@ -1624,6 +1632,35 @@ function applyCmsStateToHtml(fullHtml) {
         return `
         <div class="work-card">
           <span class="work-index">${String(idx + 1).padStart(2, '0')} / Motion Graphic</span>
+          <div class="work-visual youtube-card" data-video-id="${esc(videoId)}" data-url="${esc(video)}">
+            <img src="${esc(thumbSrc(item))}" alt="${esc(item.title)}" loading="lazy">
+            <button class="play-btn" aria-label="Putar Video">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            </button>
+          </div>
+          <div class="work-title">${esc(item.title)}</div>
+          <div class="work-meta">${esc(item.meta)}</div>
+          ${video ? `
+          <div class="work-action">
+            <a href="${esc(video)}" target="_blank" rel="noopener noreferrer" class="youtube-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+              Tonton di YouTube
+            </a>
+          </div>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    const videoGallery = doc.getElementById('pmVideoGallery') || doc.querySelector('#portfolioModalVideo .work-grid');
+    if (videoGallery) {
+      videoGallery.innerHTML = videoItems.map((item, idx) => {
+        const videoId = extractYtId(item.videoUrl);
+        const video = safeUrl(item.videoUrl);
+        return `
+        <div class="work-card">
+          <span class="work-index">${String(idx + 1).padStart(2, '0')} / Video Showcase</span>
           <div class="work-visual youtube-card" data-video-id="${esc(videoId)}" data-url="${esc(video)}">
             <img src="${esc(thumbSrc(item))}" alt="${esc(item.title)}" loading="lazy">
             <button class="play-btn" aria-label="Putar Video">

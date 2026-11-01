@@ -40,7 +40,9 @@ const DEFAULT_CMS_DATA = {
     { id: "pf-m3", title: "Teaser - BSI Flash ( UBSI Tasikmalaya )", category: "motion", meta: "KIAN Company — 2026", index: "03", imageUrl: "https://img.youtube.com/vi/Zcs-eFYnMxM/hqdefault.jpg", videoUrl: "https://youtube.com/shorts/Zcs-eFYnMxM" },
     { id: "pf-m4", title: "Teaser - Kreasi 2026", category: "motion", meta: "KIAN Company — 2026", index: "04", imageUrl: "https://img.youtube.com/vi/J-bMdo0LtIY/hqdefault.jpg", videoUrl: "https://youtube.com/shorts/J-bMdo0LtIY" },
     { id: "pf-m5", title: "Teaser - ICITRI 2026", category: "motion", meta: "KIAN Company — 2026", index: "05", imageUrl: "https://img.youtube.com/vi/zDzieLy3zFY/hqdefault.jpg", videoUrl: "https://youtu.be/zDzieLy3zFY" },
-    { id: "pf-m6", title: "Teaser - BSI Flash Cengkareng 2026", category: "motion", meta: "KIAN Company — 2026", index: "06", imageUrl: "https://img.youtube.com/vi/Gz-OoOX_3NA/hqdefault.jpg", videoUrl: "https://youtube.com/shorts/Gz-OoOX_3NA" }
+    { id: "pf-m6", title: "Teaser - BSI Flash Cengkareng 2026", category: "motion", meta: "KIAN Company — 2026", index: "06", imageUrl: "https://img.youtube.com/vi/Gz-OoOX_3NA/hqdefault.jpg", videoUrl: "https://youtube.com/shorts/Gz-OoOX_3NA" },
+    { id: "pf-v1", title: "Video Showcase 01", category: "video", meta: "Bayu Askar Abdillah — 2026", index: "01", imageUrl: "", videoUrl: "" },
+    { id: "pf-v2", title: "Video Showcase 02", category: "video", meta: "Bayu Askar Abdillah — 2026", index: "02", imageUrl: "", videoUrl: "" }
   ],
   experienceProjects: [
     { id: "ep-1792296966580", title: "Seminar Economic Review - Thamrin Nine", category: "event & broadcast", date: "19 Agustus 2026", role: "Switcher", desc: "Mengoperasikan Switcher dari awal acara sampai berakhir nya acara.", output: "Multiview Cam Record dan switching dengan baik" },
